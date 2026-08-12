@@ -190,8 +190,8 @@ html.dark-theme .theme-toggle .icon-moon {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	padding-top: 6rem;
+	justify-content: flex-start;
+	padding-top: 5rem;
 	padding-bottom: 4rem;
 }
 
