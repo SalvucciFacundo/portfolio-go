@@ -139,3 +139,42 @@ Documento de especificación técnica de diseño y guía de estilos (*Design Sys
 1. **Sin Colores Estridentes**: Mantener la paleta estricta en tonos neutros (blanco, grises, negro). La única excepción son los iconos oficiales de las tecnologías en la sección de habilidades.
 2. **Espaciado Generoso**: Usar padding y márgenes amplios para dar sensación de galería de arte u hoja editorial.
 3. **Marcas de Agua No Invasivas**: Los textos de fondo deben tener un `z-index` inferior y una opacidad menor a `0.05` para que no afecten la legibilidad.
+
+---
+
+## 6. Regla de Revelado de Color al Hover (Firma de Interacción)
+
+**Principio**: *La página vive en monocromo; el color es la recompensa de la interacción.*
+
+- **Estado de reposo**: Fotos, iconos (incluidos los de habilidades) y thumbnails se renderizan en escala de grises (`filter: grayscale(100%)`) o con opacidad reducida.
+- **Estado hover/focus**: El elemento recupera su color real (foto a color, icono oficial de la tecnología, acento de enlace) mediante transición suave.
+
+### Reglas Técnicas
+
+1. **Transición**: `transition: filter 300ms ease, opacity 300ms ease, transform 300ms ease` — sin easing elástico ni efectos de rebote.
+2. **Alcance**: Aplica a foto de avatar, iconos de la barra social, iconos de skills, thumbnails de proyectos y enlaces de la navegación.
+3. **Reducción de movimiento**: Respetar `prefers-reduced-motion` — desactivar el cambio de filtro suave y aplicar el cambio de color sin animación.
+4. **Accesibilidad (teclado)**: El revelado de color también debe dispararse con `:focus-visible`, no solo con `:hover`, para que sea usable sin mouse.
+5. **Contraste**: El color revelado nunca debe degradar el contraste del texto; en enlaces, el cambio de color se acompaña de subrayado o cambio de peso.
+
+### Tratamiento por Elemento
+
+| Elemento | Reposo | Hover / Focus |
+| :--- | :--- | :--- |
+| Avatar vinilo | Imagen en grayscale (anillo exterior gris suave) | Imagen a color, anillos mantienen rotación |
+| Iconos sidebar social | Gris `#666` / `#999` | Color de marca del servicio (GitHub, LinkedIn, etc.) |
+| Iconos skills grid | Grayscale | Icono oficial a color |
+| Thumbnails de proyectos | Grayscale | Foto a color, `scale(1.02)` sutil |
+| Enlaces de navegación | `--text-secondary` | Color de acento + subrayado 1px |
+
+**Ejemplo de implementación**:
+```css
+.grayscale-reveal {
+  filter: grayscale(100%);
+  transition: filter 300ms ease;
+}
+.grayscale-reveal:hover,
+.grayscale-reveal:focus-visible {
+  filter: grayscale(0%);
+}
+```
