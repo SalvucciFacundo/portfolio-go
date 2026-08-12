@@ -31,6 +31,8 @@ var translations = map[string]map[string]string{
 		"theme.to_light":     "Cambiar a tema claro",
 		"login.aria":         "Iniciar sesión",
 		"lang.label":         "Idioma",
+		"lang.switch_to":     "Cambiar a inglés",
+		"sidebar.aria":       "Barra lateral",
 	},
 	"en": {
 		"meta.description":   "Portfolio of Facundo Salvucci — Full Stack Developer in Go.",
@@ -53,6 +55,8 @@ var translations = map[string]map[string]string{
 		"theme.to_light":     "Switch to light theme",
 		"login.aria":         "Sign in",
 		"lang.label":         "Language",
+		"lang.switch_to":     "Switch to Spanish",
+		"sidebar.aria":       "Sidebar",
 	},
 }
 

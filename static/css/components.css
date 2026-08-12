@@ -46,52 +46,55 @@
 .sidebar-left {
 	left: 0;
 	align-items: center;
-	justify-content: space-between;
-	padding: 1.5rem 0;
-	border-right: 1px solid var(--card-border);
+	justify-content: center;
+	padding: 0;
+	border-right: none;
 }
 
-.sidebar-left__top {
+.sidebar-left__icons {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 1.5rem;
-}
-
-.sidebar-left__bottom {
-	display: flex;
-	align-items: center;
+	gap: 1.1rem;
+	padding: 1rem 0;
 }
 
 .sidebar-left__socials {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 1.25rem;
+	gap: 1.1rem;
 }
 
-/* Theme toggle */
-.theme-toggle {
+.sidebar-left__divider {
+	width: 1px;
+	height: 24px;
+	background: var(--card-border);
+}
+
+/* Shared icon button (theme, lang, socials) */
+.icon-btn {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	width: 40px;
 	height: 40px;
 	color: var(--text-secondary);
-	transition: color var(--transition);
+	transition: color var(--transition), transform var(--transition);
 }
 
-.theme-toggle:hover,
-.theme-toggle:focus-visible {
+.icon-btn:hover,
+.icon-btn:focus-visible {
 	color: var(--text-primary);
 }
 
-.theme-toggle .icon {
+.icon-btn .icon {
 	display: flex;
 	width: 18px;
 	height: 18px;
 }
 
+/* Theme toggle */
 .theme-toggle .icon-moon {
 	display: none;
 }
@@ -104,37 +107,17 @@ html.dark-theme .theme-toggle .icon-moon {
 	display: flex;
 }
 
-/* Language toggle */
-.lang-toggle {
-	display: flex;
-	align-items: center;
-	gap: 0.25rem;
-	font-family: var(--font-mono);
-	font-size: 0.7rem;
-	letter-spacing: 0.08em;
+/* Language toggle (flag button) */
+.lang-toggle svg {
+	width: 22px;
+	height: 22px;
+	border-radius: 3px;
+	box-shadow: 0 0 0 1px var(--card-border);
 }
 
-.lang-toggle a {
-	text-decoration: none;
-	color: var(--text-muted);
-	padding: 0.25rem 0.15rem;
-	transition: color var(--transition);
-}
-
-.lang-toggle a:hover,
-.lang-toggle a:focus-visible {
-	color: var(--text-primary);
-}
-
-.lang-toggle a.is-active {
-	color: var(--text-primary);
-	font-weight: 500;
-	text-decoration: underline;
-	text-underline-offset: 3px;
-}
-
-.lang-toggle__sep {
-	color: var(--text-muted);
+.lang-toggle:hover,
+.lang-toggle:focus-visible {
+	transform: scale(1.08);
 }
 
 /* Social links */
@@ -813,17 +796,18 @@ html.dark-theme .theme-toggle .icon-moon {
 		top: auto;
 		bottom: 0;
 		width: 100%;
-		height: 56px;
+		height: 60px;
 		flex-direction: row;
-		justify-content: space-between;
-		padding: 0 1rem;
+		justify-content: center;
+		padding: 0;
 		border-right: none;
 		border-top: 1px solid var(--card-border);
 	}
 
-	.sidebar-left__top {
+	.sidebar-left__icons {
 		flex-direction: row;
-		gap: 1rem;
+		gap: 0.75rem;
+		padding: 0;
 	}
 
 	.sidebar-left__socials {
@@ -831,8 +815,13 @@ html.dark-theme .theme-toggle .icon-moon {
 		gap: 0.5rem;
 	}
 
+	.sidebar-left__divider {
+		width: 1px;
+		height: 24px;
+	}
+
 	body {
-		padding-bottom: 56px;
+		padding-bottom: 60px;
 	}
 
 	.section {

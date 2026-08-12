@@ -6,11 +6,11 @@ import (
 )
 
 templ SidebarLeft(p domain.Profile, lang string) {
-	<aside class="sidebar sidebar-left" aria-label="Barra lateral">
-		<div class="sidebar-left__top">
+	<aside class="sidebar sidebar-left" aria-label={ i18n.T(lang, "sidebar.aria") }>
+		<div class="sidebar-left__icons">
 			<button
 				type="button"
-				class="theme-toggle"
+				class="icon-btn theme-toggle"
 				id="theme-toggle"
 				aria-pressed="false"
 				aria-label={ i18n.T(lang, "theme.to_dark") }
@@ -18,17 +18,22 @@ templ SidebarLeft(p domain.Profile, lang string) {
 				<span class="icon icon-sun">@sunIcon()</span>
 				<span class="icon icon-moon">@moonIcon()</span>
 			</button>
-			<nav class="lang-toggle" aria-label={ i18n.T(lang, "lang.label") }>
-				<a href="/?lang=es" class={ activeLang(lang, "es") } aria-label="Español">ES</a>
-				<span class="lang-toggle__sep">/</span>
-				<a href="/?lang=en" class={ activeLang(lang, "en") } aria-label="English">EN</a>
-			</nav>
-		</div>
-		<div class="sidebar-left__bottom">
+			<a
+				class="icon-btn lang-toggle"
+				href={ otherLangHref(lang) }
+				aria-label={ i18n.T(lang, "lang.switch_to") }
+			>
+				if lang == "en" {
+					@flagEsIcon()
+				} else {
+					@flagEnIcon()
+				}
+			</a>
+			<div class="sidebar-left__divider" role="separator"></div>
 			<div class="sidebar-left__socials">
 				for _, s := range p.Socials {
 					<a
-						class="social-link grayscale-reveal"
+						class="icon-btn social-link grayscale-reveal"
 						style={ brandStyle(s.IconKey) }
 						href={ s.URL }
 						target="_blank"

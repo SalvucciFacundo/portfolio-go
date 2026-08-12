@@ -24,6 +24,13 @@ func activeLang(current, target string) string {
 	return ""
 }
 
+func otherLangHref(lang string) string {
+	if lang == "en" {
+		return "/?lang=es"
+	}
+	return "/?lang=en"
+}
+
 func copyEmailClass(hasLabel bool) string {
 	if hasLabel {
 		return "copy-email copy-email--with-label grayscale-reveal"
