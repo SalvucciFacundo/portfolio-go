@@ -1,0 +1,50 @@
+package components
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+)
+
+templ SidebarLeft(p domain.Profile, lang string) {
+	<aside class="sidebar sidebar-left" aria-label="Barra lateral">
+		<div class="sidebar-left__top">
+			<button
+				type="button"
+				class="theme-toggle"
+				id="theme-toggle"
+				aria-pressed="false"
+				aria-label={ i18n.T(lang, "theme.to_dark") }
+			>
+				<span class="icon icon-sun">@sunIcon()</span>
+				<span class="icon icon-moon">@moonIcon()</span>
+			</button>
+			<nav class="lang-toggle" aria-label={ i18n.T(lang, "lang.label") }>
+				<a href="/?lang=es" class={ activeLang(lang, "es") } aria-label="Español">ES</a>
+				<span class="lang-toggle__sep">/</span>
+				<a href="/?lang=en" class={ activeLang(lang, "en") } aria-label="English">EN</a>
+			</nav>
+		</div>
+		<div class="sidebar-left__bottom">
+			<div class="sidebar-left__socials">
+				for _, s := range p.Socials {
+					<a
+						class="social-link grayscale-reveal"
+						style={ brandStyle(s.IconKey) }
+						href={ s.URL }
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label={ s.Name }
+					>
+						switch s.IconKey {
+						case "github":
+							@githubIcon()
+						case "linkedin":
+							@linkedinIcon()
+						}
+					</a>
+				}
+				@CopyEmail(p.Email, "", i18n.T(lang, "action.copied"), i18n.T(lang, "action.copy_email"))
+			</div>
+		</div>
+	</aside>
+}

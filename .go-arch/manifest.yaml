@@ -1,0 +1,72 @@
+version: 1
+files:
+    .env:
+        path: .env
+        sha256: fef295ad41fda5d1ba5eda5c5e5147e8dfd8e7e412def2ffbb62f0b19a53e685
+        origin: scaffold
+        template: common/env.tmpl
+    .go-arch.yaml:
+        path: .go-arch.yaml
+        sha256: c7b218f60f84c08f6240382457615cfb9c275fb4aabbd22a01c7a02fb19fcfec
+        origin: scaffold
+        template: common/config.tmpl
+    Dockerfile:
+        path: Dockerfile
+        sha256: a6d471c56b00d8e6b129beee1654e4a7e2a2cc65c51c6e42746a3a4ee90b7e46
+        origin: scaffold
+        template: common/Dockerfile.tmpl
+    README.md:
+        path: README.md
+        sha256: 568e61aa98ecdf1561943cfb158bf5edf2940826e7d1ad866d23c96cd706884a
+        origin: scaffold
+        template: web/readme.tmpl
+    cmd/api/main.go:
+        path: cmd/api/main.go
+        sha256: 55cfbc08b0f037d479ab1e4de9bc8de0fa07909e4f03c6e67bb99e4059115c52
+        origin: scaffold
+        template: web/main.tmpl
+    docker-compose.yaml:
+        path: docker-compose.yaml
+        sha256: 2f17289a77eb36cac561230a24838270fe4f93b918d8f886330a679b4cfb6afa
+        origin: scaffold
+        template: common/docker-compose.yaml.tmpl
+    go.mod:
+        path: go.mod
+        sha256: d52a9505dd4e0b9d2bbb66e61ec1ec998ee291659a2462d457a2be18786582a2
+        origin: scaffold
+        template: common/go.mod.tmpl
+    internal/handler/page.go:
+        path: internal/handler/page.go
+        sha256: bc2dea30909403204bfec80833779d8cfdbdaf19a158cebb09191507070bea89
+        origin: scaffold
+        template: web/handler.tmpl
+    internal/router/routes.go:
+        path: internal/router/routes.go
+        sha256: 1657f91e0f44d6908a7723508acf593ed27236b5a6f43adc458b3b5736768e75
+        origin: scaffold
+        template: common/routes.tmpl
+    static/css/style.css:
+        path: static/css/style.css
+        sha256: de1ff6d5fc7f6bdf6bd85579946cab6c682103bed3fabcf5f9df10d3309571d3
+        origin: scaffold
+        template: web/style.css.tmpl
+    static/js/htmx.min.js:
+        path: static/js/htmx.min.js
+        sha256: 449317ade7881e949510db614991e195c3a099c4c791c24dacec55f9f4a2a452
+        origin: binary
+        template: web/htmx.min.js
+    views/components/counter.templ:
+        path: views/components/counter.templ
+        sha256: 5cabdb9faea8b2d7beeaf834c79d59e967a7ffcb8b9103115cdbe0588ce89d38
+        origin: scaffold
+        template: web/component.templ.tmpl
+    views/layouts/base.templ:
+        path: views/layouts/base.templ
+        sha256: 85ee5b3292deec6ce1762c21edca2c0ef4df445e6ffab9a106ada5d4ab099656
+        origin: scaffold
+        template: web/base.templ.tmpl
+    views/pages/home.templ:
+        path: views/pages/home.templ
+        sha256: d8a128eabfb230e33134727db80c7bff049bb4a4017998c556f1c85fd6f0c0df
+        origin: scaffold
+        template: web/page.templ.tmpl

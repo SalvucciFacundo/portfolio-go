@@ -1,0 +1,28 @@
+package sections
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+	"github.com/SalvucciFacundo/portfolio-go/views/components"
+)
+
+templ Hero(p domain.Profile, lang string) {
+	<section id="hero" class="section hero">
+		<p class="hero__greeting">{ i18n.T(lang, "hero.greeting") }</p>
+		<h1 class="hero__name">{ p.Name }</h1>
+		<p class="hero__role">{ i18n.L(p.RoleEs, p.RoleEn, lang) }</p>
+		<div class="hero__grid">
+			<div class="hero__text">
+				<p class="hero__headline">{ i18n.L(p.HeadlineEs, p.HeadlineEn, lang) }</p>
+				<p class="hero__summary">{ i18n.L(p.SummaryEs, p.SummaryEn, lang) }</p>
+				if p.ResumeURL != "" {
+					<a class="btn btn--primary" href={ p.ResumeURL }>{ i18n.T(lang, "action.download_cv") }</a>
+				} else {
+					<button type="button" class="btn btn--primary" disabled>{ i18n.T(lang, "action.download_cv") }</button>
+				}
+			</div>
+			@components.VinylAvatar(p)
+		</div>
+		<p class="hero__matrix">{ i18n.T(lang, "hero.matrix") }</p>
+	</section>
+}

@@ -1,0 +1,14 @@
+package components
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+)
+
+templ SkillCard(s domain.Skill, lang string) {
+	<article class="skill-card">
+		<img class="skill-card__icon grayscale-reveal" src={ s.IconURL } alt={ s.Name } width="40" height="40" loading="lazy"/>
+		<h3 class="skill-card__name">{ s.Name }</h3>
+		<p class="skill-card__level">{ i18n.L(s.LevelEs, s.LevelEn, lang) }</p>
+	</article>
+}

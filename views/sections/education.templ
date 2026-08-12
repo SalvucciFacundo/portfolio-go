@@ -1,0 +1,18 @@
+package sections
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+	"github.com/SalvucciFacundo/portfolio-go/views/components"
+)
+
+templ Education(p domain.Profile, lang string) {
+	<section id="education" class="section">
+		<h2 class="section__title">{ i18n.T(lang, "section.education") }</h2>
+		<div class="education-grid">
+			for _, e := range p.Education {
+				@components.EducationCard(e, lang)
+			}
+		</div>
+	</section>
+}

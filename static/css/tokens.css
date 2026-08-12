@@ -1,0 +1,50 @@
+:root {
+	/* Light theme (default) */
+	--bg-main: #F4F4F2;
+	--bg-alt: #EFEFEF;
+	--text-primary: #1A1A1A;
+	--text-secondary: #666666;
+	--text-muted: #999999;
+	--watermark-color: rgba(0, 0, 0, 0.04);
+	--card-bg: #EAEAEA;
+	--card-border: #E0E0E0;
+	--vinyl-outer: #D4D4D0;
+	--vinyl-mid: #666666;
+	--vinyl-inner: #1A1A1A;
+	--btn-bg: #2D2D2D;
+	--btn-text: #FFFFFF;
+	--shadow-soft: rgba(0, 0, 0, 0.08);
+
+	/* Typography */
+	--font-display: 'Space Grotesk', sans-serif;
+	--font-mono: 'JetBrains Mono', monospace;
+	--font-body: 'Inter', sans-serif;
+
+	/* Layout */
+	--sidebar-w: 64px;
+	--content-max: 1000px;
+	--radius-card: 18px;
+	--transition: 300ms ease;
+
+	/* Vinyl avatar */
+	--avatar-outer: 400px;
+	--avatar-mid: 300px;
+	--avatar-inner: 200px;
+}
+
+html.dark-theme {
+	--bg-main: #0E0E10;
+	--bg-alt: #131316;
+	--text-primary: #F4F4F2;
+	--text-secondary: #A0A0A0;
+	--text-muted: #6E6E73;
+	--watermark-color: rgba(255, 255, 255, 0.03);
+	--card-bg: #18181B;
+	--card-border: #27272A;
+	--vinyl-outer: #1C1C1F;
+	--vinyl-mid: #3A3A3E;
+	--vinyl-inner: #F4F4F2;
+	--btn-bg: #F4F4F2;
+	--btn-text: #0E0E10;
+	--shadow-soft: rgba(0, 0, 0, 0.4);
+}

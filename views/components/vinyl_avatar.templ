@@ -1,0 +1,15 @@
+package components
+
+import "github.com/SalvucciFacundo/portfolio-go/internal/domain"
+
+templ VinylAvatar(p domain.Profile) {
+	<div class="vinyl" role="img" aria-label={ p.Name }>
+		<div class="vinyl__ring vinyl__ring--outer">
+			<div class="vinyl__ring vinyl__ring--mid">
+				<div class="vinyl__core">
+					<img class="grayscale-reveal" src={ p.AvatarURL } alt={ p.Name } width="400" height="400" fetchpriority="high"/>
+				</div>
+			</div>
+		</div>
+	</div>
+}

@@ -1,0 +1,18 @@
+package sections
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+	"github.com/SalvucciFacundo/portfolio-go/views/components"
+)
+
+templ Experience(p domain.Profile, lang string) {
+	<section id="experience" class="section">
+		<h2 class="section__title">{ i18n.T(lang, "section.experience") }</h2>
+		<ol class="timeline">
+			for _, e := range p.Experience {
+				@components.ExperienceItem(e, lang)
+			}
+		</ol>
+	</section>
+}

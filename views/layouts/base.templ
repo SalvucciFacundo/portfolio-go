@@ -1,0 +1,109 @@
+package layouts
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+)
+
+templ Base(lang string) {
+	<!DOCTYPE html>
+	<html lang={ lang }>
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<meta name="description" content={ i18n.T(lang, "meta.description") }/>
+			<meta property="og:type" content="website"/>
+			<meta property="og:title" content="Facundo Salvucci — Portfolio"/>
+			<meta property="og:description" content={ i18n.T(lang, "meta.description") }/>
+			<meta property="og:locale" content={ lang }/>
+			<meta name="twitter:card" content="summary"/>
+			<meta name="twitter:title" content="Facundo Salvucci — Portfolio"/>
+			<title>Facundo Salvucci — Portfolio</title>
+			<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231A1A1A'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='15' fill='%23F4F4F2' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E"/>
+			<script>
+				(function () {
+					try {
+						var t = localStorage.getItem('theme');
+						if (!t) {
+							t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+						}
+						if (t === 'dark') {
+							document.documentElement.classList.add('dark-theme');
+						}
+					} catch (e) {}
+				})();
+			</script>
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+			<link rel="stylesheet" href="/static/css/tokens.css"/>
+			<link rel="stylesheet" href="/static/css/base.css"/>
+			<link rel="stylesheet" href="/static/css/components.css"/>
+			<script src="/static/js/htmx.min.js"></script>
+		</head>
+		<body>
+			{ children... }
+			<script>
+				(function () {
+					var root = document.documentElement;
+
+					var themeBtn = document.getElementById('theme-toggle');
+					if (themeBtn) {
+						var apply = function () {
+							themeBtn.setAttribute('aria-pressed', String(root.classList.contains('dark-theme')));
+						};
+						themeBtn.addEventListener('click', function () {
+							var dark = root.classList.toggle('dark-theme');
+							try {
+								localStorage.setItem('theme', dark ? 'dark' : 'light');
+							} catch (e) {}
+							apply();
+						});
+						apply();
+					}
+
+					document.querySelectorAll('.copy-email').forEach(function (btn) {
+						btn.addEventListener('click', function () {
+							var email = btn.getAttribute('data-email');
+							if (!email) {
+								return;
+							}
+							var feedback = btn.querySelector('.copy-email__feedback');
+							var done = function () {
+								if (feedback) {
+									feedback.classList.add('is-visible');
+									setTimeout(function () {
+										feedback.classList.remove('is-visible');
+									}, 2000);
+								}
+							};
+							if (navigator.clipboard && navigator.clipboard.writeText) {
+								navigator.clipboard.writeText(email).then(done).catch(function () {});
+							}
+						});
+					});
+
+					var navLinks = Array.prototype.slice.call(document.querySelectorAll('.sidebar-right__link'));
+					var sections = navLinks.map(function (a) {
+						return document.querySelector(a.getAttribute('href'));
+					});
+					var spy = function () {
+						var pos = window.scrollY + window.innerHeight / 3;
+						var current = '';
+						sections.forEach(function (s) {
+							if (s && s.offsetTop <= pos) {
+								current = s.id;
+							}
+						});
+						navLinks.forEach(function (a) {
+							a.classList.toggle('is-active', a.getAttribute('href') === '#' + current);
+						});
+					};
+					if (navLinks.length) {
+						window.addEventListener('scroll', spy, { passive: true });
+						spy();
+					}
+				})();
+			</script>
+		</body>
+	</html>
+}

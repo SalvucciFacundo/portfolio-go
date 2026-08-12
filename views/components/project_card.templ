@@ -1,0 +1,31 @@
+package components
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+)
+
+templ ProjectCard(p domain.Project, lang string) {
+	<article class="project-card">
+		<div class="project-card__cover">
+			<img class="grayscale-reveal" src={ p.CoverURL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" loading="lazy"/>
+			<span class="project-card__status">{ i18n.L(p.StatusLabelEs, p.StatusLabelEn, lang) }</span>
+		</div>
+		<div class="project-card__body">
+			<p class="project-card__category">{ p.Category }</p>
+			<h3 class="project-card__title">{ i18n.L(p.TitleEs, p.TitleEn, lang) }</h3>
+			<p class="project-card__desc">{ i18n.L(p.DescriptionEs, p.DescriptionEn, lang) }</p>
+			<ul class="project-card__tags">
+				for _, t := range p.Tags {
+					<li class="project-card__tag">{ t }</li>
+				}
+			</ul>
+			<div class="project-card__actions">
+				<button type="button" class="btn btn--ghost" disabled>{ i18n.T(lang, "action.view_more") }</button>
+				if p.RepoLink != "" {
+					<a class="btn btn--repo" href={ p.RepoLink } target="_blank" rel="noopener noreferrer">GitHub</a>
+				}
+			</div>
+		</div>
+	</article>
+}

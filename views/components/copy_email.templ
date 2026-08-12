@@ -1,0 +1,16 @@
+package components
+
+// CopyEmail renders a button that copies the email to the clipboard. The email
+// value only travels in data-email — it is never shown as visible text.
+templ CopyEmail(email, label, feedback, aria string) {
+	<button type="button" class={ copyEmailClass(label != "") } data-email={ email } aria-label={ aria }>
+		<svg class="copy-email__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<rect x="2" y="4" width="20" height="16" rx="2"/>
+			<path d="M2 7l10 7 10-7"/>
+		</svg>
+		if label != "" {
+			<span class="copy-email__label">{ label }</span>
+		}
+		<span class="copy-email__feedback" aria-live="polite">{ feedback }</span>
+	</button>
+}

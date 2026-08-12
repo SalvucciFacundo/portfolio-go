@@ -1,0 +1,17 @@
+package components
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+)
+
+templ ExperienceItem(e domain.Experience, lang string) {
+	<li class="timeline__item">
+		<p class="timeline__period">{ i18n.L(e.PeriodEs, e.PeriodEn, lang) }</p>
+		<div class="timeline__content">
+			<h3 class="timeline__position">{ i18n.L(e.PositionEs, e.PositionEn, lang) }</h3>
+			<p class="timeline__company">{ e.Company }</p>
+			<p class="timeline__desc">{ i18n.L(e.DescriptionEs, e.DescriptionEn, lang) }</p>
+		</div>
+	</li>
+}

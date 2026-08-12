@@ -1,0 +1,27 @@
+package pages
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+	"github.com/SalvucciFacundo/portfolio-go/views/components"
+	"github.com/SalvucciFacundo/portfolio-go/views/layouts"
+	"github.com/SalvucciFacundo/portfolio-go/views/sections"
+)
+
+templ Home(p domain.Profile, lang string) {
+	@layouts.Base(lang) {
+		<div class="frame">
+			@components.Watermark()
+			@components.SidebarLeft(p, lang)
+			@components.SidebarRight(lang)
+			<main class="main-content">
+				@sections.Hero(p, lang)
+				@sections.Skills(p, lang)
+				@sections.Projects(p, lang)
+				@sections.Experience(p, lang)
+				@sections.Education(p, lang)
+				@sections.Contact(p, lang)
+			</main>
+			@components.Footer(lang)
+		</div>
+	}
+}

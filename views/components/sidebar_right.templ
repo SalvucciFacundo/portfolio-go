@@ -1,0 +1,16 @@
+package components
+
+import "github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+
+templ SidebarRight(lang string) {
+	<aside class="sidebar sidebar-right" aria-label="Secciones">
+		<nav class="sidebar-right__nav">
+			<a class="sidebar-right__link" href="#hero">{ i18n.T(lang, "section.hero") }</a>
+			<a class="sidebar-right__link" href="#skills">{ i18n.T(lang, "section.skills") }</a>
+			<a class="sidebar-right__link" href="#projects">{ i18n.T(lang, "section.projects") }</a>
+			<a class="sidebar-right__link" href="#experience">{ i18n.T(lang, "section.experience") }</a>
+			<a class="sidebar-right__link" href="#education">{ i18n.T(lang, "section.education") }</a>
+			<a class="sidebar-right__link" href="#contact">{ i18n.T(lang, "section.contact") }</a>
+		</nav>
+	</aside>
+}

@@ -1,0 +1,15 @@
+package components
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+)
+
+templ EducationCard(e domain.Education, lang string) {
+	<article class="education-card">
+		<p class="education-card__date">{ e.Date }</p>
+		<h3 class="education-card__title">{ i18n.L(e.TitleEs, e.TitleEn, lang) }</h3>
+		<p class="education-card__school">{ e.School }</p>
+		<p class="education-card__desc">{ i18n.L(e.DescriptionEs, e.DescriptionEn, lang) }</p>
+	</article>
+}
