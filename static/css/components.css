@@ -195,6 +195,17 @@ html.dark-theme .theme-toggle .icon-moon {
 	padding-bottom: 4rem;
 }
 
+.hero__row {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+	gap: 4rem;
+}
+
+.hero__presentation {
+	max-width: 46ch;
+}
+
 .hero__greeting {
 	font-family: var(--font-mono);
 	font-size: 1rem;
@@ -221,17 +232,15 @@ html.dark-theme .theme-toggle .icon-moon {
 	content: "> ";
 }
 
-.hero__grid {
+.hero__media {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: 3rem;
-	margin-top: 3rem;
+	justify-content: center;
 }
 
-.hero__text {
-	flex: 1;
+.hero__about {
 	max-width: 46ch;
+	margin-top: 3.5rem;
 }
 
 .hero__headline {
@@ -245,6 +254,12 @@ html.dark-theme .theme-toggle .icon-moon {
 .hero__summary {
 	color: var(--text-secondary);
 	margin-bottom: 2rem;
+}
+
+.hero__actions {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
 }
 
 .hero__matrix {
@@ -777,9 +792,13 @@ html.dark-theme .theme-toggle .icon-moon {
 		display: none;
 	}
 
-	.hero__grid {
-		flex-direction: column;
-		align-items: flex-start;
+	.hero__row {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+	}
+
+	.hero__media {
+		justify-content: flex-start;
 	}
 
 	.main-content {
