@@ -102,7 +102,7 @@ Toda island mantiene `hx-post` + `hx-swap` como fallback server-driven cuando el
 ### Secciones (scroll principal)
 | # | Sección | Contenido |
 |---|---------|-----------|
-| 1 | Hero | Saludo, nombre, subtítulo terminal, `DESCARGAR_CV`, avatar vinilo |
+| 1 | Hero | Saludo, nombre, subtítulo terminal, botón `DESCARGAR_CV` (descarga el PDF subido al server), avatar vinilo |
 | 2 | Skills | Grid de tarjetas: icono oficial, nombre, nivel |
 | 3 | Projects | Cards: título + tecnología (a definir). Click / "Ver más" → **modal detalle** (§9) |
 | 4 | Experience | Timeline: periodo, cargo, empresa, descripción |
@@ -198,6 +198,12 @@ sessions (
 ### Acceso
 - Conexión `pgxpool`, migraciones SQL versionadas en `migrations/`.
 - Todos los repositorios implementan puertos (`ports`): `ProfileRepo`, `SidebarIconRepo`, `SectionRepo`, `SkillRepo`, `ProjectRepo`, `ExperienceRepo`, `EducationRepo` — cada uno con `List/Get/Create/Update/Delete`.
+
+### Bilingüe (ES/EN)
+- Los textos editables por el admin (presentación, títulos, descripciones, labels) se guardan **en los 2 idiomas en la DB**: columnas sufijadas `_es` / `_en` (ej. `headline_es`, `headline_en`, `description_es`, `description_en`).
+- Al crear/editar desde el modal CRUD, el formulario tiene campos por idioma (ES + EN).
+- Al renderizar, la página elige la columna según el idioma activo (`lang` persistido).
+- Los textos fijos de la página (nombres de secciones, labels de UI, `[ES|EN]`) se traducen en la app vía mapas de traducción por idioma — no van a la DB.
 
 ## 5. Data model de dominio (core/models)
 
@@ -349,8 +355,9 @@ volumes:
 ## 13. Tema (light/dark) e idioma (ES/EN)
 
 - Tema: light = default (design spec §2), dark con clase en `<html>`, toggle island, persistencia `localStorage` + `prefers-color-scheme`, anti-FOUC con script inline en `<head>`, `aria-pressed`/`aria-label`.
-- Idioma: toggle ES/EN en sidebar izquierdo. **Alcance a definir**: textos fijos de la UI, datos del admin (títulos de secciones, labels de skills) o ambos. v0.1 sugiere al menos UI + labels de sidebar.
+- Idioma: toggle ES/EN en sidebar izquierdo. **Contenido bilingüe en DB** (columnas `_es`/`_en`, ver §4); textos fijos de la página traducidos en la app.
 - Preferencia de idioma persistida (`localStorage` o cookie).
+- **Sin partículas de fondo** (decisión: solo watermark).
 
 ## 14. Accesibilidad y rendimiento
 
@@ -363,9 +370,8 @@ volumes:
 ## 15. Pendientes / decisiones abiertas
 
 1. **Servicio de email** del formulario (§8) — investigar candidatos gratuitos.
-2. **Formato exacto de la card de proyecto** (título + tecnología, resto a definir).
-3. **Alcance del toggle ES/EN** (§13).
-4. **Partículas de fondo**: ¿canvas o solo watermark? (design spec no las menciona).
-5. **CV**: ¿se mantiene `DESCARGAR_CV` en hero y dónde vive el PDF (local vs Cloudinary)?
-6. **Seed de datos**: migración inicial con los datos reales del portafolio (desde el JSON del clean-portfolio).
-7. **Medidas de compresión exactas** de Cloudinary (§10).
+2. **Formato exacto de la card de proyecto** — **por ahora MOCK** (título + tecnología); se ajusta en la iteración de diseño.
+3. ~~Partículas de fondo~~ — **descartadas** (solo watermark).
+4. **CV**: botón `DESCARGAR_CV` en hero (posición final a definir); el admin **sube el PDF al server** (handler `upload.go`), se guarda en disco/volumen y se sirve por descarga.
+5. **Seed de datos**: migración inicial con los datos reales del portafolio (desde el JSON del clean-portfolio).
+6. **Medidas de compresión exactas** de Cloudinary (§10).
