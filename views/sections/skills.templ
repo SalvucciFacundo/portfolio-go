@@ -9,10 +9,39 @@ import (
 templ Skills(p domain.Profile, lang string) {
 	<section id="skills" class="section">
 		<h2 class="section__title">{ i18n.T(lang, "section.skills") }</h2>
-		<div class="skills-grid">
-			for _, s := range p.Skills {
-				@components.SkillCard(s, lang)
-			}
+		
+		<div class="skills-section">
+			<h3 class="skills-section__subtitle">
+				if lang == "en" {
+					Technologies
+				} else {
+					Tecnologías
+				}
+			</h3>
+			<div class="skills-grid">
+				for _, s := range p.Skills {
+					if !s.IsTool {
+						@components.SkillCard(s, lang)
+					}
+				}
+			</div>
+		</div>
+
+		<div class="skills-section">
+			<h3 class="skills-section__subtitle">
+				if lang == "en" {
+					Tools
+				} else {
+					Herramientas
+				}
+			</h3>
+			<div class="skills-grid">
+				for _, s := range p.Skills {
+					if s.IsTool {
+						@components.SkillCard(s, lang)
+					}
+				}
+			</div>
 		</div>
 	</section>
 }

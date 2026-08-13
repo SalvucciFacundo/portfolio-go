@@ -8,5 +8,6 @@ import (
 
 func Register(mux *http.ServeMux) {
 	mux.HandleFunc("GET /", handler.PageHandler)
+	mux.HandleFunc("POST /contact", handler.ContactHandler)
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 }

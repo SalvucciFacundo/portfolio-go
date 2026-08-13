@@ -9,10 +9,39 @@ import (
 templ Education(p domain.Profile, lang string) {
 	<section id="education" class="section">
 		<h2 class="section__title">{ i18n.T(lang, "section.education") }</h2>
-		<div class="education-grid">
-			for _, e := range p.Education {
-				@components.EducationCard(e, lang)
-			}
+		
+		<div class="education-section">
+			<h3 class="education-section__subtitle">
+				if lang == "en" {
+					Academic Degrees
+				} else {
+					Títulos Académicos
+				}
+			</h3>
+			<div class="education-grid">
+				for _, e := range p.Education {
+					if !e.IsCourse {
+						@components.EducationCard(e, lang)
+					}
+				}
+			</div>
+		</div>
+
+		<div class="education-section">
+			<h3 class="education-section__subtitle">
+				if lang == "en" {
+					Courses & Certifications
+				} else {
+					Cursos y Certificaciones
+				}
+			</h3>
+			<div class="education-grid">
+				for _, e := range p.Education {
+					if e.IsCourse {
+						@components.EducationCard(e, lang)
+					}
+				}
+			</div>
 		</div>
 	</section>
 }

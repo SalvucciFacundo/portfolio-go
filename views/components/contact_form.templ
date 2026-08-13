@@ -1,0 +1,60 @@
+package components
+
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
+)
+
+templ ContactForm(lang string, email, subject, message, err string, success bool) {
+	<div id="contact-form-container" class="contact-form-container">
+		if success {
+			<div class="contact-feedback contact-feedback--success">
+				<div class="contact-feedback__icon">✓</div>
+				<p class="contact-feedback__text">{ i18n.T(lang, "contact.success") }</p>
+			</div>
+		} else {
+			<form class="contact-form" hx-post={ "/contact?lang=" + lang } hx-swap="outerHTML" hx-target="#contact-form-container">
+				if err != "" {
+					<div class="contact-feedback contact-feedback--error">
+						<span class="contact-feedback__icon">⚠</span>
+						<span class="contact-feedback__text">{ err }</span>
+					</div>
+				}
+				<div class="contact-form__field">
+					<input 
+						id="contact-email"
+						type="email" 
+						name="email" 
+						value={ email } 
+						placeholder={ i18n.T(lang, "contact.email_placeholder") } 
+						required 
+						class="contact-form__input"
+					/>
+				</div>
+				<div class="contact-form__field">
+					<input 
+						id="contact-subject"
+						type="text" 
+						name="subject" 
+						value={ subject } 
+						placeholder={ i18n.T(lang, "contact.subject_placeholder") } 
+						required 
+						class="contact-form__input"
+					/>
+				</div>
+				<div class="contact-form__field">
+					<textarea 
+						id="contact-message"
+						name="message" 
+						placeholder={ i18n.T(lang, "contact.message_placeholder") } 
+						required 
+						class="contact-form__textarea"
+						rows="5"
+					>{ message }</textarea>
+				</div>
+				<button type="submit" class="contact-form__submit btn btn--primary">
+					<span>{ i18n.T(lang, "contact.send") }</span>
+				</button>
+			</form>
+		}
+	</div>
+}

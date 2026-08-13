@@ -13,5 +13,6 @@ templ Contact(p domain.Profile, lang string) {
 		<div class="contact__actions">
 			@components.CopyEmail(p.Email, i18n.T(lang, "action.copy_email"), i18n.T(lang, "action.copied"), i18n.T(lang, "action.copy_email"))
 		</div>
+		@components.ContactForm(lang, "", "", "", "", false)
 	</section>
 }

@@ -37,9 +37,12 @@ templ Hero(p domain.Profile, lang string) {
 				</p>
 				<h1 class="hero__name">{ p.Name }</h1>
 				<div class="hero__role-wrapper">
-					<div class="hero__role">
-						<span class="hero__pulse-dot"></span>
-						<span>{ i18n.L(p.RoleEs, p.RoleEn, lang) }</span>
+					<div class="hero__role-card">
+						<div class="hero__role-card-back" aria-hidden="true"></div>
+						<div class="hero__role-card-front">
+							<span class="hero__pulse-dot"></span>
+							<span>{ i18n.L(p.RoleEs, p.RoleEn, lang) }</span>
+						</div>
 					</div>
 				</div>
 				<div class="hero__text">
@@ -51,9 +54,15 @@ templ Hero(p domain.Profile, lang string) {
 				</div>
 				<div class="hero__actions">
 					if p.ResumeURL != "" {
-						<a class="btn btn--primary" href={ p.ResumeURL }>{ i18n.T(lang, "action.download_cv") }</a>
+						<a class="btn-3d" href={ p.ResumeURL }>
+							<span class="btn-3d__back"></span>
+							<span class="btn-3d__front">{ i18n.T(lang, "action.download_cv") }</span>
+						</a>
 					} else {
-						<button type="button" class="btn btn--primary" disabled>{ i18n.T(lang, "action.download_cv") }</button>
+						<button type="button" class="btn-3d" disabled>
+							<span class="btn-3d__back"></span>
+							<span class="btn-3d__front">{ i18n.T(lang, "action.download_cv") }</span>
+						</button>
 					}
 				</div>
 			</div>

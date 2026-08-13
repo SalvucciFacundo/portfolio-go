@@ -27,10 +27,11 @@ type SocialLink struct {
 }
 
 type Skill struct {
-	Name    string `json:"name"`
-	LevelEs string `json:"level_es"`
-	LevelEn string `json:"level_en"`
-	IconURL string `json:"icon_url"`
+	Name     string `json:"name"`
+	LevelEs  string `json:"level_es"`
+	LevelEn  string `json:"level_en"`
+	IconURL  string `json:"icon_url"`
+	IsTool   bool   `json:"is_tool"`
 }
 
 type Project struct {
@@ -64,4 +65,5 @@ type Education struct {
 	Date          string `json:"date"`
 	DescriptionEs string `json:"description_es"`
 	DescriptionEn string `json:"description_en"`
+	IsCourse      bool   `json:"is_course"`
 }
