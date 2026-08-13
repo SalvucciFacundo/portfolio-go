@@ -724,7 +724,7 @@ html.dark-theme .theme-toggle .icon-moon {
 .footer__inner {
 	max-width: var(--content-max);
 	margin: 0;
-	padding: 0 calc(var(--sidebar-w) + 3rem) 0 0;
+	padding: 0 calc(var(--sidebar-w) + 3rem) 0 calc(var(--sidebar-w) + 3rem);
 }
 
 .footer__cta {

@@ -62,7 +62,7 @@ ol {
 	z-index: 1;
 	max-width: var(--content-max);
 	margin: 0;
-	padding: 0 calc(var(--sidebar-w) + 3rem) 4rem 0;
+	padding: 0 calc(var(--sidebar-w) + 3rem) 4rem calc(var(--sidebar-w) + 3rem);
 }
 
 .section {
