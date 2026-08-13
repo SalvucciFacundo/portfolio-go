@@ -6,8 +6,11 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
 )
 
-templ Hero(p domain.Profile, lang string) {
+templ Hero(p domain.Profile, lang string, isAdmin bool) {
 	<section id="hero" class="section hero">
+		if isAdmin {
+			@components.AdminEditBtn("hero-edit-modal")
+		}
 		<div class="hero__number" aria-hidden="true">01</div>
 		<div class="hero__software-bar">
 			<span class="hero__software-file">{ "// main.go" }</span>
@@ -27,7 +30,7 @@ templ Hero(p domain.Profile, lang string) {
 					<span>developer</span>
 					<span>designer</span>
 				</div>
-				@components.VinylAvatar(p)
+				@components.VinylAvatar(p, isAdmin)
 			</div>
 			<div class="hero__intro">
 				<p class="hero__greeting">

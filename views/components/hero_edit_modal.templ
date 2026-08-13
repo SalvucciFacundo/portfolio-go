@@ -1,0 +1,60 @@
+package components
+
+import "github.com/SalvucciFacundo/portfolio-go/internal/domain"
+
+templ HeroEditModal(p domain.Profile) {
+	<dialog id="hero-edit-modal" class="admin-modal">
+		<div class="admin-modal__content admin-modal__content--wide">
+			<div class="admin-modal__header">
+				<h3 class="admin-modal__title">Edit Hero</h3>
+				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
+			</div>
+			<form hx-post="/admin/hero" hx-encoding="multipart/form-data" hx-swap="none">
+				<div class="admin-modal__grid">
+					<div class="admin-modal__field">
+						<label for="hero-name">Name</label>
+						<input type="text" id="hero-name" name="name" value={ p.Name } required/>
+					</div>
+					<div class="admin-modal__field">
+						<label for="hero-role-es">Title (ES)</label>
+						<input type="text" id="hero-role-es" name="role_es" value={ p.RoleEs } required/>
+					</div>
+					<div class="admin-modal__field">
+						<label for="hero-role-en">Title (EN)</label>
+						<input type="text" id="hero-role-en" name="role_en" value={ p.RoleEn } required/>
+					</div>
+				</div>
+				<div class="admin-modal__field">
+					<label for="hero-headline-es">Headline (ES)</label>
+					<input type="text" id="hero-headline-es" name="headline_es" value={ p.HeadlineEs }/>
+				</div>
+				<div class="admin-modal__field">
+					<label for="hero-headline-en">Headline (EN)</label>
+					<input type="text" id="hero-headline-en" name="headline_en" value={ p.HeadlineEn }/>
+				</div>
+				<div class="admin-modal__grid">
+					<div class="admin-modal__field">
+						<label for="hero-summary-es">About Me (ES)</label>
+						<textarea id="hero-summary-es" name="summary_es" rows="4">{ p.SummaryEs }</textarea>
+					</div>
+					<div class="admin-modal__field">
+						<label for="hero-summary-en">About Me (EN)</label>
+						<textarea id="hero-summary-en" name="summary_en" rows="4">{ p.SummaryEn }</textarea>
+					</div>
+				</div>
+				<hr class="admin-modal__divider"/>
+				<div class="admin-modal__field">
+					<label for="hero-cv">CV (PDF)</label>
+					<input type="file" id="hero-cv" name="cv" accept=".pdf"/>
+					if p.ResumeURL != "" {
+						<span class="admin-modal__file-hint">Current: { p.ResumeURL }</span>
+					}
+				</div>
+				<div class="admin-modal__actions">
+					<button type="button" class="admin-modal__cancel" onclick="this.closest('dialog').close()">Cancel</button>
+					<button type="submit" class="admin-modal__submit">Save</button>
+				</div>
+			</form>
+		</div>
+	</dialog>
+}

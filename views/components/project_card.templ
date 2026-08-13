@@ -73,24 +73,30 @@ templ ProjectModal(p domain.Project, lang string) {
 				<h2 class="project-modal__title">{ i18n.L(p.TitleEs, p.TitleEn, lang) }</h2>
 			</div>
 			<div class="project-modal__body">
-				<div class="project-modal__gallery-wrapper">
-					<button type="button" class="project-modal__arrow project-modal__arrow--left" aria-label="Previous image">&larr;</button>
+				<div class="project-modal__gallery-wrapper" data-index="0" data-images={ strings.Join(p.Screenshots, ",") }>
+					if len(p.Screenshots) > 1 {
+						<button type="button" class="project-modal__arrow project-modal__arrow--left" onclick="navigateGallery(this, -1)" aria-label="Previous image">&larr;</button>
+					}
 					<div class="project-modal__gallery">
-						<img src={ p.CoverURL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" />
+						if len(p.Screenshots) > 0 {
+							<img src={ p.Screenshots[0] } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" />
+						} else {
+							<img src={ p.CoverURL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" />
+						}
 					</div>
-					<button type="button" class="project-modal__arrow project-modal__arrow--right" aria-label="Next image">&rarr;</button>
+					if len(p.Screenshots) > 1 {
+						<button type="button" class="project-modal__arrow project-modal__arrow--right" onclick="navigateGallery(this, 1)" aria-label="Next image">&rarr;</button>
+					}
 				</div>
 				<hr class="project-modal__divider"/>
 				<div class="project-modal__info">
 					<p class="project-modal__desc">{ i18n.L(p.DescriptionEs, p.DescriptionEn, lang) }</p>
 					<hr class="project-modal__divider"/>
-					<p class="project-modal__tech-explanation">
-						if lang == "en" {
-							{ "Implemented with a clean architecture focused on modularity and high performance. It leverages a modern tech stack to ensure quick rendering times and robust data flow." }
-						} else {
-							{ "Implementado con una arquitectura limpia enfocada en la modularidad y el alto rendimiento. Aprovecha un stack tecnológico moderno para garantizar tiempos de respuesta rápidos y flujos de datos sólidos." }
-						}
-					</p>
+					if p.TechDescriptionEs != "" || p.TechDescriptionEn != "" {
+						<p class="project-modal__tech-explanation">
+							{ i18n.L(p.TechDescriptionEs, p.TechDescriptionEn, lang) }
+						</p>
+					}
 					<div class="project-modal__meta">
 						<span class="project-modal__meta-label">Stack:</span>
 						<ul class="project-modal__tags">

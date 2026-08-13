@@ -1,0 +1,199 @@
+package components
+
+import (
+	"fmt"
+	"strings"
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+)
+
+templ ProjectsAdminModal(p domain.Profile) {
+	<dialog id="projects-admin-modal" class="admin-modal">
+		<div class="admin-modal__content admin-modal__content--wide">
+			<div class="admin-modal__header">
+				<h3 class="admin-modal__title">Manage Projects</h3>
+				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
+			</div>
+
+			<div class="admin-modal__grid">
+				<!-- Left Column: Current Projects List -->
+				<div class="admin-skills-list">
+					<h4 class="admin-skills-list__title">Current Projects</h4>
+					<div class="admin-skills-list__container">
+						for _, pr := range p.Projects {
+							<div class="admin-skill-item">
+								<img class="admin-skill-item__icon" src={ pr.CoverURL } alt="" width="32" height="32" style="border-radius: 4px; object-fit: cover;"/>
+								<div class="admin-skill-item__details">
+									<span class="admin-skill-item__name">{ pr.TitleEn }</span>
+									<span class="admin-skill-item__category">{ pr.Category }</span>
+								</div>
+								<div class="admin-skill-item__actions">
+									<button 
+										type="button" 
+										class="admin-skill-item__btn admin-skill-item__btn--edit"
+										data-title-es={ pr.TitleEs }
+										data-title-en={ pr.TitleEn }
+										data-desc-es={ pr.DescriptionEs }
+										data-desc-en={ pr.DescriptionEn }
+										data-tech-es={ pr.TechDescriptionEs }
+										data-tech-en={ pr.TechDescriptionEn }
+										data-category={ pr.Category }
+										data-tags={ strings.Join(pr.Tags, ", ") }
+										data-link={ pr.Link }
+										data-repo={ pr.RepoLink }
+										onclick="fillProjectForm(
+											this.getAttribute('data-title-es'),
+											this.getAttribute('data-title-en'),
+											this.getAttribute('data-desc-es'),
+											this.getAttribute('data-desc-en'),
+											this.getAttribute('data-tech-es'),
+											this.getAttribute('data-tech-en'),
+											this.getAttribute('data-category'),
+											this.getAttribute('data-tags'),
+											this.getAttribute('data-link'),
+											this.getAttribute('data-repo')
+										)"
+									>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
+											<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+											<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+										</svg>
+									</button>
+									<button 
+										type="button" 
+										class="admin-skill-item__btn admin-skill-item__btn--delete"
+										hx-delete={ fmt.Sprintf("/admin/projects?title=%s", pr.TitleEn) }
+										hx-confirm={ fmt.Sprintf("Are you sure you want to delete '%s'?", pr.TitleEn) }
+										hx-swap="none"
+									>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
+											<polyline points="3 6 5 6 21 6"></polyline>
+											<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+											<line x1="10" y1="11" x2="10" y2="17"></line>
+											<line x1="14" y1="11" x2="14" y2="17"></line>
+										</svg>
+									</button>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+
+				<!-- Right Column: Add/Edit Form -->
+				<div class="admin-skills-form" style="max-height: 480px; overflow-y: auto; padding-right: 0.5rem;">
+					<h4 id="project-form-title" class="admin-skills-form__title">Add New Project</h4>
+					<form hx-post="/admin/projects" hx-encoding="multipart/form-data" hx-swap="none">
+						<input type="hidden" id="project-old-title" name="old_title" value=""/>
+						
+						<div class="admin-modal__grid">
+							<div class="admin-modal__field">
+								<label for="project-title-es">Title (ES)</label>
+								<input type="text" id="project-title-es" name="title_es" required placeholder="e.g. GAIA"/>
+							</div>
+							<div class="admin-modal__field">
+								<label for="project-title-en">Title (EN)</label>
+								<input type="text" id="project-title-en" name="title_en" required placeholder="e.g. GAIA"/>
+							</div>
+						</div>
+
+						<div class="admin-modal__field">
+							<label for="project-desc-es">Description (ES)</label>
+							<textarea id="project-desc-es" name="description_es" rows="3" required placeholder="General overview..."></textarea>
+						</div>
+
+						<div class="admin-modal__field">
+							<label for="project-desc-en">Description (EN)</label>
+							<textarea id="project-desc-en" name="description_en" rows="3" required placeholder="General overview..."></textarea>
+						</div>
+
+						<div class="admin-modal__field">
+							<label for="project-tech-desc-es">Technical Explanation (ES)</label>
+							<textarea id="project-tech-desc-es" name="tech_description_es" rows="3" placeholder="Architecture details..."></textarea>
+						</div>
+
+						<div class="admin-modal__field">
+							<label for="project-tech-desc-en">Technical Explanation (EN)</label>
+							<textarea id="project-tech-desc-en" name="tech_description_en" rows="3" placeholder="Architecture details..."></textarea>
+						</div>
+
+						<div class="admin-modal__grid">
+							<div class="admin-modal__field">
+								<label for="project-category">Category</label>
+								<select id="project-category" name="category" class="admin-modal__select">
+									<option value="Web">Web</option>
+									<option value="AI">AI</option>
+									<option value="Tools">Tools</option>
+								</select>
+							</div>
+							<div class="admin-modal__field">
+								<label for="project-tags">Technologies (Comma separated)</label>
+								<input type="text" id="project-tags" name="tags" placeholder="e.g. Go, Angular, Docker"/>
+							</div>
+						</div>
+
+						<div class="admin-modal__grid">
+							<div class="admin-modal__field">
+								<label for="project-link">Web Link</label>
+								<input type="text" id="project-link" name="link" placeholder="e.g. https://myproject.com"/>
+							</div>
+							<div class="admin-modal__field">
+								<label for="project-repo-link">GitHub Link</label>
+								<input type="text" id="project-repo-link" name="repo_link" placeholder="e.g. https://github.com/..."/>
+							</div>
+						</div>
+
+						<div class="admin-modal__grid">
+							<div class="admin-modal__field">
+								<label for="project-cover">Cover Image</label>
+								<input type="file" id="project-cover" name="cover" accept="image/*"/>
+							</div>
+							<div class="admin-modal__field">
+								<label for="project-screenshots">Screenshots (1 or more)</label>
+								<input type="file" id="project-screenshots" name="screenshots" multiple accept="image/*"/>
+							</div>
+						</div>
+
+						<div class="admin-modal__actions">
+							<button type="button" class="admin-modal__cancel" onclick="resetProjectForm()">Reset</button>
+							<button type="submit" id="project-submit-btn" class="admin-modal__submit">Add Project</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Form prefill and reset helpers -->
+		<script>
+			function fillProjectForm(titleEs, titleEn, descEs, descEn, techDescEs, techDescEn, category, tags, link, repoLink) {
+				document.getElementById('project-old-title').value = titleEn;
+				document.getElementById('project-title-es').value = titleEs;
+				document.getElementById('project-title-en').value = titleEn;
+				document.getElementById('project-desc-es').value = descEs;
+				document.getElementById('project-desc-en').value = descEn;
+				document.getElementById('project-tech-desc-es').value = techDescEs;
+				document.getElementById('project-tech-desc-en').value = techDescEn;
+				document.getElementById('project-category').value = category;
+				document.getElementById('project-tags').value = tags;
+				document.getElementById('project-link').value = link;
+				document.getElementById('project-repo-link').value = repoLink;
+				document.getElementById('project-form-title').innerText = 'Edit Project: ' + titleEn;
+				document.getElementById('project-submit-btn').innerText = 'Save Changes';
+			}
+
+			function resetProjectForm() {
+				document.getElementById('project-old-title').value = '';
+				document.getElementById('project-title-es').value = '';
+				document.getElementById('project-title-en').value = '';
+				document.getElementById('project-desc-es').value = '';
+				document.getElementById('project-desc-en').value = '';
+				document.getElementById('project-tech-desc-es').value = '';
+				document.getElementById('project-tech-desc-en').value = '';
+				document.getElementById('project-category').value = 'Web';
+				document.getElementById('project-tags').value = '';
+				document.getElementById('project-link').value = '';
+				document.getElementById('project-repo-link').value = '';
+				document.getElementById('project-form-title').innerText = 'Add New Project';
+				document.getElementById('project-submit-btn').innerText = 'Add Project';
+			}
+		</script>
+	</dialog>
+}

@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/SalvucciFacundo/portfolio-go/internal/domain"
 
-func VinylAvatar(p domain.Profile) templ.Component {
+func VinylAvatar(p domain.Profile, isAdmin bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -122,7 +122,17 @@ func VinylAvatar(p domain.Profile) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" alt=\"\" width=\"320\" height=\"320\" aria-hidden=\"true\"><div class=\"tech-avatar__scan-beam\" aria-hidden=\"true\"></div></div><div class=\"tech-avatar__footer\"><span class=\"tech-avatar__code\">PROFILE.IMG</span> <span class=\"tech-avatar__tag\">[SCAN: ACTIVE]</span></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" alt=\"\" width=\"320\" height=\"320\" aria-hidden=\"true\"><div class=\"tech-avatar__scan-beam\" aria-hidden=\"true\"></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if isAdmin {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<input type=\"file\" id=\"avatar-file-input\" name=\"avatar\" accept=\"image/*\" hx-post=\"/admin/avatar\" hx-encoding=\"multipart/form-data\" hx-trigger=\"change\" hx-swap=\"none\" style=\"display: none;\"> <button type=\"button\" class=\"tech-avatar__edit-btn\" onclick=\"document.getElementById('avatar-file-input').click()\" aria-label=\"Change avatar\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z\"></path> <circle cx=\"12\" cy=\"13\" r=\"4\"></circle></svg></button>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div><div class=\"tech-avatar__footer\"><span class=\"tech-avatar__code\">PROFILE.IMG</span> <span class=\"tech-avatar__tag\">[SCAN: ACTIVE]</span></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

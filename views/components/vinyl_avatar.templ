@@ -2,7 +2,7 @@ package components
 
 import "github.com/SalvucciFacundo/portfolio-go/internal/domain"
 
-templ VinylAvatar(p domain.Profile) {
+templ VinylAvatar(p domain.Profile, isAdmin bool) {
 	<div class="tech-avatar" aria-label={ p.Name }>
 		<div class="tech-avatar__header">
 			<div class="tech-avatar__status">
@@ -23,6 +23,15 @@ templ VinylAvatar(p domain.Profile) {
 			<img class="tech-avatar__img tech-avatar__img--base" src={ p.AvatarURL } alt={ p.Name } width="320" height="320" fetchpriority="high"/>
 			<img class="tech-avatar__img tech-avatar__img--color" src={ p.AvatarURL } alt="" width="320" height="320" aria-hidden="true"/>
 			<div class="tech-avatar__scan-beam" aria-hidden="true"></div>
+			if isAdmin {
+				<input type="file" id="avatar-file-input" name="avatar" accept="image/*" hx-post="/admin/avatar" hx-encoding="multipart/form-data" hx-trigger="change" hx-swap="none" style="display: none;"/>
+				<button type="button" class="tech-avatar__edit-btn" onclick="document.getElementById('avatar-file-input').click()" aria-label="Change avatar">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+						<circle cx="12" cy="13" r="4"/>
+					</svg>
+				</button>
+			}
 		</div>
 		<div class="tech-avatar__footer">
 			<span class="tech-avatar__code">PROFILE.IMG</span>

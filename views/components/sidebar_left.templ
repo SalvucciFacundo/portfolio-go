@@ -5,7 +5,7 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 )
 
-templ SidebarLeft(p domain.Profile, lang string) {
+templ SidebarLeft(p domain.Profile, lang string, isAdmin bool) {
 	<aside class="sidebar sidebar-left" aria-label={ i18n.T(lang, "sidebar.aria") }>
 		<div class="sidebar-left__icons">
 			<button
@@ -49,6 +49,10 @@ templ SidebarLeft(p domain.Profile, lang string) {
 					</a>
 				}
 				@CopyEmail(p.Email, "", i18n.T(lang, "action.copied"), i18n.T(lang, "action.copy_email"))
+				if isAdmin {
+					<div class="sidebar-left__divider" role="separator" style="margin: 0.5rem 0;"></div>
+					@AdminEditBtn("socials-admin-modal")
+				}
 			</div>
 		</div>
 	</aside>

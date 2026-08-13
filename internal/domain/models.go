@@ -28,24 +28,25 @@ type SocialLink struct {
 
 type Skill struct {
 	Name     string `json:"name"`
-	LevelEs  string `json:"level_es"`
-	LevelEn  string `json:"level_en"`
 	IconURL  string `json:"icon_url"`
 	IsTool   bool   `json:"is_tool"`
 }
 
 type Project struct {
-	TitleEs       string   `json:"title_es"`
-	TitleEn       string   `json:"title_en"`
-	DescriptionEs string   `json:"description_es"`
-	DescriptionEn string   `json:"description_en"`
-	Category      string   `json:"category"`
-	StatusLabelEs string   `json:"status_label_es"`
-	StatusLabelEn string   `json:"status_label_en"`
-	Tags          []string `json:"tags"`
-	Link          string   `json:"link"`
-	RepoLink      string   `json:"repo_link"`
-	CoverURL      string   `json:"cover_url"`
+	TitleEs           string   `json:"title_es"`
+	TitleEn           string   `json:"title_en"`
+	DescriptionEs     string   `json:"description_es"`
+	DescriptionEn     string   `json:"description_en"`
+	TechDescriptionEs string   `json:"tech_description_es"`
+	TechDescriptionEn string   `json:"tech_description_en"`
+	Category          string   `json:"category"`
+	StatusLabelEs     string   `json:"status_label_es"`
+	StatusLabelEn     string   `json:"status_label_en"`
+	Tags              []string `json:"tags"`
+	Link              string   `json:"link"`
+	RepoLink          string   `json:"repo_link"`
+	CoverURL          string   `json:"cover_url"`
+	Screenshots       []string `json:"screenshots"`
 }
 
 type Experience struct {

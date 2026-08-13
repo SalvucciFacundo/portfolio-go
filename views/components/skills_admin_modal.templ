@@ -1,0 +1,121 @@
+package components
+
+import (
+	"fmt"
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+)
+
+templ SkillsAdminModal(p domain.Profile) {
+	<dialog id="skills-admin-modal" class="admin-modal">
+		<div class="admin-modal__content admin-modal__content--wide">
+			<div class="admin-modal__header">
+				<h3 class="admin-modal__title">Manage Skills</h3>
+				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
+			</div>
+
+			<div class="admin-modal__grid">
+				<!-- Left Column: Current Skills List -->
+				<div class="admin-skills-list">
+					<h4 class="admin-skills-list__title">Current Skills</h4>
+					<div class="admin-skills-list__container">
+						for _, s := range p.Skills {
+							<div class="admin-skill-item">
+								<img class="admin-skill-item__icon" src={ s.IconURL } alt="" width="24" height="24"/>
+								<div class="admin-skill-item__details">
+									<span class="admin-skill-item__name">{ s.Name }</span>
+									<span class="admin-skill-item__category">
+										if s.IsTool {
+											Tool
+										} else {
+											Technology
+										}
+									</span>
+								</div>
+								<div class="admin-skill-item__actions">
+									<button 
+										type="button" 
+										class="admin-skill-item__btn admin-skill-item__btn--edit"
+										data-name={ s.Name }
+										data-is-tool={ fmt.Sprintf("%t", s.IsTool) }
+										data-icon={ s.IconURL }
+										onclick="fillSkillForm(this.getAttribute('data-name'), this.getAttribute('data-is-tool') === 'true', this.getAttribute('data-icon'))"
+									>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
+											<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+											<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+										</svg>
+									</button>
+									<button 
+										type="button" 
+										class="admin-skill-item__btn admin-skill-item__btn--delete"
+										hx-delete={ fmt.Sprintf("/admin/skills?name=%s", s.Name) }
+										hx-confirm={ fmt.Sprintf("Are you sure you want to delete '%s'?", s.Name) }
+										hx-swap="none"
+									>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
+											<polyline points="3 6 5 6 21 6"></polyline>
+											<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+											<line x1="10" y1="11" x2="10" y2="17"></line>
+											<line x1="14" y1="11" x2="14" y2="17"></line>
+										</svg>
+									</button>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+
+				<!-- Right Column: Add/Edit Form -->
+				<div class="admin-skills-form">
+					<h4 id="skill-form-title" class="admin-skills-form__title">Add New Skill</h4>
+					<form hx-post="/admin/skills" hx-encoding="multipart/form-data" hx-swap="none">
+						<input type="hidden" id="skill-old-name" name="old_name" value=""/>
+						
+						<div class="admin-modal__field">
+							<label for="skill-name">Name</label>
+							<input type="text" id="skill-name" name="name" required placeholder="e.g. Go, Docker"/>
+						</div>
+
+						<div class="admin-modal__field">
+							<label for="skill-category">Category</label>
+							<select id="skill-category" name="is_tool" class="admin-modal__select">
+								<option value="false">Technology</option>
+								<option value="true">Tool</option>
+							</select>
+						</div>
+
+						<div class="admin-modal__field">
+							<label for="skill-icon">Icon/Logo File</label>
+							<input type="file" id="skill-icon" name="icon" accept="image/*,.svg"/>
+							<span class="admin-modal__file-hint">Optional if editing (keeps current)</span>
+						</div>
+
+						<div class="admin-modal__actions">
+							<button type="button" class="admin-modal__cancel" onclick="resetSkillForm()">Reset</button>
+							<button type="submit" id="skill-submit-btn" class="admin-modal__submit">Add Skill</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Form prefill and reset helpers -->
+		<script>
+			function fillSkillForm(name, isTool, iconUrl) {
+				document.getElementById('skill-old-name').value = name;
+				document.getElementById('skill-name').value = name;
+				document.getElementById('skill-category').value = isTool ? 'true' : 'false';
+				document.getElementById('skill-form-title').innerText = 'Edit Skill: ' + name;
+				document.getElementById('skill-submit-btn').innerText = 'Save Changes';
+			}
+
+			function resetSkillForm() {
+				document.getElementById('skill-old-name').value = '';
+				document.getElementById('skill-name').value = '';
+				document.getElementById('skill-category').value = 'false';
+				document.getElementById('skill-form-title').innerText = 'Add New Skill';
+				document.getElementById('skill-submit-btn').innerText = 'Add Skill';
+			}
+		</script>
+	</dialog>
+}

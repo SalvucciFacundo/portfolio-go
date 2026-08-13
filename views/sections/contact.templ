@@ -6,7 +6,7 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
 )
 
-templ Contact(p domain.Profile, lang string) {
+templ Contact(p domain.Profile, lang string, isAdmin bool) {
 	<section id="contact" class="section contact">
 		<h2 class="section__title">{ i18n.T(lang, "section.contact") }</h2>
 		<p class="contact__text">{ i18n.T(lang, "contact.cta") }</p>
@@ -14,5 +14,6 @@ templ Contact(p domain.Profile, lang string) {
 			@components.CopyEmail(p.Email, i18n.T(lang, "action.copy_email"), i18n.T(lang, "action.copied"), i18n.T(lang, "action.copy_email"))
 		</div>
 		@components.ContactForm(lang, "", "", "", "", false)
+		@components.Footer(lang, isAdmin)
 	</section>
 }

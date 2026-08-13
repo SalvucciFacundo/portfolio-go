@@ -1,15 +1,45 @@
 package data
 
-import "github.com/SalvucciFacundo/portfolio-go/internal/domain"
+import (
+	"sync"
+
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+)
 
 const (
 	devicon = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons"
 	cover   = "https://placehold.co/800x500/E0E0E0/1A1A1A?text="
 )
 
-// MockData returns the portfolio content. Bilingual editable fields carry both
-// languages; the view picks one based on the active lang.
+var (
+	profile domain.Profile
+	mu      sync.RWMutex
+)
+
+func init() {
+	profile = initMockProfile()
+}
+
+// GetProfile returns a copy of the current profile.
+func GetProfile() domain.Profile {
+	mu.RLock()
+	defer mu.RUnlock()
+	return profile
+}
+
+// UpdateProfile replaces the in-memory profile.
+func UpdateProfile(p domain.Profile) {
+	mu.Lock()
+	profile = p
+	mu.Unlock()
+}
+
+// MockData returns the profile (kept for backward compatibility).
 func MockData() domain.Profile {
+	return GetProfile()
+}
+
+func initMockProfile() domain.Profile {
 	return domain.Profile{
 		Name:       "Facundo Salvucci",
 		RoleEs:     "Desarrollador Full Stack",
@@ -26,54 +56,63 @@ func MockData() domain.Profile {
 			{Name: "LinkedIn", URL: "https://linkedin.com/in/facundo-salvucci", IconKey: "linkedin"},
 		},
 		Skills: []domain.Skill{
-			{Name: "Go", LevelEs: "Avanzado", LevelEn: "Advanced", IconURL: devicon + "/go/go-original.svg", IsTool: false},
-			{Name: "templ", LevelEs: "Intermedio", LevelEn: "Intermediate", IconURL: "https://placehold.co/64x64/1A1A1A/F4F4F2?text=t", IsTool: false},
-			{Name: "HTMX", LevelEs: "Intermedio", LevelEn: "Intermediate", IconURL: devicon + "/htmx/htmx-original.svg", IsTool: false},
-			{Name: "PostgreSQL", LevelEs: "Intermedio", LevelEn: "Intermediate", IconURL: devicon + "/postgresql/postgresql-original.svg", IsTool: false},
-			{Name: "Docker", LevelEs: "Intermedio", LevelEn: "Intermediate", IconURL: devicon + "/docker/docker-original.svg", IsTool: true},
-			{Name: "TypeScript", LevelEs: "Avanzado", LevelEn: "Advanced", IconURL: devicon + "/typescript/typescript-original.svg", IsTool: false},
-			{Name: "Angular", LevelEs: "Avanzado", LevelEn: "Advanced", IconURL: devicon + "/angular/angular-original.svg", IsTool: false},
-			{Name: "Git", LevelEs: "Avanzado", LevelEn: "Advanced", IconURL: devicon + "/git/git-original.svg", IsTool: true},
+			{Name: "Go", IconURL: devicon + "/go/go-original.svg", IsTool: false},
+			{Name: "templ", IconURL: "https://placehold.co/64x64/1A1A1A/F4F4F2?text=t", IsTool: false},
+			{Name: "HTMX", IconURL: devicon + "/htmx/htmx-original.svg", IsTool: false},
+			{Name: "PostgreSQL", IconURL: devicon + "/postgresql/postgresql-original.svg", IsTool: false},
+			{Name: "Docker", IconURL: devicon + "/docker/docker-original.svg", IsTool: true},
+			{Name: "TypeScript", IconURL: devicon + "/typescript/typescript-original.svg", IsTool: false},
+			{Name: "Angular", IconURL: devicon + "/angular/angular-original.svg", IsTool: false},
+			{Name: "Git", IconURL: devicon + "/git/git-original.svg", IsTool: true},
 		},
 		Projects: []domain.Project{
 			{
-				TitleEs:       "Portafolio Go",
-				TitleEn:       "Go Portfolio",
-				DescriptionEs: "Este mismo portafolio: server-rendered con templ + HTMX, arquitectura hexagonal en Go y CSS puro con tokens de diseño.",
-				DescriptionEn: "This very portfolio: server-rendered with templ + HTMX, hexagonal architecture in Go and plain CSS with design tokens.",
-				Category:      "Web",
-				StatusLabelEs: "Producción",
-				StatusLabelEn: "Production",
-				Tags:          []string{"Go", "templ", "HTMX", "PostgreSQL"},
-				Link:          "",
-				RepoLink:      "https://github.com/SalvucciFacundo/portfolio-go",
-				CoverURL:      cover + "Portafolio+Go",
+				TitleEs:           "Portafolio Go",
+				TitleEn:           "Go Portfolio",
+				DescriptionEs:     "Este mismo portafolio: server-rendered con templ + HTMX, arquitectura hexagonal en Go y CSS puro con tokens de diseño.",
+				DescriptionEn:     "This very portfolio: server-rendered with templ + HTMX, hexagonal architecture in Go and plain CSS with design tokens.",
+				TechDescriptionEs: "Implementado con Go vanilla, usando templ para tipado seguro en vistas y HTMX para swaps parciales. La arquitectura hexagonal separa dominio y adaptadores de transporte de forma limpia.",
+				TechDescriptionEn: "Implemented in vanilla Go, using templ for type-safe rendering and HTMX for partial DOM swaps. Hexagonal architecture separates domain models and transport adapters cleanly.",
+				Category:          "Web",
+				StatusLabelEs:     "Producción",
+				StatusLabelEn:     "Production",
+				Tags:              []string{"Go", "templ", "HTMX", "PostgreSQL"},
+				Link:              "",
+				RepoLink:          "https://github.com/SalvucciFacundo/portfolio-go",
+				CoverURL:          cover + "Portafolio+Go",
+				Screenshots:       []string{cover + "Portafolio+Go", cover + "Bento+Layout", cover + "Hexagonal+Architecture"},
 			},
 			{
-				TitleEs:       "GAIA",
-				TitleEn:       "GAIA",
-				DescriptionEs: "Agente de IA que conecta modelos de lenguaje con herramientas reales usando Go: orquestación de agentes, ejecución de tareas y respuestas en tiempo real.",
-				DescriptionEn: "AI agent that connects language models with real tools using Go: agent orchestration, task execution and real-time responses.",
-				Category:      "AI",
-				StatusLabelEs: "Producción",
-				StatusLabelEn: "Production",
-				Tags:          []string{"Go", "AI", "LLM"},
-				Link:          "",
-				RepoLink:      "https://github.com/SalvucciFacundo",
-				CoverURL:      cover + "GAIA",
+				TitleEs:           "GAIA",
+				TitleEn:           "GAIA",
+				DescriptionEs:     "Agente de IA que conecta modelos de lenguaje con herramientas reales usando Go: orquestación de agentes, ejecución de tareas y respuestas en tiempo real.",
+				DescriptionEn:     "AI agent that connects language models with real tools using Go: agent orchestration, task execution and real-time responses.",
+				TechDescriptionEs: "Orquestador de agentes implementado sobre modelos LLM de Anthropic y OpenAI. El motor de herramientas en Go resuelve en paralelo llamadas externas y valida esquemas JSON dinámicamente.",
+				TechDescriptionEn: "Agent orchestrator built on top of Anthropic and OpenAI LLM models. The Go-based tool executor handles parallel tool invocations and validates JSON schemas dynamically.",
+				Category:          "AI",
+				StatusLabelEs:     "Producción",
+				StatusLabelEn:     "Production",
+				Tags:              []string{"Go", "AI", "LLM"},
+				Link:              "",
+				RepoLink:          "https://github.com/SalvucciFacundo",
+				CoverURL:          cover + "GAIA",
+				Screenshots:       []string{cover + "GAIA", cover + "AI+Agent+Flow", cover + "JSON+Validation"},
 			},
 			{
-				TitleEs:       "Mis Canarios",
-				TitleEn:       "Mis Canarios",
-				DescriptionEs: "App para el registro y seguimiento de canarios: datos de cada ave, concursos y descendencias. Frontend con Angular y datos en Firebase.",
-				DescriptionEn: "App for registering and tracking canaries: bird data, contests and offspring. Angular frontend with Firebase as the data backend.",
-				Category:      "Web",
-				StatusLabelEs: "Producción",
-				StatusLabelEn: "Production",
-				Tags:          []string{"Angular", "Firebase", "TypeScript"},
-				Link:          "",
-				RepoLink:      "https://github.com/SalvucciFacundo",
-				CoverURL:      cover + "Mis+Canarios",
+				TitleEs:           "Mis Canarios",
+				TitleEn:           "Mis Canarios",
+				DescriptionEs:     "App para el registro y seguimiento de canarios: datos de cada ave, concursos y descendencias. Frontend con Angular y datos en Firebase.",
+				DescriptionEn:     "App for registering and tracking canaries: bird data, contests and offspring. Angular frontend with Firebase as the data backend.",
+				TechDescriptionEs: "Cliente SPA desarrollado con Angular que consume servicios reactivos de Firestore. Cuenta con sincronización de estado local e indexación gráfica de pedigrí de aves.",
+				TechDescriptionEn: "SPA client developed with Angular consuming reactive Firestore services. Features local offline synchronization state and graphical pedigree tree rendering.",
+				Category:          "Web",
+				StatusLabelEs:     "Producción",
+				StatusLabelEn:     "Production",
+				Tags:              []string{"Angular", "Firebase", "TypeScript"},
+				Link:              "",
+				RepoLink:          "https://github.com/SalvucciFacundo",
+				CoverURL:          cover + "Mis+Canarios",
+				Screenshots:       []string{cover + "Mis+Canarios", cover + "Canary+Genetics", cover + "Firebase+Sync"},
 			},
 		},
 		Experience: []domain.Experience{

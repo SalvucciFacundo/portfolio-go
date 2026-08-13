@@ -1,0 +1,164 @@
+package components
+
+import (
+	"fmt"
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+)
+
+templ EducationAdminModal(p domain.Profile) {
+	<dialog id="education-admin-modal" class="admin-modal">
+		<div class="admin-modal__content admin-modal__content--wide">
+			<div class="admin-modal__header">
+				<h3 class="admin-modal__title">Manage Education & Courses</h3>
+				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
+			</div>
+
+			<div class="admin-modal__grid">
+				<!-- Left Column: Current Education List -->
+				<div class="admin-skills-list">
+					<h4 class="admin-skills-list__title">Current Entries</h4>
+					<div class="admin-skills-list__container">
+						for _, e := range p.Education {
+							<div class="admin-skill-item">
+								<div class="admin-skill-item__details" style="padding-left: 0;">
+									<span class="admin-skill-item__name">{ e.TitleEn }</span>
+									<span class="admin-skill-item__category">{ e.School } ({ e.Date })</span>
+									<span class="admin-skill-item__category" style="color: var(--text-muted); font-size: 0.65rem; margin-top: 2px;">
+										if e.IsCourse {
+											Course/Certification
+										} else {
+											Academic Degree
+										}
+									</span>
+								</div>
+								<div class="admin-skill-item__actions">
+									<button 
+										type="button" 
+										class="admin-skill-item__btn admin-skill-item__btn--edit"
+										data-title-es={ e.TitleEs }
+										data-title-en={ e.TitleEn }
+										data-school={ e.School }
+										data-date={ e.Date }
+										data-desc-es={ e.DescriptionEs }
+										data-desc-en={ e.DescriptionEn }
+										data-is-course={ fmt.Sprintf("%t", e.IsCourse) }
+										onclick="fillEducationForm(
+											this.getAttribute('data-title-es'),
+											this.getAttribute('data-title-en'),
+											this.getAttribute('data-school'),
+											this.getAttribute('data-date'),
+											this.getAttribute('data-desc-es'),
+											this.getAttribute('data-desc-en'),
+											this.getAttribute('data-is-course') === 'true'
+										)"
+									>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
+											<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+											<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+										</svg>
+									</button>
+									<button 
+										type="button" 
+										class="admin-skill-item__btn admin-skill-item__btn--delete"
+										hx-delete={ fmt.Sprintf("/admin/education?title=%s", e.TitleEn) }
+										hx-confirm={ fmt.Sprintf("Are you sure you want to delete '%s'?", e.TitleEn) }
+										hx-swap="none"
+									>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
+											<polyline points="3 6 5 6 21 6"></polyline>
+											<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+											<line x1="10" y1="11" x2="10" y2="17"></line>
+											<line x1="14" y1="11" x2="14" y2="17"></line>
+										</svg>
+									</button>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+
+				<!-- Right Column: Add/Edit Form -->
+				<div class="admin-skills-form">
+					<h4 id="education-form-title" class="admin-skills-form__title">Add New Entry</h4>
+					<form hx-post="/admin/education" hx-swap="none">
+						<input type="hidden" id="education-old-title" name="old_title" value=""/>
+						
+						<div class="admin-modal__grid">
+							<div class="admin-modal__field">
+								<label for="education-title-es">Title (ES)</label>
+								<input type="text" id="education-title-es" name="title_es" required placeholder="e.g. Ingeniero en Sistemas"/>
+							</div>
+							<div class="admin-modal__field">
+								<label for="education-title-en">Title (EN)</label>
+								<input type="text" id="education-title-en" name="title_en" required placeholder="e.g. Systems Engineer"/>
+							</div>
+						</div>
+
+						<div class="admin-modal__field">
+							<label for="education-school">School / Institution</label>
+							<input type="text" id="education-school" name="school" required placeholder="e.g. Universidad Tecnológica Nacional"/>
+						</div>
+
+						<div class="admin-modal__grid">
+							<div class="admin-modal__field">
+								<label for="education-date">Date Range</label>
+								<input type="text" id="education-date" name="date" required placeholder="e.g. 2020 - 2024, 2023"/>
+							</div>
+							<div class="admin-modal__field">
+								<label for="education-category">Category</label>
+								<select id="education-category" name="is_course" class="admin-modal__select">
+									<option value="false">Academic Degree / Title</option>
+									<option value="true">Course / Certification</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="admin-modal__field">
+							<label for="education-desc-es">Description (ES)</label>
+							<textarea id="education-desc-es" name="description_es" rows="3" placeholder="Syllabus, highlights..."></textarea>
+						</div>
+
+						<div class="admin-modal__field">
+							<label for="education-desc-en">Description (EN)</label>
+							<textarea id="education-desc-en" name="description_en" rows="3" placeholder="Syllabus, highlights..."></textarea>
+						</div>
+
+						<div class="admin-modal__actions">
+							<button type="button" class="admin-modal__cancel" onclick="resetEducationForm()">Reset</button>
+							<button type="submit" id="education-submit-btn" class="admin-modal__submit">Add Entry</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Form prefill and reset helpers -->
+		<script>
+			function fillEducationForm(titleEs, titleEn, school, date, descEs, descEn, isCourse) {
+				document.getElementById('education-old-title').value = titleEn;
+				document.getElementById('education-title-es').value = titleEs;
+				document.getElementById('education-title-en').value = titleEn;
+				document.getElementById('education-school').value = school;
+				document.getElementById('education-date').value = date;
+				document.getElementById('education-desc-es').value = descEs;
+				document.getElementById('education-desc-en').value = descEn;
+				document.getElementById('education-category').value = isCourse ? 'true' : 'false';
+				document.getElementById('education-form-title').innerText = 'Edit Education: ' + titleEn;
+				document.getElementById('education-submit-btn').innerText = 'Save Changes';
+			}
+
+			function resetEducationForm() {
+				document.getElementById('education-old-title').value = '';
+				document.getElementById('education-title-es').value = '';
+				document.getElementById('education-title-en').value = '';
+				document.getElementById('education-school').value = '';
+				document.getElementById('education-date').value = '';
+				document.getElementById('education-desc-es').value = '';
+				document.getElementById('education-desc-en').value = '';
+				document.getElementById('education-category').value = 'false';
+				document.getElementById('education-form-title').innerText = 'Add New Entry';
+				document.getElementById('education-submit-btn').innerText = 'Add Entry';
+			}
+		</script>
+	</dialog>
+}

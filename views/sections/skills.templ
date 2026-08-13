@@ -6,8 +6,11 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
 )
 
-templ Skills(p domain.Profile, lang string) {
+templ Skills(p domain.Profile, lang string, isAdmin bool) {
 	<section id="skills" class="section">
+		if isAdmin {
+			@components.AdminEditBtn("skills-admin-modal")
+		}
 		<h2 class="section__title">{ i18n.T(lang, "section.skills") }</h2>
 		
 		<div class="skills-section">

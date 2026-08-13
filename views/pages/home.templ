@@ -7,21 +7,31 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/views/sections"
 )
 
-templ Home(p domain.Profile, lang string) {
+templ Home(p domain.Profile, lang string, isAdmin bool) {
 	@layouts.Base(lang) {
 		<div class="frame">
 			@components.Watermark()
-			@components.SidebarLeft(p, lang)
+			@components.SidebarLeft(p, lang, isAdmin)
 			@components.SidebarRight(lang)
 			<main class="main-content">
-				@sections.Hero(p, lang)
-				@sections.Skills(p, lang)
-				@sections.Projects(p, lang)
-				@sections.Experience(p, lang)
-				@sections.Education(p, lang)
-				@sections.Contact(p, lang)
-				@components.Footer(lang)
+				@sections.Hero(p, lang, isAdmin)
+				@sections.Skills(p, lang, isAdmin)
+				@sections.Projects(p, lang, isAdmin)
+				@sections.Experience(p, lang, isAdmin)
+				@sections.Education(p, lang, isAdmin)
+				@sections.Contact(p, lang, isAdmin)
 			</main>
 		</div>
+		if !isAdmin {
+			@components.LoginModal()
+		}
+		if isAdmin {
+			@components.HeroEditModal(p)
+			@components.SkillsAdminModal(p)
+			@components.ProjectsAdminModal(p)
+			@components.EducationAdminModal(p)
+			@components.ExperienceAdminModal(p)
+			@components.SocialsAdminModal(p)
+		}
 	}
 }

@@ -1,0 +1,22 @@
+package components
+
+templ LoginModal() {
+	<dialog id="login-modal" class="admin-modal">
+		<div class="admin-modal__content">
+			<div class="admin-modal__header">
+				<h3 class="admin-modal__title">Admin Login</h3>
+				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
+			</div>
+			<form hx-post="/admin/login" hx-swap="none">
+				<div class="admin-modal__field">
+					<label for="admin-password">Password</label>
+					<input type="password" id="admin-password" name="password" required autocomplete="current-password" placeholder="Enter admin password"/>
+				</div>
+				<div id="login-error" class="admin-modal__error"></div>
+				<div class="admin-modal__actions">
+					<button type="submit" class="admin-modal__submit">Login</button>
+				</div>
+			</form>
+		</div>
+	</dialog>
+}
