@@ -4,7 +4,11 @@ import "github.com/SalvucciFacundo/portfolio-go/internal/domain"
 
 templ SkillCard(s domain.Skill, lang string) {
 	<article class="skill-card">
-		<img class="skill-card__icon grayscale-reveal" src={ s.IconURL } alt={ s.Name } width="28" height="28" loading="lazy"/>
-		<span class="skill-card__name">{ s.Name }</span>
+		<div class="skill-card__back" aria-hidden="true"></div>
+		<div class="skill-card__front">
+			<span class="skill-card__status-dot"></span>
+			<img class="skill-card__icon grayscale-reveal" src={ s.IconURL } alt={ s.Name } width="40" height="40" loading="lazy"/>
+			<span class="skill-card__name">{ s.Name }</span>
+		</div>
 	</article>
 }

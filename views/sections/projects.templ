@@ -10,9 +10,12 @@ templ Projects(p domain.Profile, lang string) {
 	<section id="projects" class="section">
 		<h2 class="section__title">{ i18n.T(lang, "section.projects") }</h2>
 		<div class="projects-grid">
-			for _, pr := range p.Projects {
-				@components.ProjectCard(pr, lang)
+			for i, pr := range p.Projects {
+				@components.ProjectCard(pr, i, lang)
 			}
 		</div>
+		for _, pr := range p.Projects {
+			@components.ProjectModal(pr, lang)
+		}
 	</section>
 }

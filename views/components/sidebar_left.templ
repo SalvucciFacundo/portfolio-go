@@ -24,9 +24,9 @@ templ SidebarLeft(p domain.Profile, lang string) {
 				aria-label={ i18n.T(lang, "lang.switch_to") }
 			>
 				if lang == "en" {
-					@flagEsIcon()
+					@flagUsIcon()
 				} else {
-					@flagEnIcon()
+					@flagEsIcon()
 				}
 			</a>
 			<div class="sidebar-left__divider" role="separator"></div>

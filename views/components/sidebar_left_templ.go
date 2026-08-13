@@ -107,12 +107,12 @@ func SidebarLeft(p domain.Profile, lang string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if lang == "en" {
-			templ_7745c5c3_Err = flagEsIcon().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = flagUsIcon().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = flagEnIcon().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = flagEsIcon().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

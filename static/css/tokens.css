@@ -14,6 +14,9 @@
 	--btn-bg: #2D2D2D;
 	--btn-text: #FFFFFF;
 	--shadow-soft: rgba(0, 0, 0, 0.1);
+	--shadow-3d-color: #B5B5B2;
+	--skill-hover-bg: #1A1A1A;
+	--skill-hover-text: #F4F4F2;
 
 	/* Typography */
 	--font-display: 'Concrete', 'Space Grotesk', sans-serif;
@@ -47,4 +50,7 @@ html.dark-theme {
 	--btn-bg: #F4F4F2;
 	--btn-text: #0E0E10;
 	--shadow-soft: rgba(0, 0, 0, 0.4);
+	--shadow-3d-color: #000000;
+	--skill-hover-bg: #F4F4F2;
+	--skill-hover-text: #1A1A1A;
 }
