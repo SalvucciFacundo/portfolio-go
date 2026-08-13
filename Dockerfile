@@ -3,19 +3,13 @@ FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
 COPY go.mod ./
-
-# If you have a go.sum, uncomment this:
-# COPY go.sum ./
-
+COPY go.sum ./
 RUN go mod download
 
-# Copy source code
 COPY . .
 
-# Build the binary
-# CGO_ENABLED=0 is critical for running in a scratch/alpine image
+# CGO_ENABLED=0 = binario estático que corre en alpine
 RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/api/main.go
 
 # Stage 2: Runtime
@@ -23,12 +17,9 @@ FROM alpine:latest
 
 WORKDIR /root/
 
-# Copy the binary from the builder stage
 COPY --from=builder /app/main .
-COPY --from=builder /app/.env .
 
-# Expose the application port
-EXPOSE 8080
+# Puerto que espera Dokploy (Container Port configurado)
+EXPOSE 3000
 
-# Run the binary
 CMD ["./main"]

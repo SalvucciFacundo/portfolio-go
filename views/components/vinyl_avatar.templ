@@ -3,13 +3,28 @@ package components
 import "github.com/SalvucciFacundo/portfolio-go/internal/domain"
 
 templ VinylAvatar(p domain.Profile) {
-	<div class="vinyl" role="img" aria-label={ p.Name }>
-		<div class="vinyl__ring vinyl__ring--outer">
-			<div class="vinyl__ring vinyl__ring--mid">
-				<div class="vinyl__core">
-					<img class="grayscale-reveal" src={ p.AvatarURL } alt={ p.Name } width="400" height="400" fetchpriority="high"/>
-				</div>
+	<div class="tech-avatar" aria-label={ p.Name }>
+		<div class="tech-avatar__header">
+			<div class="tech-avatar__status">
+				<span class="tech-avatar__dot"></span>
+				<span class="tech-avatar__label">SYS.AVATAR // ONLINE</span>
 			</div>
+			<div class="tech-avatar__loader" aria-hidden="true">
+				<span class="dot">{ "." }</span>
+				<span class="dot">{ "." }</span>
+				<span class="dot">{ "." }</span>
+			</div>
+		</div>
+		<div class="tech-avatar__frame">
+			<span class="tech-avatar__corner tech-avatar__corner--tl">+</span>
+			<span class="tech-avatar__corner tech-avatar__corner--tr">+</span>
+			<span class="tech-avatar__corner tech-avatar__corner--bl">+</span>
+			<span class="tech-avatar__corner tech-avatar__corner--br">+</span>
+			<img class="tech-avatar__img grayscale-reveal" src={ p.AvatarURL } alt={ p.Name } width="320" height="320" fetchpriority="high"/>
+		</div>
+		<div class="tech-avatar__footer">
+			<span class="tech-avatar__code">PROFILE.IMG</span>
+			<span class="tech-avatar__tag">[v1.0]</span>
 		</div>
 	</div>
 }

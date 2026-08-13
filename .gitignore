@@ -1,2 +1,7 @@
 # Local AI runtime state
 .atl/
+tmp/
+
+# Environment files
+.env
+*.env.local

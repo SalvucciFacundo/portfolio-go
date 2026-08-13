@@ -8,27 +8,46 @@ import (
 
 templ Hero(p domain.Profile, lang string) {
 	<section id="hero" class="section hero">
-		<div class="hero__row">
-			<div class="hero__presentation">
-				<p class="hero__greeting">{ i18n.T(lang, "hero.greeting") }</p>
-				<h1 class="hero__name">{ p.Name }</h1>
-				<p class="hero__role">{ i18n.L(p.RoleEs, p.RoleEn, lang) }</p>
-			</div>
-			<div class="hero__media">
+		<div class="hero__number" aria-hidden="true">01</div>
+		<div class="hero__software-bar">
+			<span class="hero__software-file">{ "// main.go" }</span>
+			<span class="hero__software-tag">[EXEC: OK]</span>
+			<span class="hero__software-dots"><span class="dot">{ "." }</span><span class="dot">{ "." }</span><span class="dot">{ "." }</span></span>
+		</div>
+		<div class="hero__body">
+			<div class="hero__media-floated">
+				<div class="hero__backtext" aria-hidden="true">
+					<span>developer</span>
+					<span>designer</span>
+				</div>
 				@components.VinylAvatar(p)
 			</div>
-		</div>
-		<div class="hero__about">
-			<p class="hero__headline">{ i18n.L(p.HeadlineEs, p.HeadlineEn, lang) }</p>
-			<p class="hero__summary">{ i18n.L(p.SummaryEs, p.SummaryEn, lang) }</p>
-			<div class="hero__actions">
-				if p.ResumeURL != "" {
-					<a class="btn btn--primary" href={ p.ResumeURL }>{ i18n.T(lang, "action.download_cv") }</a>
-				} else {
-					<button type="button" class="btn btn--primary" disabled>{ i18n.T(lang, "action.download_cv") }</button>
-				}
+			<div class="hero__intro">
+				<p class="hero__greeting">
+					<span class="hero__status-tag">SYS.INIT</span>
+					<span class="hero__code-prefix">{ "func main() {" }</span>
+					<span>{ i18n.T(lang, "hero.greeting") }</span>
+				</p>
+				<h1 class="hero__name">{ p.Name }</h1>
+				<div class="hero__role">
+					<span class="hero__pulse-dot"></span>
+					<span>{ i18n.L(p.RoleEs, p.RoleEn, lang) }</span>
+				</div>
+				<div class="hero__text">
+					<p class="hero__headline">{ i18n.L(p.HeadlineEs, p.HeadlineEn, lang) }</p>
+					if p.SummaryEs != "" || p.SummaryEn != "" {
+						<p class="hero__summary">{ i18n.L(p.SummaryEs, p.SummaryEn, lang) }</p>
+					}
+					<p class="hero__code-suffix">{ "}" } <span class="hero__code-comment">{ "// stack: Go + templ + HTMX" }</span></p>
+				</div>
+				<div class="hero__actions">
+					if p.ResumeURL != "" {
+						<a class="btn btn--primary" href={ p.ResumeURL }>{ i18n.T(lang, "action.download_cv") }</a>
+					} else {
+						<button type="button" class="btn btn--primary" disabled>{ i18n.T(lang, "action.download_cv") }</button>
+					}
+				</div>
 			</div>
 		</div>
-		<p class="hero__matrix">{ i18n.T(lang, "hero.matrix") }</p>
 	</section>
 }
