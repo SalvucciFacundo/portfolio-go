@@ -89,16 +89,6 @@ ol {
 	text-align: left;
 }
 
-.section:not(.hero) .section__title::before {
-	content: "0" counter(section-num) " // ";
-	font-family: var(--font-mono);
-	font-size: 1.35rem;
-	font-weight: 500;
-	color: var(--text-muted);
-	letter-spacing: 0.05em;
-	margin-right: 0.25rem;
-}
-
 /* Buttons */
 .btn {
 	display: inline-flex;
