@@ -1,9 +1,10 @@
 # Spec de Lógica — Portafolio
 
-**Status:** v0.2
+**Status:** v0.3
 **Stack:** Go + templ + HTMX + templ-islands
 **Arquitectura:** Hexagonal (scaffold con go-arch MCP)
 **Base de datos:** PostgreSQL
+**API:** REST JSON (`/api/v1`) con IDs numéricos (ver `api_contract.md`)
 **Diseño:** ver `design_spec.md` (Neobrutalismo Tech / Cyber-Editorial + Regla de Revelado de Color al Hover)
 **Secciones de referencia:** `clean-portfolio` (estructura), no su estética
 
@@ -354,8 +355,9 @@ volumes:
 
 ## 13. Tema (light/dark) e idioma (ES/EN)
 
-- Tema: light = default (design spec §2), dark con clase en `<html>`, toggle island, persistencia `localStorage` + `prefers-color-scheme`, anti-FOUC con script inline en `<head>`, `aria-pressed`/`aria-label`.
+- Tema: **dark por defecto** (design spec §2 — el dark pasa a ser el tema base). Clase en `<html>`, toggle island, persistencia `localStorage` + `prefers-color-scheme`, anti-FOUC con script inline en `<head>`, `aria-pressed`/`aria-label`. Si `localStorage('theme')` no existe → **dark** (no light).
 - Idioma: toggle ES/EN en sidebar izquierdo. **Contenido bilingüe en DB** (columnas `_es`/`_en`, ver §4); textos fijos de la página traducidos en la app.
+- **Detección del idioma del navegador**: al cargar `GET /` sin preferencia guardada, el server lee el header `Accept-Language` y si contiene `en` (ej. `en-US`, `en-GB`) carga en inglés; si no, español. La preferencia explícita del usuario (cookie `lang` o `localStorage`) **gana** sobre la del navegador.
 - Preferencia de idioma persistida (`localStorage` o cookie).
 - **Sin partículas de fondo** (decisión: solo watermark).
 
