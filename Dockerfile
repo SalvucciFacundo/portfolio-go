@@ -18,7 +18,7 @@ FROM alpine:latest
 WORKDIR /root/
 
 COPY --from=builder /app/main .
-COPY --from=builder /app/static ./static   # ← ESTA LÍNEA FALTA (el fix)
+COPY --from=builder /app/static ./static
 
 # Puerto que espera Dokploy (Container Port configurado)
 EXPOSE 3000

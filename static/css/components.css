@@ -351,7 +351,7 @@ html.dark-theme .theme-toggle .icon-moon {
 .hero__role-wrapper {
 	display: flex;
 	justify-content: flex-start;
-	margin-left: clamp(2rem, 8vw, 5rem);
+	margin-left: clamp(12rem, 32vw, 24rem);
 	margin-bottom: 1.5rem;
 }
 
