@@ -7,7 +7,7 @@ templ VinylAvatar(p domain.Profile) {
 		<div class="tech-avatar__header">
 			<div class="tech-avatar__status">
 				<span class="tech-avatar__dot"></span>
-				<span class="tech-avatar__label">SYS.AVATAR // ONLINE</span>
+				<span class="tech-avatar__label">SYS.AVATAR // SCANNING</span>
 			</div>
 			<div class="tech-avatar__loader" aria-hidden="true">
 				<span class="dot">{ "." }</span>
@@ -20,11 +20,13 @@ templ VinylAvatar(p domain.Profile) {
 			<span class="tech-avatar__corner tech-avatar__corner--tr">+</span>
 			<span class="tech-avatar__corner tech-avatar__corner--bl">+</span>
 			<span class="tech-avatar__corner tech-avatar__corner--br">+</span>
-			<img class="tech-avatar__img grayscale-reveal" src={ p.AvatarURL } alt={ p.Name } width="320" height="320" fetchpriority="high"/>
+			<img class="tech-avatar__img tech-avatar__img--base" src={ p.AvatarURL } alt={ p.Name } width="320" height="320" fetchpriority="high"/>
+			<img class="tech-avatar__img tech-avatar__img--color" src={ p.AvatarURL } alt="" width="320" height="320" aria-hidden="true"/>
+			<div class="tech-avatar__scan-beam" aria-hidden="true"></div>
 		</div>
 		<div class="tech-avatar__footer">
 			<span class="tech-avatar__code">PROFILE.IMG</span>
-			<span class="tech-avatar__tag">[v1.0]</span>
+			<span class="tech-avatar__tag">[SCAN: ACTIVE]</span>
 		</div>
 	</div>
 }

@@ -15,6 +15,13 @@ templ Hero(p domain.Profile, lang string) {
 			<span class="hero__software-dots"><span class="dot">{ "." }</span><span class="dot">{ "." }</span><span class="dot">{ "." }</span></span>
 		</div>
 		<div class="hero__body">
+			<div class="hero__gutter" aria-hidden="true">
+				<span>01</span>
+				<span>02</span>
+				<span>03</span>
+				<span>04</span>
+				<span>05</span>
+			</div>
 			<div class="hero__media-floated">
 				<div class="hero__backtext" aria-hidden="true">
 					<span>developer</span>
@@ -24,21 +31,23 @@ templ Hero(p domain.Profile, lang string) {
 			</div>
 			<div class="hero__intro">
 				<p class="hero__greeting">
-					<span class="hero__status-tag">SYS.INIT</span>
+					<span class="hero__status-tag">SYS.INIT <span class="hero__caret" aria-hidden="true">▌</span></span>
 					<span class="hero__code-prefix">{ "func main() {" }</span>
 					<span>{ i18n.T(lang, "hero.greeting") }</span>
 				</p>
 				<h1 class="hero__name">{ p.Name }</h1>
-				<div class="hero__role">
-					<span class="hero__pulse-dot"></span>
-					<span>{ i18n.L(p.RoleEs, p.RoleEn, lang) }</span>
+				<div class="hero__role-wrapper">
+					<div class="hero__role">
+						<span class="hero__pulse-dot"></span>
+						<span>{ i18n.L(p.RoleEs, p.RoleEn, lang) }</span>
+					</div>
 				</div>
 				<div class="hero__text">
 					<p class="hero__headline">{ i18n.L(p.HeadlineEs, p.HeadlineEn, lang) }</p>
 					if p.SummaryEs != "" || p.SummaryEn != "" {
 						<p class="hero__summary">{ i18n.L(p.SummaryEs, p.SummaryEn, lang) }</p>
 					}
-					<p class="hero__code-suffix">{ "}" } <span class="hero__code-comment">{ "// stack: Go + templ + HTMX" }</span></p>
+					<p class="hero__code-suffix">{ "}" }</p>
 				</div>
 				<div class="hero__actions">
 					if p.ResumeURL != "" {

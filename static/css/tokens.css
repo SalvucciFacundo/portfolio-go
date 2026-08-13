@@ -3,17 +3,17 @@
 	--bg-main: #F4F4F2;
 	--bg-alt: #EFEFEF;
 	--text-primary: #1A1A1A;
-	--text-secondary: #666666;
-	--text-muted: #999999;
-	--watermark-color: rgba(0, 0, 0, 0.04);
-	--card-bg: #EAEAEA;
-	--card-border: #E0E0E0;
+	--text-secondary: #4A4A4A;
+	--text-muted: #666666;
+	--watermark-color: rgba(0, 0, 0, 0.05);
+	--card-bg: #E2E2DF;
+	--card-border: #CCCCCC;
 	--vinyl-outer: #D4D4D0;
 	--vinyl-mid: #666666;
 	--vinyl-inner: #1A1A1A;
 	--btn-bg: #2D2D2D;
 	--btn-text: #FFFFFF;
-	--shadow-soft: rgba(0, 0, 0, 0.08);
+	--shadow-soft: rgba(0, 0, 0, 0.1);
 
 	/* Typography */
 	--font-display: 'Concrete', 'Space Grotesk', sans-serif;

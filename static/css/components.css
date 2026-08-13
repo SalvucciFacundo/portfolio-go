@@ -256,9 +256,25 @@ html.dark-theme .theme-toggle .icon-moon {
 	clear: both;
 }
 
+.hero__gutter {
+	position: absolute;
+	left: -2.25rem;
+	top: 0.25rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.4rem;
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	color: var(--text-muted);
+	opacity: 0.5;
+	user-select: none;
+	pointer-events: none;
+}
+
 .hero__media-floated {
 	float: right;
-	margin-left: 2.5rem;
+	margin-top: -1.75rem;
+	margin-left: 2rem;
 	margin-bottom: 1.5rem;
 	position: relative;
 }
@@ -292,6 +308,24 @@ html.dark-theme .theme-toggle .icon-moon {
 	border-radius: 4px;
 }
 
+.hero__caret {
+	display: inline-block;
+	font-size: 0.75rem;
+	color: var(--text-primary);
+	margin-left: 2px;
+	animation: caret-blink 1.2s infinite step-start;
+}
+
+@keyframes caret-blink {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.15;
+	}
+}
+
 .hero__dots .dot {
 	display: inline-block;
 	animation: blink-loader 1.4s infinite step-start;
@@ -314,6 +348,13 @@ html.dark-theme .theme-toggle .icon-moon {
 	margin-bottom: 1.25rem;
 }
 
+.hero__role-wrapper {
+	display: flex;
+	justify-content: flex-start;
+	margin-left: clamp(2rem, 8vw, 5rem);
+	margin-bottom: 1.5rem;
+}
+
 .hero__role {
 	display: inline-flex;
 	align-items: center;
@@ -324,7 +365,6 @@ html.dark-theme .theme-toggle .icon-moon {
 	border: 1px solid var(--card-border);
 	padding: 6px 14px;
 	border-radius: 6px;
-	margin-bottom: 1.5rem;
 }
 
 .hero__pulse-dot {
@@ -367,19 +407,73 @@ html.dark-theme .theme-toggle .icon-moon {
 	margin-top: 0.75rem;
 }
 
-.hero__code-comment {
-	color: var(--text-muted);
-	opacity: 0.7;
-	font-style: italic;
-	margin-left: 8px;
-}
-
 .hero__actions {
 	clear: both;
 	display: flex;
 	align-items: center;
 	gap: 1rem;
 	padding-top: 0.5rem;
+}
+
+.hero__dots-wave {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 0.75rem;
+}
+
+.hero__dots-wave .wave-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background-color: var(--text-muted);
+	opacity: 0.25;
+	animation: wave-pulse 1.6s infinite ease-in-out;
+}
+
+.hero__dots-wave .wave-dot:nth-child(1) {
+	animation-delay: 0s;
+}
+
+.hero__dots-wave .wave-dot:nth-child(2) {
+	animation-delay: 0.2s;
+}
+
+.hero__dots-wave .wave-dot:nth-child(3) {
+	animation-delay: 0.4s;
+}
+
+.hero__dots-wave .wave-dot:nth-child(4) {
+	animation-delay: 0.6s;
+}
+
+.hero__dots-wave .wave-dot:nth-child(5) {
+	animation-delay: 0.8s;
+}
+
+.hero__dots-wave .wave-dot:nth-child(6) {
+	animation-delay: 1s;
+}
+
+.hero__dots-wave .wave-dot:nth-child(7) {
+	animation-delay: 1.2s;
+}
+
+.hero__dots-wave .wave-dot:nth-child(8) {
+	animation-delay: 1.4s;
+}
+
+@keyframes wave-pulse {
+	0%,
+	100% {
+		opacity: 0.2;
+		transform: scale(0.8);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.3);
+		background-color: var(--text-primary);
+	}
 }
 
 .hero__backtext {
@@ -430,7 +524,7 @@ html.dark-theme .theme-toggle .icon-moon {
 }
 
 /* ==========================================================================
-   Tech Avatar Frame (Program Interface)
+   Tech Avatar Frame (Program Interface + Laser Scan Reveal)
    ========================================================================== */
 .tech-avatar {
 	width: 220px;
@@ -505,7 +599,7 @@ html.dark-theme .theme-toggle .icon-moon {
 	font-family: var(--font-mono);
 	font-size: 0.7rem;
 	color: var(--text-muted);
-	z-index: 2;
+	z-index: 4;
 	pointer-events: none;
 	line-height: 1;
 }
@@ -534,6 +628,86 @@ html.dark-theme .theme-toggle .icon-moon {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+.tech-avatar__img--base {
+	position: absolute;
+	inset: 0;
+	filter: grayscale(100%);
+	z-index: 1;
+}
+
+.tech-avatar__img--color {
+	position: absolute;
+	inset: 0;
+	filter: grayscale(0%);
+	z-index: 2;
+	animation: scanner-reveal 4s infinite linear;
+}
+
+.tech-avatar__scan-beam {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, #22c55e, #ffffff, #22c55e, transparent);
+	box-shadow: 0 0 10px #22c55e, 0 0 16px rgba(34, 197, 94, 0.8);
+	z-index: 3;
+	pointer-events: none;
+	animation: scanner-beam 4s infinite linear;
+}
+
+@keyframes scanner-reveal {
+	0% {
+		clip-path: inset(0 0 100% 0);
+	}
+	45% {
+		clip-path: inset(0 0 0% 0);
+	}
+	50% {
+		clip-path: inset(0 0 0% 0);
+	}
+	95% {
+		clip-path: inset(100% 0 0% 0);
+	}
+	100% {
+		clip-path: inset(100% 0 0% 0);
+	}
+}
+
+@keyframes scanner-beam {
+	0% {
+		top: 0%;
+		opacity: 1;
+	}
+	45% {
+		top: 100%;
+		opacity: 1;
+	}
+	48% {
+		top: 100%;
+		opacity: 0;
+	}
+	50% {
+		top: 100%;
+		opacity: 0;
+	}
+	52% {
+		top: 100%;
+		opacity: 1;
+	}
+	95% {
+		top: 0%;
+		opacity: 1;
+	}
+	98% {
+		top: 0%;
+		opacity: 0;
+	}
+	100% {
+		top: 0%;
+		opacity: 1;
+	}
 }
 
 .tech-avatar__footer {

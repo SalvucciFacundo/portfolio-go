@@ -44,7 +44,7 @@ func VinylAvatar(p domain.Profile) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><div class=\"tech-avatar__header\"><div class=\"tech-avatar__status\"><span class=\"tech-avatar__dot\"></span> <span class=\"tech-avatar__label\">SYS.AVATAR // ONLINE</span></div><div class=\"tech-avatar__loader\" aria-hidden=\"true\"><span class=\"dot\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><div class=\"tech-avatar__header\"><div class=\"tech-avatar__status\"><span class=\"tech-avatar__dot\"></span> <span class=\"tech-avatar__label\">SYS.AVATAR // SCANNING</span></div><div class=\"tech-avatar__loader\" aria-hidden=\"true\"><span class=\"dot\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -83,14 +83,14 @@ func VinylAvatar(p domain.Profile) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div></div><div class=\"tech-avatar__frame\"><span class=\"tech-avatar__corner tech-avatar__corner--tl\">+</span> <span class=\"tech-avatar__corner tech-avatar__corner--tr\">+</span> <span class=\"tech-avatar__corner tech-avatar__corner--bl\">+</span> <span class=\"tech-avatar__corner tech-avatar__corner--br\">+</span> <img class=\"tech-avatar__img grayscale-reveal\" src=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div></div><div class=\"tech-avatar__frame\"><span class=\"tech-avatar__corner tech-avatar__corner--tl\">+</span> <span class=\"tech-avatar__corner tech-avatar__corner--tr\">+</span> <span class=\"tech-avatar__corner tech-avatar__corner--bl\">+</span> <span class=\"tech-avatar__corner tech-avatar__corner--br\">+</span> <img class=\"tech-avatar__img tech-avatar__img--base\" src=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(p.AvatarURL)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/vinyl_avatar.templ`, Line: 23, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/vinyl_avatar.templ`, Line: 23, Col: 73}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -103,13 +103,26 @@ func VinylAvatar(p domain.Profile) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(p.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/vinyl_avatar.templ`, Line: 23, Col: 82}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/vinyl_avatar.templ`, Line: 23, Col: 88}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" width=\"320\" height=\"320\" fetchpriority=\"high\"></div><div class=\"tech-avatar__footer\"><span class=\"tech-avatar__code\">PROFILE.IMG</span> <span class=\"tech-avatar__tag\">[v1.0]</span></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" width=\"320\" height=\"320\" fetchpriority=\"high\"> <img class=\"tech-avatar__img tech-avatar__img--color\" src=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var8 string
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(p.AvatarURL)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/vinyl_avatar.templ`, Line: 24, Col: 74}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" alt=\"\" width=\"320\" height=\"320\" aria-hidden=\"true\"><div class=\"tech-avatar__scan-beam\" aria-hidden=\"true\"></div></div><div class=\"tech-avatar__footer\"><span class=\"tech-avatar__code\">PROFILE.IMG</span> <span class=\"tech-avatar__tag\">[SCAN: ACTIVE]</span></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
