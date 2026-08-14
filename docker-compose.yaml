@@ -1,24 +1,43 @@
+# docker-compose para DESARROLLO local (la app + postgres).
+# En Dokploy NO se usa este archivo: la app se despliega como servicio Docker
+# con el Environment configurado en la UI y un servicio PostgreSQL aparte.
+
 services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio_go}
+      POSTGRES_USER: ${POSTGRES_USER:-portafolio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-portafolio_dev}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-portafolio} -d ${POSTGRES_DB:-portfolio_go}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   api:
     build: .
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-
-  db:
-  
-    image: postgres:15-alpine
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: portfolio-go
-  
+      DATABASE_URL: postgres://${POSTGRES_USER:-portafolio}:${POSTGRES_PASSWORD:-portafolio_dev}@db:5432/${POSTGRES_DB:-portfolio_go}?sslmode=disable
+      SERVER_PORT: "8080"
+      APP_ENV: ${APP_ENV:-development}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      CONTACT_EMAIL: ${CONTACT_EMAIL}
+      CONTACT_FROM: ${CONTACT_FROM}
     ports:
-    
-      - "5432:5432"
-    
+      - "${PORT:-8080}:8080"
 
-
+volumes:
+  pgdata:
