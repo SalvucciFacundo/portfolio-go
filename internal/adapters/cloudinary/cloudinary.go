@@ -76,10 +76,12 @@ func New() (*Adapter, error) {
 // UploadImage stores an already-encoded WebP image (format conversion is the
 // caller's responsibility, see internal/adapters/imageproc) and returns its
 // secure delivery URL. publicID must NOT include a file extension (Cloudinary
-// appends the format to the URL). overwrite=true makes re-uploads with the
-// same public_id idempotent.
-func (a *Adapter) UploadImage(ctx context.Context, fileBytes []byte, publicID string) (string, error) {
-	url, err := a.uploadImageByPath(ctx, fileBytes, publicID)
+// appends the format to the URL). folder is the Media Library folder (e.g.
+// "portfolio/avatar") — setting AssetFolder makes Cloudinary index the asset
+// into a real folder instead of only prefixing the public_id. overwrite=true
+// makes re-uploads with the same public_id idempotent.
+func (a *Adapter) UploadImage(ctx context.Context, fileBytes []byte, folder, publicID string) (string, error) {
+	url, err := a.uploadImageByPath(ctx, fileBytes, folder, publicID)
 	if err != nil {
 		return "", fmt.Errorf("cloudinary: upload image %q: %w", publicID, err)
 	}
@@ -88,9 +90,10 @@ func (a *Adapter) UploadImage(ctx context.Context, fileBytes []byte, publicID st
 
 // UploadRaw stores a raw file (PDFs) through the signed REST API (the SDK
 // silently fails for resource_type=raw). publicID MUST carry the file
-// extension (e.g. "cv-1723000000.pdf"). Returns the secure delivery URL.
-func (a *Adapter) UploadRaw(ctx context.Context, fileBytes []byte, publicID string) (string, error) {
-	url, err := a.uploadRawREST(ctx, fileBytes, publicID)
+// extension (e.g. "cv-1723000000.pdf"). folder is the Media Library folder.
+// Returns the secure delivery URL.
+func (a *Adapter) UploadRaw(ctx context.Context, fileBytes []byte, folder, publicID string) (string, error) {
+	url, err := a.uploadRawREST(ctx, fileBytes, folder, publicID)
 	if err != nil {
 		return "", fmt.Errorf("cloudinary: upload raw %q: %w", publicID, err)
 	}
@@ -99,7 +102,7 @@ func (a *Adapter) UploadRaw(ctx context.Context, fileBytes []byte, publicID stri
 
 // uploadImageByPath writes the bytes to a temp file and uploads by path,
 // working around the SDK bug where bytes.Reader uploads return empty results.
-func (a *Adapter) uploadImageByPath(ctx context.Context, fileBytes []byte, publicID string) (string, error) {
+func (a *Adapter) uploadImageByPath(ctx context.Context, fileBytes []byte, folder, publicID string) (string, error) {
 	tmp, err := os.CreateTemp("", "cld-upload-*")
 	if err != nil {
 		return "", fmt.Errorf("create temp file: %w", err)
@@ -116,6 +119,7 @@ func (a *Adapter) uploadImageByPath(ctx context.Context, fileBytes []byte, publi
 
 	resp, err := a.cld.Upload.Upload(ctx, tmp.Name(), uploader.UploadParams{
 		PublicID:     publicID,
+		AssetFolder:  folder,
 		ResourceType: "image",
 		Overwrite:    api.Bool(true),
 	})
@@ -130,15 +134,16 @@ func (a *Adapter) uploadImageByPath(ctx context.Context, fileBytes []byte, publi
 
 // uploadRawREST sube un archivo raw (PDF) usando la API REST de Cloudinary con
 // firma SHA-1. El SDK Go falla silenciosamente con resource_type=raw.
-func (a *Adapter) uploadRawREST(ctx context.Context, fileBytes []byte, publicID string) (string, error) {
+func (a *Adapter) uploadRawREST(ctx context.Context, fileBytes []byte, folder, publicID string) (string, error) {
 	timestamp := fmt.Sprintf("%d", time.Now().Unix())
 
 	// Firma: todos los campos del form (excepto api_key/file/resource_type,
 	// que van en la URL) en orden alfabético + secret.
 	signParams := map[string]string{
-		"timestamp": timestamp,
-		"public_id": publicID,
-		"overwrite": "true",
+		"timestamp":    timestamp,
+		"public_id":    publicID,
+		"asset_folder": folder,
+		"overwrite":    "true",
 	}
 	sign := buildSignature(signParams, a.apiSecret)
 
@@ -146,7 +151,7 @@ func (a *Adapter) uploadRawREST(ctx context.Context, fileBytes []byte, publicID 
 
 	var buf bytes.Buffer
 	mw := multipart.NewWriter(&buf)
-	for _, k := range []string{"timestamp", "overwrite", "resource_type", "public_id"} {
+	for _, k := range []string{"timestamp", "overwrite", "resource_type", "public_id", "asset_folder"} {
 		_ = mw.WriteField(k, signParams[k])
 	}
 	_ = mw.WriteField("api_key", a.apiKey)

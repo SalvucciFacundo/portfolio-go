@@ -24,10 +24,10 @@ import (
 
 // Uploader es el puerto de salida del handler hacia el almacenamiento externo
 // (Cloudinary). Desacopla los handlers del adapter concreto: el llamador decide
-// el public_id y recibe la URL de entrega.
+// la carpeta (Media Library) y el nombre, y recibe la URL de entrega.
 type Uploader interface {
-	UploadImage(ctx context.Context, data []byte, publicID string) (string, error)
-	UploadRaw(ctx context.Context, data []byte, publicID string) (string, error)
+	UploadImage(ctx context.Context, data []byte, folder, publicID string) (string, error)
+	UploadRaw(ctx context.Context, data []byte, folder, publicID string) (string, error)
 }
 
 // API agrupa los handlers JSON del portafolio sobre el Store, el Service de
@@ -102,16 +102,16 @@ func (a *API) uploadFile(r *http.Request, fh *multipart.FileHeader, folder, name
 	ext := strings.ToLower(filepath.Ext(filename))
 	switch {
 	case cvExts[ext]:
-		publicID := fmt.Sprintf("%s/%s-%d.pdf", folder, name, time.Now().Unix())
-		url, err = a.uploader.UploadRaw(r.Context(), data, publicID)
+		publicID := fmt.Sprintf("%s-%d.pdf", name, time.Now().Unix())
+		url, err = a.uploader.UploadRaw(r.Context(), data, folder, publicID)
 	case imageExts[ext]:
 		webp, convErr := imageproc.ConvertToWebP(data, filename)
 		if convErr != nil {
 			return "", "", convErr
 		}
 		// public_id SIN extensión: Cloudinary agrega el formato a la URL
-		publicID := fmt.Sprintf("%s/%s-%d", folder, name, time.Now().Unix())
-		url, err = a.uploader.UploadImage(r.Context(), webp, publicID)
+		publicID := fmt.Sprintf("%s-%d", name, time.Now().Unix())
+		url, err = a.uploader.UploadImage(r.Context(), webp, folder, publicID)
 	default:
 		return "", "", fmt.Errorf("file type %q not allowed", ext)
 	}
