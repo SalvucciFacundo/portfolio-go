@@ -257,20 +257,20 @@ Mismo shape que las tablas: `Profile`, `SidebarIcon`, `SidebarSection`, `Skill`,
 
 ## 10. Cloudinary — imágenes (REQUISITO)
 
-**Política: compresión y redimensionado SIEMPRE en local; Cloudinary solo almacena y entrega.**
+**Política: Cloudinary solo almacena y entrega. Conversión de formato en local; NO se redimensionan las imágenes ni se degrada la calidad.**
 
 ### Pipeline de subida (admin)
 1. Admin sube imagen en el modal CRUD (file input).
-2. **En el servidor Go** (handler `upload.go`): redimensiona + comprime a **WebP** localmente (ej. `github.com/chai2010/webp` / `golang.org/x/image` o `imgproxy`-style). Sin gastar créditos de transformación.
-3. Sube el WebP ya optimizado a Cloudinary (upload API, sin transformations).
+2. **En el servidor Go** (handler `upload.go`): se convierte el formato a **WebP** con el binario `cwebp` (instalado vía `apk add webp` en la imagen Docker — sin cgo, fácil de deployar). **Sin `-resize`** (las dimensiones originales se conservan) y **calidad alta `-q 90`** (visualmente idéntica; se usa `-lossless` si se requiere fidelidad exacta).
+3. Sube el WebP a Cloudinary (upload API, sin transformations).
 4. Guarda la URL devuelta en DB (`icon_url`, `cover_url`, `url`, `avatar_url`).
-5. Entrega: `<img src="...">` directo desde Cloudinary con `fetch_format=auto` (entrega gratis) + `loading="lazy"` (excepto avatar) + `grayscale` en reposo → color al hover.
+5. Entrega: `<img src="...">` directo desde Cloudinary + `loading="lazy"` (excepto avatar) + `grayscale` en reposo → color al hover.
 
-### Límites por tipo de imagen (a definir)
-- Avatar: ~400px, quality 80
-- Cover de proyecto: ~1200px wide, quality 80
-- Iconos skills: ~64-128px, quality 80
-- Screenshots de proyecto: ~1200px wide
+### Reglas
+- **No redimensionar**: las imágenes se guardan con sus dimensiones originales.
+- **Calidad**: `-q 90` por defecto (indistinguible del original); `-lossless` si el archivo original es PNG con gráficos planos/logo (para no introducir artefactos).
+- Los archivos que ya son WebP se suben tal cual (sin re-codificar).
+- El CV (PDF) se sube como **raw** a Cloudinary (`use_filename=true`, `unique_filename=false`) y se descarga con el nombre original vía `fl_attachment` (ver `api_contract.md` §5).
 
 ## 11. Configuración (env vars)
 
@@ -376,4 +376,4 @@ volumes:
 3. ~~Partículas de fondo~~ — **descartadas** (solo watermark).
 4. **CV**: botón `DESCARGAR_CV` en hero (posición final a definir); el admin **sube el PDF al server** (handler `upload.go`), se guarda en disco/volumen y se sirve por descarga.
 5. **Seed de datos**: migración inicial con los datos reales del portafolio (desde el JSON del clean-portfolio).
-6. **Medidas de compresión exactas** de Cloudinary (§10).
+6. **Medidas de compresión**: conversión local a WebP con `cwebp` (`-q 90`, sin resize; `-lossless` para PNG planos/logos). CV como raw en Cloudinary con nombre original (`fl_attachment`).

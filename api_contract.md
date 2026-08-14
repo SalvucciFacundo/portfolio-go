@@ -21,10 +21,11 @@
   "summary_es": "...",
   "summary_en": "...",
   "email": "fds1288@gmail.com",
-  "avatar_url": "/static/uploads/avatar.webp",
-  "resume_url": "/static/uploads/cv.pdf",
+  "avatar_url": "https://res.cloudinary.com/.../avatar.webp",
+  "resume_url": "https://res.cloudinary.com/.../cv.pdf",
+  "resume_filename": "facundo-salvucci_cv.pdf",
   "socials": [ { "id": 1, "position": 0, "name": "GitHub", "url": "https://...", "icon_key": "github" } ],
-  "skills": [ { "id": 1, "position": 0, "name": "Go", "icon_url": "/static/uploads/go.webp", "is_tool": false } ]
+  "skills": [ { "id": 1, "position": 0, "name": "Go", "icon_url": "https://res.cloudinary.com/.../go.webp", "is_tool": false } ]
 }
 ```
 
@@ -120,11 +121,21 @@
 - `GET` devuelve las listas **ordenadas por position ASC**.
 - Para reordenar, el admin actualiza `position` vía PUT del item (o endpoint de reorder a futuro).
 
-## 5. Uploads
+## 5. Uploads — Cloudinary
 
-- Los archivos se suben como `multipart/form-data` y se guardan en `static/uploads/` (por ahora local; el adapter Cloudinary se pluguea después sin cambiar el contrato).
-- Nombres generados: `<entidad>-<unix>.webp` / `.pdf`.
-- La URL resultante es `/static/uploads/<archivo>` y se guarda en el campo correspondiente.
+- **Imágenes** (avatar, iconos, covers, screenshots): el server Go las convierte a **WebP** en local con `cwebp` (`-q 90`, sin redimensionar; `-lossless` para PNG planos) y sube el WebP a Cloudinary. Sin transformations de Cloudinary (cero créditos). La URL devuelta se guarda en la DB.
+- **CV (PDF)**: se sube a Cloudinary como **raw** con `use_filename=true` + `unique_filename=false` (el public_id conserva el nombre original con extensión). En la DB se guardan dos campos:
+  - `resume_url` → URL de Cloudinary
+  - `resume_filename` → nombre original del archivo (ej. `Mi CV 2026.pdf`)
+- **Descarga del CV**: `GET /api/v1/profile/cv` redirige a la URL de Cloudinary con `fl_attachment:<resume_filename url-encoded>` → el navegador descarga con el nombre original exacto (`Content-Disposition: attachment; filename="..."`).
+- Nombres de public_id: `<entidad>-<slug>` generados por Cloudinary o el nombre original (CV).
+
+### Contracto de subida
+- `POST /api/v1/profile/avatar` → multipart `avatar` (imagen) → guarda `avatar_url`
+- `POST /api/v1/profile/cv` → multipart `cv` (PDF) → guarda `resume_url` + `resume_filename`
+- `POST /api/v1/skills` → multipart `icon` opcional (imagen) → `icon_url`
+- `POST /api/v1/projects/{id}/images` → multipart `screenshots[]` → agrega a `screenshots`
+- `POST /api/v1/projects` → multipart `cover` opcional (imagen) → `cover_url`
 
 ## 6. Errores
 
