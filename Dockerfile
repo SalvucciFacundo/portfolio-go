@@ -37,7 +37,8 @@ COPY --from=builder /app/static ./static
 RUN addgroup -S app && adduser -S app -G app
 USER app
 
-# Puerto que espera Dokploy (Container Port configurado)
-EXPOSE 8080
+# Puerto que espera Dokploy (Container Port configurado — el server escucha
+# en el puerto de SERVER_PORT del environment, default 8080)
+EXPOSE 3000
 
 CMD ["./main"]
