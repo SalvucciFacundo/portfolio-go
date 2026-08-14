@@ -604,6 +604,3 @@ func SocialsUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("HX-Redirect", r.Referer())
 	w.WriteHeader(http.StatusOK)
 }
-
-
-
