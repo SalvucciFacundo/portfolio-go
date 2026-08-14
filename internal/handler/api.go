@@ -107,7 +107,8 @@ func (a *API) uploadFile(r *http.Request, fh *multipart.FileHeader, entity strin
 		if convErr != nil {
 			return "", "", convErr
 		}
-		publicID := fmt.Sprintf("%s-%d.webp", entity, time.Now().Unix())
+		// public_id SIN extensión: Cloudinary agrega el formato a la URL
+		publicID := fmt.Sprintf("%s-%d", entity, time.Now().Unix())
 		url, err = a.uploader.UploadImage(r.Context(), webp, publicID)
 	default:
 		return "", "", fmt.Errorf("file type %q not allowed", ext)

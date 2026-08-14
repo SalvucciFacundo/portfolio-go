@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
@@ -177,13 +178,17 @@ func (a *API) GetCV(w http.ResponseWriter, r *http.Request) {
 // entrega raw de Cloudinary. Es la forma robusta: no re-construye la URL desde
 // el public_id (que ya queda embebido en resume_url tal como Cloudinary lo
 // devolvió), solo ancla el flag con el nombre original guardado en la DB.
+//
+// El nombre del flag NO lleva extensión: Cloudinary la agrega según el formato
+// del asset ("Mi CV 2026" → filename="Mi CV 2026.pdf").
 func cloudinaryDownloadURL(rawURL, filename string) string {
 	const marker = "/raw/upload/"
 	i := strings.Index(rawURL, marker)
 	if i < 0 {
 		return rawURL
 	}
-	flag := "fl_attachment:" + url.PathEscape(filename)
+	base := strings.TrimSuffix(filename, filepath.Ext(filename))
+	flag := "fl_attachment:" + url.PathEscape(base)
 	insertAt := i + len(marker)
 	return rawURL[:insertAt] + flag + "/" + rawURL[insertAt:]
 }
