@@ -13,6 +13,8 @@ templ ExperienceAdminModal(p domain.Profile) {
 				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
 			</div>
 
+			<div id="experience-error" class="admin-modal__error"></div>
+
 			<div class="admin-modal__grid">
 				<!-- Left Column: Current Experiences List -->
 				<div class="admin-skills-list">
@@ -28,6 +30,8 @@ templ ExperienceAdminModal(p domain.Profile) {
 									<button 
 										type="button" 
 										class="admin-skill-item__btn admin-skill-item__btn--edit"
+										data-id={ fmt.Sprintf("%d", e.ID) }
+										data-position={ fmt.Sprintf("%d", e.Position) }
 										data-company={ e.Company }
 										data-position-es={ e.PositionEs }
 										data-position-en={ e.PositionEn }
@@ -35,15 +39,7 @@ templ ExperienceAdminModal(p domain.Profile) {
 										data-period-en={ e.PeriodEn }
 										data-desc-es={ e.DescriptionEs }
 										data-desc-en={ e.DescriptionEn }
-										onclick="fillExperienceForm(
-											this.getAttribute('data-company'),
-											this.getAttribute('data-position-es'),
-											this.getAttribute('data-position-en'),
-											this.getAttribute('data-period-es'),
-											this.getAttribute('data-period-en'),
-											this.getAttribute('data-desc-es'),
-											this.getAttribute('data-desc-en')
-										)"
+										onclick="fillExperienceForm(this)"
 									>
 										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
 											<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -53,9 +49,10 @@ templ ExperienceAdminModal(p domain.Profile) {
 									<button 
 										type="button" 
 										class="admin-skill-item__btn admin-skill-item__btn--delete"
-										hx-delete={ fmt.Sprintf("/admin/experience?company=%s&position=%s", e.Company, e.PositionEn) }
-										hx-confirm={ fmt.Sprintf("Are you sure you want to delete '%s' role at '%s'?", e.PositionEn, e.Company) }
-										hx-swap="none"
+										data-id={ fmt.Sprintf("%d", e.ID) }
+										data-company={ e.Company }
+										data-position-en={ e.PositionEn }
+										onclick="deleteExperience(this)"
 									>
 										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
 											<polyline points="3 6 5 6 21 6"></polyline>
@@ -73,10 +70,7 @@ templ ExperienceAdminModal(p domain.Profile) {
 				<!-- Right Column: Add/Edit Form -->
 				<div class="admin-skills-form">
 					<h4 id="experience-form-title" class="admin-skills-form__title">Add New Experience</h4>
-					<form hx-post="/admin/experience" hx-swap="none">
-						<input type="hidden" id="experience-old-company" name="old_company" value=""/>
-						<input type="hidden" id="experience-old-position" name="old_position" value=""/>
-						
+					<form onsubmit="PortfolioAdmin.saveExperience(event)">
 						<div class="admin-modal__field">
 							<label for="experience-company">Company</label>
 							<input type="text" id="experience-company" name="company" required placeholder="e.g. Acme Corp"/>
@@ -122,36 +116,5 @@ templ ExperienceAdminModal(p domain.Profile) {
 				</div>
 			</div>
 		</div>
-
-		<!-- Form prefill and reset helpers -->
-		<script>
-			function fillExperienceForm(company, posEs, posEn, periodEs, periodEn, descEs, descEn) {
-				document.getElementById('experience-old-company').value = company;
-				document.getElementById('experience-old-position').value = posEn;
-				document.getElementById('experience-company').value = company;
-				document.getElementById('experience-position-es').value = posEs;
-				document.getElementById('experience-position-en').value = posEn;
-				document.getElementById('experience-period-es').value = periodEs;
-				document.getElementById('experience-period-en').value = periodEn;
-				document.getElementById('experience-desc-es').value = descEs;
-				document.getElementById('experience-desc-en').value = descEn;
-				document.getElementById('experience-form-title').innerText = 'Edit Experience: ' + company;
-				document.getElementById('experience-submit-btn').innerText = 'Save Changes';
-			}
-
-			function resetExperienceForm() {
-				document.getElementById('experience-old-company').value = '';
-				document.getElementById('experience-old-position').value = '';
-				document.getElementById('experience-company').value = '';
-				document.getElementById('experience-position-es').value = '';
-				document.getElementById('experience-position-en').value = '';
-				document.getElementById('experience-period-es').value = '';
-				document.getElementById('experience-period-en').value = '';
-				document.getElementById('experience-desc-es').value = '';
-				document.getElementById('experience-desc-en').value = '';
-				document.getElementById('experience-form-title').innerText = 'Add New Experience';
-				document.getElementById('experience-submit-btn').innerText = 'Add Experience';
-			}
-		</script>
 	</dialog>
 }

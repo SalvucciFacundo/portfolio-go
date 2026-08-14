@@ -13,6 +13,8 @@ templ EducationAdminModal(p domain.Profile) {
 				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
 			</div>
 
+			<div id="education-error" class="admin-modal__error"></div>
+
 			<div class="admin-modal__grid">
 				<!-- Left Column: Current Education List -->
 				<div class="admin-skills-list">
@@ -35,6 +37,8 @@ templ EducationAdminModal(p domain.Profile) {
 									<button 
 										type="button" 
 										class="admin-skill-item__btn admin-skill-item__btn--edit"
+										data-id={ fmt.Sprintf("%d", e.ID) }
+										data-position={ fmt.Sprintf("%d", e.Position) }
 										data-title-es={ e.TitleEs }
 										data-title-en={ e.TitleEn }
 										data-school={ e.School }
@@ -42,15 +46,7 @@ templ EducationAdminModal(p domain.Profile) {
 										data-desc-es={ e.DescriptionEs }
 										data-desc-en={ e.DescriptionEn }
 										data-is-course={ fmt.Sprintf("%t", e.IsCourse) }
-										onclick="fillEducationForm(
-											this.getAttribute('data-title-es'),
-											this.getAttribute('data-title-en'),
-											this.getAttribute('data-school'),
-											this.getAttribute('data-date'),
-											this.getAttribute('data-desc-es'),
-											this.getAttribute('data-desc-en'),
-											this.getAttribute('data-is-course') === 'true'
-										)"
+										onclick="fillEducationForm(this)"
 									>
 										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
 											<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -60,9 +56,9 @@ templ EducationAdminModal(p domain.Profile) {
 									<button 
 										type="button" 
 										class="admin-skill-item__btn admin-skill-item__btn--delete"
-										hx-delete={ fmt.Sprintf("/admin/education?title=%s", e.TitleEn) }
-										hx-confirm={ fmt.Sprintf("Are you sure you want to delete '%s'?", e.TitleEn) }
-										hx-swap="none"
+										data-id={ fmt.Sprintf("%d", e.ID) }
+										data-title={ e.TitleEn }
+										onclick="deleteEducation(this)"
 									>
 										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
 											<polyline points="3 6 5 6 21 6"></polyline>
@@ -80,9 +76,7 @@ templ EducationAdminModal(p domain.Profile) {
 				<!-- Right Column: Add/Edit Form -->
 				<div class="admin-skills-form">
 					<h4 id="education-form-title" class="admin-skills-form__title">Add New Entry</h4>
-					<form hx-post="/admin/education" hx-swap="none">
-						<input type="hidden" id="education-old-title" name="old_title" value=""/>
-						
+					<form onsubmit="PortfolioAdmin.saveEducation(event)">
 						<div class="admin-modal__grid">
 							<div class="admin-modal__field">
 								<label for="education-title-es">Title (ES)</label>
@@ -131,34 +125,5 @@ templ EducationAdminModal(p domain.Profile) {
 				</div>
 			</div>
 		</div>
-
-		<!-- Form prefill and reset helpers -->
-		<script>
-			function fillEducationForm(titleEs, titleEn, school, date, descEs, descEn, isCourse) {
-				document.getElementById('education-old-title').value = titleEn;
-				document.getElementById('education-title-es').value = titleEs;
-				document.getElementById('education-title-en').value = titleEn;
-				document.getElementById('education-school').value = school;
-				document.getElementById('education-date').value = date;
-				document.getElementById('education-desc-es').value = descEs;
-				document.getElementById('education-desc-en').value = descEn;
-				document.getElementById('education-category').value = isCourse ? 'true' : 'false';
-				document.getElementById('education-form-title').innerText = 'Edit Education: ' + titleEn;
-				document.getElementById('education-submit-btn').innerText = 'Save Changes';
-			}
-
-			function resetEducationForm() {
-				document.getElementById('education-old-title').value = '';
-				document.getElementById('education-title-es').value = '';
-				document.getElementById('education-title-en').value = '';
-				document.getElementById('education-school').value = '';
-				document.getElementById('education-date').value = '';
-				document.getElementById('education-desc-es').value = '';
-				document.getElementById('education-desc-en').value = '';
-				document.getElementById('education-category').value = 'false';
-				document.getElementById('education-form-title').innerText = 'Add New Entry';
-				document.getElementById('education-submit-btn').innerText = 'Add Entry';
-			}
-		</script>
 	</dialog>
 }

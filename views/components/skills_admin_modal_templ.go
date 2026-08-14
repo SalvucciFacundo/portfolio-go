@@ -34,7 +34,7 @@ func SkillsAdminModal(p domain.Profile) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<dialog id=\"skills-admin-modal\" class=\"admin-modal\"><div class=\"admin-modal__content admin-modal__content--wide\"><div class=\"admin-modal__header\"><h3 class=\"admin-modal__title\">Manage Skills</h3><button type=\"button\" class=\"admin-modal__close\" onclick=\"this.closest('dialog').close()\">&times;</button></div><div class=\"admin-modal__grid\"><!-- Left Column: Current Skills List --><div class=\"admin-skills-list\"><h4 class=\"admin-skills-list__title\">Current Skills</h4><div class=\"admin-skills-list__container\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<dialog id=\"skills-admin-modal\" class=\"admin-modal\"><div class=\"admin-modal__content admin-modal__content--wide\"><div class=\"admin-modal__header\"><h3 class=\"admin-modal__title\">Manage Skills</h3><button type=\"button\" class=\"admin-modal__close\" onclick=\"this.closest('dialog').close()\">&times;</button></div><div id=\"skills-error\" class=\"admin-modal__error\"></div><div class=\"admin-modal__grid\"><!-- Left Column: Current Skills List --><div class=\"admin-skills-list\"><h4 class=\"admin-skills-list__title\">Current Skills</h4><div class=\"admin-skills-list__container\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -46,7 +46,7 @@ func SkillsAdminModal(p domain.Profile) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(s.IconURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 23, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 25, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -59,7 +59,7 @@ func SkillsAdminModal(p domain.Profile) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(s.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 25, Col: 54}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 27, Col: 54}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -80,77 +80,103 @@ func SkillsAdminModal(p domain.Profile) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span></div><div class=\"admin-skill-item__actions\"><button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--edit\" data-name=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span></div><div class=\"admin-skill-item__actions\"><button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--edit\" data-id=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(s.Name)
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", s.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 38, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 40, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" data-is-tool=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" data-position=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%t", s.IsTool))
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", s.Position))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 39, Col: 52}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 41, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" data-icon=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" data-name=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(s.IconURL)
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(s.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 40, Col: 31}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 42, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" onclick=\"fillSkillForm(this.getAttribute('data-name'), this.getAttribute('data-is-tool') === 'true', this.getAttribute('data-icon'))\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><path d=\"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\"></path> <path d=\"M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z\"></path></svg></button> <button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--delete\" hx-delete=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" data-is-tool=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var7 string
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/admin/skills?name=%s", s.Name))
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%t", s.IsTool))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 51, Col: 66}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 43, Col: 52}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" hx-confirm=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" data-icon=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
-			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Are you sure you want to delete '%s'?", s.Name))
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(s.IconURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 52, Col: 83}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 44, Col: 31}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" hx-swap=\"none\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><polyline points=\"3 6 5 6 21 6\"></polyline> <path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"></path> <line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"></line> <line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"></line></svg></button></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" onclick=\"fillSkillForm(this)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><path d=\"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\"></path> <path d=\"M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z\"></path></svg></button> <button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--delete\" data-id=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var9 string
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", s.ID))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 55, Col: 43}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" data-name=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var10 string
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(s.Name)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/skills_admin_modal.templ`, Line: 56, Col: 28}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" onclick=\"deleteSkill(this)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><polyline points=\"3 6 5 6 21 6\"></polyline> <path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"></path> <line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"></line> <line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"></line></svg></button></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></div><!-- Right Column: Add/Edit Form --><div class=\"admin-skills-form\"><h4 id=\"skill-form-title\" class=\"admin-skills-form__title\">Add New Skill</h4><form hx-post=\"/admin/skills\" hx-encoding=\"multipart/form-data\" hx-swap=\"none\"><input type=\"hidden\" id=\"skill-old-name\" name=\"old_name\" value=\"\"><div class=\"admin-modal__field\"><label for=\"skill-name\">Name</label> <input type=\"text\" id=\"skill-name\" name=\"name\" required placeholder=\"e.g. Go, Docker\"></div><div class=\"admin-modal__field\"><label for=\"skill-category\">Category</label> <select id=\"skill-category\" name=\"is_tool\" class=\"admin-modal__select\"><option value=\"false\">Technology</option> <option value=\"true\">Tool</option></select></div><div class=\"admin-modal__field\"><label for=\"skill-icon\">Icon/Logo File</label> <input type=\"file\" id=\"skill-icon\" name=\"icon\" accept=\"image/*,.svg\"> <span class=\"admin-modal__file-hint\">Optional if editing (keeps current)</span></div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"resetSkillForm()\">Reset</button> <button type=\"submit\" id=\"skill-submit-btn\" class=\"admin-modal__submit\">Add Skill</button></div></form></div></div></div><!-- Form prefill and reset helpers --><script>\n\t\t\tfunction fillSkillForm(name, isTool, iconUrl) {\n\t\t\t\tdocument.getElementById('skill-old-name').value = name;\n\t\t\t\tdocument.getElementById('skill-name').value = name;\n\t\t\t\tdocument.getElementById('skill-category').value = isTool ? 'true' : 'false';\n\t\t\t\tdocument.getElementById('skill-form-title').innerText = 'Edit Skill: ' + name;\n\t\t\t\tdocument.getElementById('skill-submit-btn').innerText = 'Save Changes';\n\t\t\t}\n\n\t\t\tfunction resetSkillForm() {\n\t\t\t\tdocument.getElementById('skill-old-name').value = '';\n\t\t\t\tdocument.getElementById('skill-name').value = '';\n\t\t\t\tdocument.getElementById('skill-category').value = 'false';\n\t\t\t\tdocument.getElementById('skill-form-title').innerText = 'Add New Skill';\n\t\t\t\tdocument.getElementById('skill-submit-btn').innerText = 'Add Skill';\n\t\t\t}\n\t\t</script></dialog>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div></div><!-- Right Column: Add/Edit Form --><div class=\"admin-skills-form\"><h4 id=\"skill-form-title\" class=\"admin-skills-form__title\">Add New Skill</h4><form onsubmit=\"PortfolioAdmin.saveSkill(event)\"><div class=\"admin-modal__field\"><label for=\"skill-name\">Name</label> <input type=\"text\" id=\"skill-name\" name=\"name\" required placeholder=\"e.g. Go, Docker\"></div><div class=\"admin-modal__field\"><label for=\"skill-category\">Category</label> <select id=\"skill-category\" name=\"is_tool\" class=\"admin-modal__select\"><option value=\"false\">Technology</option> <option value=\"true\">Tool</option></select></div><div class=\"admin-modal__field\"><label for=\"skill-icon\">Icon/Logo File</label> <input type=\"file\" id=\"skill-icon\" name=\"icon\" accept=\"image/*,.svg\"> <span class=\"admin-modal__file-hint\">Icon upload is not available yet — icons are managed later via the API</span></div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"resetSkillForm()\">Reset</button> <button type=\"submit\" id=\"skill-submit-btn\" class=\"admin-modal__submit\">Add Skill</button></div></form></div></div></div></dialog>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

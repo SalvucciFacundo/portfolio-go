@@ -40,7 +40,7 @@ func SocialsAdminModal(p domain.Profile) templ.Component {
 				linkedinURL = s.URL
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<dialog id=\"socials-admin-modal\" class=\"admin-modal\"><div class=\"admin-modal__content\"><div class=\"admin-modal__header\"><h3 class=\"admin-modal__title\">Edit Contact & Social Links</h3><button type=\"button\" class=\"admin-modal__close\" onclick=\"this.closest('dialog').close()\">&times;</button></div><form hx-post=\"/admin/socials\" hx-swap=\"none\"><div class=\"admin-modal__field\"><label for=\"admin-email\">Email Address</label> <input type=\"email\" id=\"admin-email\" name=\"email\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<dialog id=\"socials-admin-modal\" class=\"admin-modal\"><div class=\"admin-modal__content\"><div class=\"admin-modal__header\"><h3 class=\"admin-modal__title\">Edit Contact & Social Links</h3><button type=\"button\" class=\"admin-modal__close\" onclick=\"this.closest('dialog').close()\">&times;</button></div><form onsubmit=\"PortfolioAdmin.saveSocials(event)\"><div class=\"admin-modal__field\"><label for=\"admin-email\">Email Address</label> <input type=\"email\" id=\"admin-email\" name=\"email\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -79,7 +79,7 @@ func SocialsAdminModal(p domain.Profile) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" placeholder=\"e.g. https://linkedin.com/in/username\" class=\"admin-modal__select\" style=\"font-family: var(--font-body);\"></div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"this.closest('dialog').close()\">Cancel</button> <button type=\"submit\" class=\"admin-modal__submit\">Save Links</button></div></form></div></dialog>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" placeholder=\"e.g. https://linkedin.com/in/username\" class=\"admin-modal__select\" style=\"font-family: var(--font-body);\"></div><div id=\"socials-error\" class=\"admin-modal__error\"></div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"this.closest('dialog').close()\">Cancel</button> <button type=\"submit\" class=\"admin-modal__submit\">Save Links</button></div></form></div></dialog>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

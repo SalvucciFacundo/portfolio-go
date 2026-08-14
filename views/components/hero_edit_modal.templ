@@ -9,7 +9,7 @@ templ HeroEditModal(p domain.Profile) {
 				<h3 class="admin-modal__title">Edit Hero</h3>
 				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
 			</div>
-			<form hx-post="/admin/hero" hx-encoding="multipart/form-data" hx-swap="none">
+			<form onsubmit="PortfolioAdmin.saveHero(event)">
 				<div class="admin-modal__grid">
 					<div class="admin-modal__field">
 						<label for="hero-name">Name</label>
@@ -50,6 +50,7 @@ templ HeroEditModal(p domain.Profile) {
 						<span class="admin-modal__file-hint">Current: { p.ResumeURL }</span>
 					}
 				</div>
+				<div id="hero-error" class="admin-modal__error"></div>
 				<div class="admin-modal__actions">
 					<button type="button" class="admin-modal__cancel" onclick="this.closest('dialog').close()">Cancel</button>
 					<button type="submit" class="admin-modal__submit">Save</button>

@@ -7,7 +7,7 @@ templ LoginModal() {
 				<h3 class="admin-modal__title">Admin Login</h3>
 				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
 			</div>
-			<form hx-post="/admin/login" hx-swap="none">
+			<form onsubmit="PortfolioAdmin.login(event)">
 				<div class="admin-modal__field">
 					<label for="admin-password">Password</label>
 					<input type="password" id="admin-password" name="password" required autocomplete="current-password" placeholder="Enter admin password"/>

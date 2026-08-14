@@ -50,7 +50,7 @@
   "link": "https://...",
   "repo_link": "https://github.com/...",
   "cover_url": "/static/uploads/project-cover.webp",
-  "screenshots": ["/static/uploads/project-1.webp", "/static/uploads/project-2.webp"]
+  "screenshots": [ { "id": 1, "url": "/static/uploads/project-1.webp" }, { "id": 2, "url": "/static/uploads/project-2.webp" } ]
 }
 ```
 
@@ -117,9 +117,11 @@ sessions (
 | POST | `/api/v1/skills` | Crear skill | `Skill` sin id |
 | PUT | `/api/v1/skills/{id}` | Actualizar skill | `Skill` |
 | DELETE | `/api/v1/skills/{id}` | Eliminar skill | — |
+| POST | `/api/v1/skills/{id}/icon` | Subir icono (multipart `icon`) → `{"icon_url":"..."}` | file |
 | POST | `/api/v1/projects` | Crear proyecto | `Project` sin id |
 | PUT | `/api/v1/projects/{id}` | Actualizar proyecto | `Project` |
 | DELETE | `/api/v1/projects/{id}` | Eliminar proyecto | — |
+| POST | `/api/v1/projects/{id}/cover` | Subir cover (multipart `cover`) → `{"cover_url":"..."}` | file |
 | POST | `/api/v1/projects/{id}/images` | Subir screenshots (multipart `screenshots[]`) | files |
 | DELETE | `/api/v1/projects/{id}/images/{imageId}` | Eliminar screenshot | — |
 | POST | `/api/v1/experience` | Crear experiencia | `Experience` sin id |
@@ -152,7 +154,8 @@ sessions (
 ### Contracto de subida
 - `POST /api/v1/profile/avatar` → multipart `avatar` (imagen) → guarda `avatar_url`
 - `POST /api/v1/profile/cv` → multipart `cv` (PDF) → guarda `resume_url` + `resume_filename`
-- `POST /api/v1/skills` → multipart `icon` opcional (imagen) → `icon_url`
+- `POST /api/v1/skills/{id}/icon` → multipart `icon` (imagen) → `icon_url` del skill `{id}` (404 si no existe). public_id `skill-icon-<id>-<unix>`
+- `POST /api/v1/projects/{id}/cover` → multipart `cover` (imagen) → `cover_url` del proyecto `{id}` (404 si no existe). public_id `project-cover-<id>-<unix>`
 - `POST /api/v1/projects/{id}/images` → multipart `screenshots[]` → agrega a `screenshots`
 - `POST /api/v1/projects` → multipart `cover` opcional (imagen) → `cover_url`
 
@@ -196,3 +199,31 @@ Formato: `{"error": "descripción"}`.
 ### Endpoints admin
 - Todo endpoint admin (PUT/DELETE de profile/skills/projects/experience/education/socials, uploads) requiere: sesión válida + `X-CSRF-Token` válido.
 - Sin sesión → `401 {"error":"unauthorized"}`. CSRF inválido → `403 {"error":"invalid csrf token"}`.
+
+## 9. Estado real del frontend admin (migración v1 — fetch + JSON)
+
+El frontend admin migró del contrato HTMX (forms + claves naturales + HX-Redirect)
+al contrato REST JSON de este documento (`static/js/admin.js` + `onsubmit`/`onclick`
+inline en los modales). Decisiones tomadas en la migración:
+
+- **Skill icon**: existe el endpoint dedicado `POST /api/v1/skills/{id}/icon`
+  (multipart `icon`, 404 si el skill no existe, public_id `skill-icon-<id>-<unix>`).
+  El front todavía NO lo usa (el form mantiene el input file sin subirlo);
+  pendiente solo del lado front.
+- **Project cover**: idem — existe `POST /api/v1/projects/{id}/cover`
+  (multipart `cover`, 404 si el proyecto no existe, public_id
+  `project-cover-<id>-<unix>`). Al editar se preserva el `cover_url` existente;
+  un cover nuevo no se sube (hint en el form). Pendiente solo del lado front.
+- **Screenshot individual**: el server expone `screenshots` como
+  `[{ "id": <image_id>, "url": ... }]` (los IDs numéricos de `project_images`)
+  en `GET /api/v1/projects/{id}`, y el borrado individual
+  (`DELETE /api/v1/projects/{id}/images/{imageId}`, 204) ya se puede consumir
+  desde el front. Pendiente solo del lado front (renderizar botones por imagen).
+- **Avatar**: se mantiene el componente público `vinyl_avatar.templ` con HTMX
+  (`POST /admin/avatar`) — fuera del alcance de la migración de modales admin.
+- **Render de la página**: `GET /` ya compone el perfil desde el Store real
+  (`store.Profile.Get` + `ListSocials` + `Skill.List` + `Project.List` +
+  `Experience.List` + `Education.List`), por lo que los `data-id` del HTML admin
+  son los IDs reales de la DB. Listas vacías → `[]` (no null). El mock en
+  memoria (`internal/data`) quedó sin uso por PageHandler (lo usan solo los
+  handlers HTMX legacy de `admin.go`, que siguen registrados por compatibilidad).

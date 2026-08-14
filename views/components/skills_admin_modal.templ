@@ -13,6 +13,8 @@ templ SkillsAdminModal(p domain.Profile) {
 				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
 			</div>
 
+			<div id="skills-error" class="admin-modal__error"></div>
+
 			<div class="admin-modal__grid">
 				<!-- Left Column: Current Skills List -->
 				<div class="admin-skills-list">
@@ -35,10 +37,12 @@ templ SkillsAdminModal(p domain.Profile) {
 									<button 
 										type="button" 
 										class="admin-skill-item__btn admin-skill-item__btn--edit"
+										data-id={ fmt.Sprintf("%d", s.ID) }
+										data-position={ fmt.Sprintf("%d", s.Position) }
 										data-name={ s.Name }
 										data-is-tool={ fmt.Sprintf("%t", s.IsTool) }
 										data-icon={ s.IconURL }
-										onclick="fillSkillForm(this.getAttribute('data-name'), this.getAttribute('data-is-tool') === 'true', this.getAttribute('data-icon'))"
+										onclick="fillSkillForm(this)"
 									>
 										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
 											<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -48,9 +52,9 @@ templ SkillsAdminModal(p domain.Profile) {
 									<button 
 										type="button" 
 										class="admin-skill-item__btn admin-skill-item__btn--delete"
-										hx-delete={ fmt.Sprintf("/admin/skills?name=%s", s.Name) }
-										hx-confirm={ fmt.Sprintf("Are you sure you want to delete '%s'?", s.Name) }
-										hx-swap="none"
+										data-id={ fmt.Sprintf("%d", s.ID) }
+										data-name={ s.Name }
+										onclick="deleteSkill(this)"
 									>
 										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
 											<polyline points="3 6 5 6 21 6"></polyline>
@@ -68,9 +72,7 @@ templ SkillsAdminModal(p domain.Profile) {
 				<!-- Right Column: Add/Edit Form -->
 				<div class="admin-skills-form">
 					<h4 id="skill-form-title" class="admin-skills-form__title">Add New Skill</h4>
-					<form hx-post="/admin/skills" hx-encoding="multipart/form-data" hx-swap="none">
-						<input type="hidden" id="skill-old-name" name="old_name" value=""/>
-						
+					<form onsubmit="PortfolioAdmin.saveSkill(event)">
 						<div class="admin-modal__field">
 							<label for="skill-name">Name</label>
 							<input type="text" id="skill-name" name="name" required placeholder="e.g. Go, Docker"/>
@@ -87,7 +89,7 @@ templ SkillsAdminModal(p domain.Profile) {
 						<div class="admin-modal__field">
 							<label for="skill-icon">Icon/Logo File</label>
 							<input type="file" id="skill-icon" name="icon" accept="image/*,.svg"/>
-							<span class="admin-modal__file-hint">Optional if editing (keeps current)</span>
+							<span class="admin-modal__file-hint">Icon upload is not available yet — icons are managed later via the API</span>
 						</div>
 
 						<div class="admin-modal__actions">
@@ -98,24 +100,5 @@ templ SkillsAdminModal(p domain.Profile) {
 				</div>
 			</div>
 		</div>
-
-		<!-- Form prefill and reset helpers -->
-		<script>
-			function fillSkillForm(name, isTool, iconUrl) {
-				document.getElementById('skill-old-name').value = name;
-				document.getElementById('skill-name').value = name;
-				document.getElementById('skill-category').value = isTool ? 'true' : 'false';
-				document.getElementById('skill-form-title').innerText = 'Edit Skill: ' + name;
-				document.getElementById('skill-submit-btn').innerText = 'Save Changes';
-			}
-
-			function resetSkillForm() {
-				document.getElementById('skill-old-name').value = '';
-				document.getElementById('skill-name').value = '';
-				document.getElementById('skill-category').value = 'false';
-				document.getElementById('skill-form-title').innerText = 'Add New Skill';
-				document.getElementById('skill-submit-btn').innerText = 'Add Skill';
-			}
-		</script>
 	</dialog>
 }

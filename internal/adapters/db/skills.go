@@ -100,6 +100,16 @@ func (r *SkillRepo) Delete(ctx context.Context, id int64) (bool, error) {
 	return tag.RowsAffected() > 0, nil
 }
 
+// SetIcon updates only the icon_url of a skill and reports whether a row was
+// affected (false when the skill does not exist).
+func (r *SkillRepo) SetIcon(ctx context.Context, id int64, iconURL string) (bool, error) {
+	tag, err := r.pool.Exec(ctx, `UPDATE skills SET icon_url = $1 WHERE id = $2`, iconURL, id)
+	if err != nil {
+		return false, fmt.Errorf("set icon for skill %d: %w", id, err)
+	}
+	return tag.RowsAffected() > 0, nil
+}
+
 // ExistsByName reports whether a skill with the given name exists.
 func (r *SkillRepo) ExistsByName(ctx context.Context, name string) (bool, error) {
 	var exists bool

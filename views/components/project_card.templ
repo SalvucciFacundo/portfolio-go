@@ -73,13 +73,13 @@ templ ProjectModal(p domain.Project, lang string) {
 				<h2 class="project-modal__title">{ i18n.L(p.TitleEs, p.TitleEn, lang) }</h2>
 			</div>
 			<div class="project-modal__body">
-				<div class="project-modal__gallery-wrapper" data-index="0" data-images={ strings.Join(p.Screenshots, ",") }>
+				<div class="project-modal__gallery-wrapper" data-index="0" data-images={ strings.Join(screenshotURLs(p.Screenshots), ",") }>
 					if len(p.Screenshots) > 1 {
 						<button type="button" class="project-modal__arrow project-modal__arrow--left" onclick="navigateGallery(this, -1)" aria-label="Previous image">&larr;</button>
 					}
 					<div class="project-modal__gallery">
 						if len(p.Screenshots) > 0 {
-							<img src={ p.Screenshots[0] } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" />
+							<img src={ p.Screenshots[0].URL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" />
 						} else {
 							<img src={ p.CoverURL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" />
 						}

@@ -78,7 +78,7 @@ func initMockProfile() domain.Profile {
 				Link:              "",
 				RepoLink:          "https://github.com/SalvucciFacundo/portfolio-go",
 				CoverURL:          cover + "Portafolio+Go",
-				Screenshots:       []string{cover + "Portafolio+Go", cover + "Bento+Layout", cover + "Hexagonal+Architecture"},
+				Screenshots:       []domain.ProjectImage{{URL: cover + "Portafolio+Go"}, {URL: cover + "Bento+Layout"}, {URL: cover + "Hexagonal+Architecture"}},
 			},
 			{
 				TitleEs:           "GAIA",
@@ -92,7 +92,7 @@ func initMockProfile() domain.Profile {
 				Link:              "",
 				RepoLink:          "https://github.com/SalvucciFacundo",
 				CoverURL:          cover + "GAIA",
-				Screenshots:       []string{cover + "GAIA", cover + "AI+Agent+Flow", cover + "JSON+Validation"},
+				Screenshots:       []domain.ProjectImage{{URL: cover + "GAIA"}, {URL: cover + "AI+Agent+Flow"}, {URL: cover + "JSON+Validation"}},
 			},
 			{
 				TitleEs:           "Mis Canarios",
@@ -106,7 +106,7 @@ func initMockProfile() domain.Profile {
 				Link:              "",
 				RepoLink:          "https://github.com/SalvucciFacundo",
 				CoverURL:          cover + "Mis+Canarios",
-				Screenshots:       []string{cover + "Mis+Canarios", cover + "Canary+Genetics", cover + "Firebase+Sync"},
+				Screenshots:       []domain.ProjectImage{{URL: cover + "Mis+Canarios"}, {URL: cover + "Canary+Genetics"}, {URL: cover + "Firebase+Sync"}},
 			},
 		},
 		Experience: []domain.Experience{

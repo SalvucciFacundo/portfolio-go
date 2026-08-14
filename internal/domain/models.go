@@ -39,20 +39,27 @@ type Skill struct {
 }
 
 type Project struct {
-	ID                int64    `json:"id"`
-	Position          int      `json:"position"`
-	TitleEs           string   `json:"title_es"`
-	TitleEn           string   `json:"title_en"`
-	DescriptionEs     string   `json:"description_es"`
-	DescriptionEn     string   `json:"description_en"`
-	TechDescriptionEs string   `json:"tech_description_es"`
-	TechDescriptionEn string   `json:"tech_description_en"`
-	Category          string   `json:"category"`
-	Tags              []string `json:"tags"`
-	Link              string   `json:"link"`
-	RepoLink          string   `json:"repo_link"`
-	CoverURL          string   `json:"cover_url"`
-	Screenshots       []string `json:"screenshots"`
+	ID                int64          `json:"id"`
+	Position          int            `json:"position"`
+	TitleEs           string         `json:"title_es"`
+	TitleEn           string         `json:"title_en"`
+	DescriptionEs     string         `json:"description_es"`
+	DescriptionEn     string         `json:"description_en"`
+	TechDescriptionEs string         `json:"tech_description_es"`
+	TechDescriptionEn string         `json:"tech_description_en"`
+	Category          string         `json:"category"`
+	Tags              []string       `json:"tags"`
+	Link              string         `json:"link"`
+	RepoLink          string         `json:"repo_link"`
+	CoverURL          string         `json:"cover_url"`
+	Screenshots       []ProjectImage `json:"screenshots"`
+}
+
+// ProjectImage es una imagen de proyecto (screenshot) con su id numérico de
+// project_images, necesario para el borrado individual vía API.
+type ProjectImage struct {
+	ID  int64  `json:"id"`
+	URL string `json:"url"`
 }
 
 type Experience struct {

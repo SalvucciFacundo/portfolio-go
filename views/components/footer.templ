@@ -13,12 +13,12 @@ templ Footer(lang string, isAdmin bool) {
 			<div class="footer__bottom">
 				<p class="footer__copy">© { time.Now().Year() } Facundo Salvucci — { i18n.T(lang, "footer.rights") }</p>
 				if isAdmin {
-					<a class="footer__login footer__login--active" href="/admin/logout" aria-label="Logout">
+					<button type="button" class="footer__login footer__login--active" onclick="PortfolioAdmin.logout()" aria-label="Logout">
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 							<rect x="4" y="11" width="16" height="10" rx="2"/>
 							<path d="M8 11V7a4 4 0 0 1 7.87-.87"/>
 						</svg>
-					</a>
+					</button>
 				} else {
 					<button type="button" class="footer__login" onclick="document.getElementById('login-modal').showModal()" aria-label={ i18n.T(lang, "login.aria") }>
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

@@ -2,6 +2,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -39,7 +40,7 @@ func (a *API) GetProject(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if project.Screenshots == nil {
-		project.Screenshots = []string{}
+		project.Screenshots = []domain.ProjectImage{}
 	}
 	writeJSON(w, http.StatusOK, project)
 }
@@ -58,6 +59,9 @@ func (a *API) CreateProject(w http.ResponseWriter, r *http.Request) {
 	if project.TitleEs == "" || project.TitleEn == "" {
 		writeError(w, http.StatusBadRequest, "title_es and title_en are required")
 		return
+	}
+	if project.Tags == nil {
+		project.Tags = []string{}
 	}
 
 	exists, err := a.store.Project.ExistsByTitleEn(r.Context(), project.TitleEn)
@@ -98,6 +102,9 @@ func (a *API) UpdateProject(w http.ResponseWriter, r *http.Request) {
 	if project.TitleEs == "" || project.TitleEn == "" {
 		writeError(w, http.StatusBadRequest, "title_es and title_en are required")
 		return
+	}
+	if project.Tags == nil {
+		project.Tags = []string{}
 	}
 
 	affected, err := a.store.Project.Update(r.Context(), project)
@@ -197,4 +204,46 @@ func (a *API) DeleteProjectImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// UploadProjectCover recibe multipart cover (imagen), lo convierte a WebP en
+// local, lo sube a Cloudinary y persiste la URL en el proyecto {id}. 404 si el
+// proyecto no existe.
+func (a *API) UploadProjectCover(w http.ResponseWriter, r *http.Request) {
+	id, err := idParam(r, "id")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid id")
+		return
+	}
+
+	if _, err := a.store.Project.GetByID(r.Context(), id); err != nil {
+		if errNoRows(err) {
+			writeError(w, http.StatusNotFound, "project not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+
+	r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+	_, header, err := r.FormFile("cover")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "missing cover file")
+		return
+	}
+
+	url, _, err := a.uploadFile(r, header, fmt.Sprintf("project-cover-%d", id))
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if affected, err := a.store.Project.SetCover(r.Context(), id, url); err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	} else if !affected {
+		writeError(w, http.StatusNotFound, "project not found")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{"cover_url": url})
 }

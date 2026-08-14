@@ -2,6 +2,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -104,4 +105,46 @@ func (a *API) DeleteSkill(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// UploadSkillIcon recibe multipart icon (imagen), lo convierte a WebP en local,
+// lo sube a Cloudinary y persiste la URL en el skill {id}. 404 si el skill no
+// existe.
+func (a *API) UploadSkillIcon(w http.ResponseWriter, r *http.Request) {
+	id, err := idParam(r, "id")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid id")
+		return
+	}
+
+	if _, err := a.store.Skill.GetByID(r.Context(), id); err != nil {
+		if errNoRows(err) {
+			writeError(w, http.StatusNotFound, "skill not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+
+	r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+	_, header, err := r.FormFile("icon")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "missing icon file")
+		return
+	}
+
+	url, _, err := a.uploadFile(r, header, fmt.Sprintf("skill-icon-%d", id))
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if affected, err := a.store.Skill.SetIcon(r.Context(), id, url); err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	} else if !affected {
+		writeError(w, http.StatusNotFound, "skill not found")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{"icon_url": url})
 }

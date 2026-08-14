@@ -27,6 +27,7 @@ type SkillRepo interface {
 	Create(ctx context.Context, skill domain.Skill) (int64, error)
 	Update(ctx context.Context, skill domain.Skill) (bool, error)
 	Delete(ctx context.Context, id int64) (bool, error)
+	SetIcon(ctx context.Context, id int64, iconURL string) (bool, error)
 	ExistsByName(ctx context.Context, name string) (bool, error)
 }
 
@@ -40,6 +41,7 @@ type ProjectRepo interface {
 	Delete(ctx context.Context, id int64) (bool, error)
 	AddImages(ctx context.Context, projectID int64, urls []string) error
 	DeleteImage(ctx context.Context, imageID int64) (bool, error)
+	SetCover(ctx context.Context, id int64, coverURL string) (bool, error)
 	ExistsByTitleEn(ctx context.Context, titleEn string) (bool, error)
 }
 

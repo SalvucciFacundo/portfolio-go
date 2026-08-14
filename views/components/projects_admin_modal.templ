@@ -14,6 +14,8 @@ templ ProjectsAdminModal(p domain.Profile) {
 				<button type="button" class="admin-modal__close" onclick="this.closest('dialog').close()">&times;</button>
 			</div>
 
+			<div id="projects-error" class="admin-modal__error"></div>
+
 			<div class="admin-modal__grid">
 				<!-- Left Column: Current Projects List -->
 				<div class="admin-skills-list">
@@ -30,6 +32,9 @@ templ ProjectsAdminModal(p domain.Profile) {
 									<button 
 										type="button" 
 										class="admin-skill-item__btn admin-skill-item__btn--edit"
+										data-id={ fmt.Sprintf("%d", pr.ID) }
+										data-position={ fmt.Sprintf("%d", pr.Position) }
+										data-cover={ pr.CoverURL }
 										data-title-es={ pr.TitleEs }
 										data-title-en={ pr.TitleEn }
 										data-desc-es={ pr.DescriptionEs }
@@ -40,18 +45,7 @@ templ ProjectsAdminModal(p domain.Profile) {
 										data-tags={ strings.Join(pr.Tags, ", ") }
 										data-link={ pr.Link }
 										data-repo={ pr.RepoLink }
-										onclick="fillProjectForm(
-											this.getAttribute('data-title-es'),
-											this.getAttribute('data-title-en'),
-											this.getAttribute('data-desc-es'),
-											this.getAttribute('data-desc-en'),
-											this.getAttribute('data-tech-es'),
-											this.getAttribute('data-tech-en'),
-											this.getAttribute('data-category'),
-											this.getAttribute('data-tags'),
-											this.getAttribute('data-link'),
-											this.getAttribute('data-repo')
-										)"
+										onclick="fillProjectForm(this)"
 									>
 										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
 											<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -61,9 +55,9 @@ templ ProjectsAdminModal(p domain.Profile) {
 									<button 
 										type="button" 
 										class="admin-skill-item__btn admin-skill-item__btn--delete"
-										hx-delete={ fmt.Sprintf("/admin/projects?title=%s", pr.TitleEn) }
-										hx-confirm={ fmt.Sprintf("Are you sure you want to delete '%s'?", pr.TitleEn) }
-										hx-swap="none"
+										data-id={ fmt.Sprintf("%d", pr.ID) }
+										data-title={ pr.TitleEn }
+										onclick="deleteProject(this)"
 									>
 										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
 											<polyline points="3 6 5 6 21 6"></polyline>
@@ -81,9 +75,7 @@ templ ProjectsAdminModal(p domain.Profile) {
 				<!-- Right Column: Add/Edit Form -->
 				<div class="admin-skills-form" style="max-height: 480px; overflow-y: auto; padding-right: 0.5rem;">
 					<h4 id="project-form-title" class="admin-skills-form__title">Add New Project</h4>
-					<form hx-post="/admin/projects" hx-encoding="multipart/form-data" hx-swap="none">
-						<input type="hidden" id="project-old-title" name="old_title" value=""/>
-						
+					<form onsubmit="PortfolioAdmin.saveProject(event)">
 						<div class="admin-modal__grid">
 							<div class="admin-modal__field">
 								<label for="project-title-es">Title (ES)</label>
@@ -145,6 +137,7 @@ templ ProjectsAdminModal(p domain.Profile) {
 							<div class="admin-modal__field">
 								<label for="project-cover">Cover Image</label>
 								<input type="file" id="project-cover" name="cover" accept="image/*"/>
+								<span class="admin-modal__file-hint">Cover upload is not available yet — the current cover is kept when editing</span>
 							</div>
 							<div class="admin-modal__field">
 								<label for="project-screenshots">Screenshots (1 or more)</label>
@@ -160,40 +153,5 @@ templ ProjectsAdminModal(p domain.Profile) {
 				</div>
 			</div>
 		</div>
-
-		<!-- Form prefill and reset helpers -->
-		<script>
-			function fillProjectForm(titleEs, titleEn, descEs, descEn, techDescEs, techDescEn, category, tags, link, repoLink) {
-				document.getElementById('project-old-title').value = titleEn;
-				document.getElementById('project-title-es').value = titleEs;
-				document.getElementById('project-title-en').value = titleEn;
-				document.getElementById('project-desc-es').value = descEs;
-				document.getElementById('project-desc-en').value = descEn;
-				document.getElementById('project-tech-desc-es').value = techDescEs;
-				document.getElementById('project-tech-desc-en').value = techDescEn;
-				document.getElementById('project-category').value = category;
-				document.getElementById('project-tags').value = tags;
-				document.getElementById('project-link').value = link;
-				document.getElementById('project-repo-link').value = repoLink;
-				document.getElementById('project-form-title').innerText = 'Edit Project: ' + titleEn;
-				document.getElementById('project-submit-btn').innerText = 'Save Changes';
-			}
-
-			function resetProjectForm() {
-				document.getElementById('project-old-title').value = '';
-				document.getElementById('project-title-es').value = '';
-				document.getElementById('project-title-en').value = '';
-				document.getElementById('project-desc-es').value = '';
-				document.getElementById('project-desc-en').value = '';
-				document.getElementById('project-tech-desc-es').value = '';
-				document.getElementById('project-tech-desc-en').value = '';
-				document.getElementById('project-category').value = 'Web';
-				document.getElementById('project-tags').value = '';
-				document.getElementById('project-link').value = '';
-				document.getElementById('project-repo-link').value = '';
-				document.getElementById('project-form-title').innerText = 'Add New Project';
-				document.getElementById('project-submit-btn').innerText = 'Add Project';
-			}
-		</script>
 	</dialog>
 }

@@ -11,6 +11,17 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 )
 
+// toProjectImages convierte una lista de URLs al tipo ProjectImage (IDs 0:
+// solo los handlers del mock en memoria los producen; los IDs reales los
+// devuelve la DB).
+func toProjectImages(urls []string) []domain.ProjectImage {
+	images := make([]domain.ProjectImage, 0, len(urls))
+	for _, u := range urls {
+		images = append(images, domain.ProjectImage{URL: u})
+	}
+	return images
+}
+
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "bad request", http.StatusBadRequest)
@@ -311,10 +322,10 @@ func ProjectsUpdateHandler(w http.ResponseWriter, r *http.Request) {
 					profile.Projects[i].CoverURL = coverURL
 				}
 				if len(screenshotURLs) > 0 {
-					profile.Projects[i].Screenshots = screenshotURLs
+					profile.Projects[i].Screenshots = toProjectImages(screenshotURLs)
 				} else if coverURL != "" {
 					// Fallback to update first image of screenshots if cover changes
-					profile.Projects[i].Screenshots = []string{coverURL}
+					profile.Projects[i].Screenshots = []domain.ProjectImage{{URL: coverURL}}
 				}
 				break
 			}
@@ -339,7 +350,7 @@ func ProjectsUpdateHandler(w http.ResponseWriter, r *http.Request) {
 			Link:              link,
 			RepoLink:          repoLink,
 			CoverURL:          coverURL,
-			Screenshots:       screenshotURLs,
+			Screenshots:       toProjectImages(screenshotURLs),
 		}
 		profile.Projects = append(profile.Projects, newProj)
 	}

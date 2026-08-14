@@ -1,5 +1,19 @@
 package components
 
+import (
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+)
+
+// screenshotURLs extrae las URLs de los screenshots para los atributos de datos
+// del front (data-images espera URLs separadas por coma).
+func screenshotURLs(imgs []domain.ProjectImage) []string {
+	urls := make([]string, 0, len(imgs))
+	for _, img := range imgs {
+		urls = append(urls, img.URL)
+	}
+	return urls
+}
+
 func brandColor(key string) string {
 	switch key {
 	case "github":

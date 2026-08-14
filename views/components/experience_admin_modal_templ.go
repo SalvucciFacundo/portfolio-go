@@ -34,7 +34,7 @@ func ExperienceAdminModal(p domain.Profile) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<dialog id=\"experience-admin-modal\" class=\"admin-modal\"><div class=\"admin-modal__content admin-modal__content--wide\"><div class=\"admin-modal__header\"><h3 class=\"admin-modal__title\">Manage Work Experience</h3><button type=\"button\" class=\"admin-modal__close\" onclick=\"this.closest('dialog').close()\">&times;</button></div><div class=\"admin-modal__grid\"><!-- Left Column: Current Experiences List --><div class=\"admin-skills-list\"><h4 class=\"admin-skills-list__title\">Current Entries</h4><div class=\"admin-skills-list__container\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<dialog id=\"experience-admin-modal\" class=\"admin-modal\"><div class=\"admin-modal__content admin-modal__content--wide\"><div class=\"admin-modal__header\"><h3 class=\"admin-modal__title\">Manage Work Experience</h3><button type=\"button\" class=\"admin-modal__close\" onclick=\"this.closest('dialog').close()\">&times;</button></div><div id=\"experience-error\" class=\"admin-modal__error\"></div><div class=\"admin-modal__grid\"><!-- Left Column: Current Experiences List --><div class=\"admin-skills-list\"><h4 class=\"admin-skills-list__title\">Current Entries</h4><div class=\"admin-skills-list__container\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -46,7 +46,7 @@ func ExperienceAdminModal(p domain.Profile) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(e.PositionEn)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 24, Col: 60}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 26, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -59,7 +59,7 @@ func ExperienceAdminModal(p domain.Profile) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(e.Company)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 25, Col: 61}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 27, Col: 61}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -72,135 +72,174 @@ func ExperienceAdminModal(p domain.Profile) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(e.PeriodEn)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 25, Col: 77}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 27, Col: 77}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ")</span></div><div class=\"admin-skill-item__actions\"><button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--edit\" data-company=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ")</span></div><div class=\"admin-skill-item__actions\"><button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--edit\" data-id=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(e.Company)
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", e.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 31, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 33, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" data-position-es=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" data-position=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(e.PositionEs)
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", e.Position))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 32, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 34, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" data-position-en=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" data-company=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var7 string
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(e.PositionEn)
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(e.Company)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 33, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 35, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" data-period-es=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" data-position-es=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
-			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(e.PeriodEs)
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(e.PositionEs)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 34, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 36, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" data-period-en=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" data-position-en=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var9 string
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(e.PeriodEn)
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(e.PositionEn)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 35, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 37, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" data-desc-es=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" data-period-es=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 string
-			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(e.DescriptionEs)
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(e.PeriodEs)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 36, Col: 40}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 38, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" data-desc-en=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" data-period-en=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var11 string
-			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(e.DescriptionEn)
+			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(e.PeriodEn)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 37, Col: 40}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 39, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" onclick=\"fillExperienceForm(\n\t\t\t\t\t\t\t\t\t\t\tthis.getAttribute('data-company'),\n\t\t\t\t\t\t\t\t\t\t\tthis.getAttribute('data-position-es'),\n\t\t\t\t\t\t\t\t\t\t\tthis.getAttribute('data-position-en'),\n\t\t\t\t\t\t\t\t\t\t\tthis.getAttribute('data-period-es'),\n\t\t\t\t\t\t\t\t\t\t\tthis.getAttribute('data-period-en'),\n\t\t\t\t\t\t\t\t\t\t\tthis.getAttribute('data-desc-es'),\n\t\t\t\t\t\t\t\t\t\t\tthis.getAttribute('data-desc-en')\n\t\t\t\t\t\t\t\t\t\t)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><path d=\"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\"></path> <path d=\"M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z\"></path></svg></button> <button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--delete\" hx-delete=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" data-desc-es=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/admin/experience?company=%s&position=%s", e.Company, e.PositionEn))
+			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(e.DescriptionEs)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 56, Col: 102}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 40, Col: 40}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" hx-confirm=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" data-desc-en=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 string
-			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Are you sure you want to delete '%s' role at '%s'?", e.PositionEn, e.Company))
+			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(e.DescriptionEn)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 57, Col: 113}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 41, Col: 40}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" hx-swap=\"none\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><polyline points=\"3 6 5 6 21 6\"></polyline> <path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"></path> <line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"></line> <line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"></line></svg></button></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" onclick=\"fillExperienceForm(this)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><path d=\"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\"></path> <path d=\"M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z\"></path></svg></button> <button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--delete\" data-id=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var14 string
+			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", e.ID))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 52, Col: 43}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" data-company=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var15 string
+			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(e.Company)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 53, Col: 34}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" data-position-en=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var16 string
+			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(e.PositionEn)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/experience_admin_modal.templ`, Line: 54, Col: 41}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" onclick=\"deleteExperience(this)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><polyline points=\"3 6 5 6 21 6\"></polyline> <path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"></path> <line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"></line> <line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"></line></svg></button></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div></div><!-- Right Column: Add/Edit Form --><div class=\"admin-skills-form\"><h4 id=\"experience-form-title\" class=\"admin-skills-form__title\">Add New Experience</h4><form hx-post=\"/admin/experience\" hx-swap=\"none\"><input type=\"hidden\" id=\"experience-old-company\" name=\"old_company\" value=\"\"> <input type=\"hidden\" id=\"experience-old-position\" name=\"old_position\" value=\"\"><div class=\"admin-modal__field\"><label for=\"experience-company\">Company</label> <input type=\"text\" id=\"experience-company\" name=\"company\" required placeholder=\"e.g. Acme Corp\"></div><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"experience-position-es\">Position (ES)</label> <input type=\"text\" id=\"experience-position-es\" name=\"position_es\" required placeholder=\"e.g. Desarrollador Senior\"></div><div class=\"admin-modal__field\"><label for=\"experience-position-en\">Position (EN)</label> <input type=\"text\" id=\"experience-position-en\" name=\"position_en\" required placeholder=\"e.g. Senior Developer\"></div></div><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"experience-period-es\">Period (ES)</label> <input type=\"text\" id=\"experience-period-es\" name=\"period_es\" required placeholder=\"e.g. 2021 - Presente\"></div><div class=\"admin-modal__field\"><label for=\"experience-period-en\">Period (EN)</label> <input type=\"text\" id=\"experience-period-en\" name=\"period_en\" required placeholder=\"e.g. 2021 - Present\"></div></div><div class=\"admin-modal__field\"><label for=\"experience-desc-es\">Description (ES)</label> <textarea id=\"experience-desc-es\" name=\"description_es\" rows=\"3\" placeholder=\"Liderazgo técnico, stack...\"></textarea></div><div class=\"admin-modal__field\"><label for=\"experience-desc-en\">Description (EN)</label> <textarea id=\"experience-desc-en\" name=\"description_en\" rows=\"3\" placeholder=\"Technical leadership, stack...\"></textarea></div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"resetExperienceForm()\">Reset</button> <button type=\"submit\" id=\"experience-submit-btn\" class=\"admin-modal__submit\">Add Experience</button></div></form></div></div></div><!-- Form prefill and reset helpers --><script>\n\t\t\tfunction fillExperienceForm(company, posEs, posEn, periodEs, periodEn, descEs, descEn) {\n\t\t\t\tdocument.getElementById('experience-old-company').value = company;\n\t\t\t\tdocument.getElementById('experience-old-position').value = posEn;\n\t\t\t\tdocument.getElementById('experience-company').value = company;\n\t\t\t\tdocument.getElementById('experience-position-es').value = posEs;\n\t\t\t\tdocument.getElementById('experience-position-en').value = posEn;\n\t\t\t\tdocument.getElementById('experience-period-es').value = periodEs;\n\t\t\t\tdocument.getElementById('experience-period-en').value = periodEn;\n\t\t\t\tdocument.getElementById('experience-desc-es').value = descEs;\n\t\t\t\tdocument.getElementById('experience-desc-en').value = descEn;\n\t\t\t\tdocument.getElementById('experience-form-title').innerText = 'Edit Experience: ' + company;\n\t\t\t\tdocument.getElementById('experience-submit-btn').innerText = 'Save Changes';\n\t\t\t}\n\n\t\t\tfunction resetExperienceForm() {\n\t\t\t\tdocument.getElementById('experience-old-company').value = '';\n\t\t\t\tdocument.getElementById('experience-old-position').value = '';\n\t\t\t\tdocument.getElementById('experience-company').value = '';\n\t\t\t\tdocument.getElementById('experience-position-es').value = '';\n\t\t\t\tdocument.getElementById('experience-position-en').value = '';\n\t\t\t\tdocument.getElementById('experience-period-es').value = '';\n\t\t\t\tdocument.getElementById('experience-period-en').value = '';\n\t\t\t\tdocument.getElementById('experience-desc-es').value = '';\n\t\t\t\tdocument.getElementById('experience-desc-en').value = '';\n\t\t\t\tdocument.getElementById('experience-form-title').innerText = 'Add New Experience';\n\t\t\t\tdocument.getElementById('experience-submit-btn').innerText = 'Add Experience';\n\t\t\t}\n\t\t</script></dialog>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></div><!-- Right Column: Add/Edit Form --><div class=\"admin-skills-form\"><h4 id=\"experience-form-title\" class=\"admin-skills-form__title\">Add New Experience</h4><form onsubmit=\"PortfolioAdmin.saveExperience(event)\"><div class=\"admin-modal__field\"><label for=\"experience-company\">Company</label> <input type=\"text\" id=\"experience-company\" name=\"company\" required placeholder=\"e.g. Acme Corp\"></div><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"experience-position-es\">Position (ES)</label> <input type=\"text\" id=\"experience-position-es\" name=\"position_es\" required placeholder=\"e.g. Desarrollador Senior\"></div><div class=\"admin-modal__field\"><label for=\"experience-position-en\">Position (EN)</label> <input type=\"text\" id=\"experience-position-en\" name=\"position_en\" required placeholder=\"e.g. Senior Developer\"></div></div><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"experience-period-es\">Period (ES)</label> <input type=\"text\" id=\"experience-period-es\" name=\"period_es\" required placeholder=\"e.g. 2021 - Presente\"></div><div class=\"admin-modal__field\"><label for=\"experience-period-en\">Period (EN)</label> <input type=\"text\" id=\"experience-period-en\" name=\"period_en\" required placeholder=\"e.g. 2021 - Present\"></div></div><div class=\"admin-modal__field\"><label for=\"experience-desc-es\">Description (ES)</label> <textarea id=\"experience-desc-es\" name=\"description_es\" rows=\"3\" placeholder=\"Liderazgo técnico, stack...\"></textarea></div><div class=\"admin-modal__field\"><label for=\"experience-desc-en\">Description (EN)</label> <textarea id=\"experience-desc-en\" name=\"description_en\" rows=\"3\" placeholder=\"Technical leadership, stack...\"></textarea></div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"resetExperienceForm()\">Reset</button> <button type=\"submit\" id=\"experience-submit-btn\" class=\"admin-modal__submit\">Add Experience</button></div></form></div></div></div></dialog>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

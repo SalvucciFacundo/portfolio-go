@@ -31,7 +31,7 @@ func HeroEditModal(p domain.Profile) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<dialog id=\"hero-edit-modal\" class=\"admin-modal\"><div class=\"admin-modal__content admin-modal__content--wide\"><div class=\"admin-modal__header\"><h3 class=\"admin-modal__title\">Edit Hero</h3><button type=\"button\" class=\"admin-modal__close\" onclick=\"this.closest('dialog').close()\">&times;</button></div><form hx-post=\"/admin/hero\" hx-encoding=\"multipart/form-data\" hx-swap=\"none\"><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"hero-name\">Name</label> <input type=\"text\" id=\"hero-name\" name=\"name\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<dialog id=\"hero-edit-modal\" class=\"admin-modal\"><div class=\"admin-modal__content admin-modal__content--wide\"><div class=\"admin-modal__header\"><h3 class=\"admin-modal__title\">Edit Hero</h3><button type=\"button\" class=\"admin-modal__close\" onclick=\"this.closest('dialog').close()\">&times;</button></div><form onsubmit=\"PortfolioAdmin.saveHero(event)\"><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"hero-name\">Name</label> <input type=\"text\" id=\"hero-name\" name=\"name\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -145,7 +145,7 @@ func HeroEditModal(p domain.Profile) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"this.closest('dialog').close()\">Cancel</button> <button type=\"submit\" class=\"admin-modal__submit\">Save</button></div></form></div></dialog>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div><div id=\"hero-error\" class=\"admin-modal__error\"></div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"this.closest('dialog').close()\">Cancel</button> <button type=\"submit\" class=\"admin-modal__submit\">Save</button></div></form></div></dialog>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
