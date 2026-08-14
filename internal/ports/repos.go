@@ -17,6 +17,7 @@ type ProfileRepo interface {
 	SetResume(ctx context.Context, resumeURL, resumeFilename string) error
 	SetAvatar(ctx context.Context, avatarURL string) error
 	SetSocials(ctx context.Context, socials []domain.SocialLink) error
+	ListSocials(ctx context.Context) ([]domain.SocialLink, error)
 }
 
 // SkillRepo persists skills. Lists are always ordered by position.

@@ -88,8 +88,15 @@ func runServe(ctx context.Context, pool *pgxpool.Pool) {
 	svc := auth.NewService(db.NewAuthRepo(pool))
 	handler.SetupAuth(svc)
 
+	store := db.New(pool)
+	limiter := auth.NewLimiter()
+
 	mux := http.NewServeMux()
-	router.Register(mux)
+	router.Register(mux, router.Deps{
+		Store:   store,
+		Auth:    svc,
+		Limiter: limiter,
+	})
 
 	port := os.Getenv("SERVER_PORT")
 	if port == "" {

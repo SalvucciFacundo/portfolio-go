@@ -20,30 +20,30 @@ type loginRequest struct {
 func LoginJSONHandler(svc *auth.Service, limiter *auth.Limiter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			writeJSONError(w, http.StatusMethodNotAllowed, "method not allowed")
+			writeError(w, http.StatusMethodNotAllowed, "method not allowed")
 			return
 		}
 
 		if !limiter.Allow(remoteIP(r)) {
-			writeJSONError(w, http.StatusTooManyRequests, "too many requests")
+			writeError(w, http.StatusTooManyRequests, "too many requests")
 			return
 		}
 
 		var req loginRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			writeJSONError(w, http.StatusBadRequest, "invalid request")
+			writeError(w, http.StatusBadRequest, "invalid request")
 			return
 		}
 
 		token, err := svc.Login(r.Context(), req.Password, r.UserAgent())
 		if err != nil {
-			writeJSONError(w, http.StatusUnauthorized, "invalid credentials")
+			writeError(w, http.StatusUnauthorized, "invalid credentials")
 			return
 		}
 
 		csrf, err := auth.GenerateCSRFToken()
 		if err != nil {
-			writeJSONError(w, http.StatusInternalServerError, "internal error")
+			writeError(w, http.StatusInternalServerError, "internal error")
 			return
 		}
 		setSessionCookie(w, token)
@@ -58,7 +58,7 @@ func LoginJSONHandler(svc *auth.Service, limiter *auth.Limiter) http.HandlerFunc
 func LogoutJSONHandler(svc *auth.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			writeJSONError(w, http.StatusMethodNotAllowed, "method not allowed")
+			writeError(w, http.StatusMethodNotAllowed, "method not allowed")
 			return
 		}
 
@@ -76,8 +76,4 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
 	_ = json.NewEncoder(w).Encode(v)
-}
-
-func writeJSONError(w http.ResponseWriter, status int, msg string) {
-	writeJSON(w, status, map[string]string{"error": msg})
 }

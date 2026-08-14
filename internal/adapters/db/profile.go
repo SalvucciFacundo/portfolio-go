@@ -91,6 +91,30 @@ func (r *ProfileRepo) SetAvatar(ctx context.Context, avatarURL string) error {
 	return nil
 }
 
+// ListSocials returns every social link ordered by position.
+func (r *ProfileRepo) ListSocials(ctx context.Context) ([]domain.SocialLink, error) {
+	rows, err := r.pool.Query(ctx,
+		`SELECT id, position, name, url, icon_key
+		 FROM social_links ORDER BY position ASC, id ASC`)
+	if err != nil {
+		return nil, fmt.Errorf("list socials: %w", err)
+	}
+	defer rows.Close()
+
+	socials := make([]domain.SocialLink, 0)
+	for rows.Next() {
+		var s domain.SocialLink
+		if err := rows.Scan(&s.ID, &s.Position, &s.Name, &s.URL, &s.IconKey); err != nil {
+			return nil, fmt.Errorf("scan social: %w", err)
+		}
+		socials = append(socials, s)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("list socials: %w", err)
+	}
+	return socials, nil
+}
+
 // SetSocials replaces every social link in a single transaction.
 func (r *ProfileRepo) SetSocials(ctx context.Context, socials []domain.SocialLink) error {
 	tx, err := r.pool.Begin(ctx)

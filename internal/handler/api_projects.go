@@ -1,0 +1,205 @@
+// api_projects.go — handlers JSON de /api/v1/projects y sus imágenes.
+package handler
+
+import (
+	"net/http"
+	"strings"
+
+	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
+)
+
+// ListProjects devuelve los proyectos ordenados por position (sin screenshots).
+func (a *API) ListProjects(w http.ResponseWriter, r *http.Request) {
+	projects, err := a.store.Project.List(r.Context())
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+	if projects == nil {
+		projects = []domain.Project{}
+	}
+	writeJSON(w, http.StatusOK, projects)
+}
+
+// GetProject devuelve el proyecto {id} con sus screenshots; 404 si no existe.
+func (a *API) GetProject(w http.ResponseWriter, r *http.Request) {
+	id, err := idParam(r, "id")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid id")
+		return
+	}
+
+	project, err := a.store.Project.GetByID(r.Context(), id)
+	if err != nil {
+		if errNoRows(err) {
+			writeError(w, http.StatusNotFound, "project not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+	if project.Screenshots == nil {
+		project.Screenshots = []string{}
+	}
+	writeJSON(w, http.StatusOK, project)
+}
+
+// CreateProject valida los títulos, chequea duplicado por title_en (409) y crea
+// el proyecto (201). Los screenshots en el body son opcionales.
+func (a *API) CreateProject(w http.ResponseWriter, r *http.Request) {
+	var project domain.Project
+	if err := readJSON(r, &project); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+
+	project.TitleEs = strings.TrimSpace(project.TitleEs)
+	project.TitleEn = strings.TrimSpace(project.TitleEn)
+	if project.TitleEs == "" || project.TitleEn == "" {
+		writeError(w, http.StatusBadRequest, "title_es and title_en are required")
+		return
+	}
+
+	exists, err := a.store.Project.ExistsByTitleEn(r.Context(), project.TitleEn)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+	if exists {
+		writeError(w, http.StatusConflict, "project already exists")
+		return
+	}
+
+	id, err := a.store.Project.Create(r.Context(), project)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+	writeJSON(w, http.StatusCreated, map[string]int64{"id": id})
+}
+
+// UpdateProject modifica el proyecto {id}; 404 si no existe.
+func (a *API) UpdateProject(w http.ResponseWriter, r *http.Request) {
+	id, err := idParam(r, "id")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid id")
+		return
+	}
+
+	var project domain.Project
+	if err := readJSON(r, &project); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+
+	project.ID = id
+	project.TitleEs = strings.TrimSpace(project.TitleEs)
+	project.TitleEn = strings.TrimSpace(project.TitleEn)
+	if project.TitleEs == "" || project.TitleEn == "" {
+		writeError(w, http.StatusBadRequest, "title_es and title_en are required")
+		return
+	}
+
+	affected, err := a.store.Project.Update(r.Context(), project)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+	if !affected {
+		writeError(w, http.StatusNotFound, "project not found")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]int64{"id": id})
+}
+
+// DeleteProject elimina el proyecto {id}; 204 en éxito.
+func (a *API) DeleteProject(w http.ResponseWriter, r *http.Request) {
+	id, err := idParam(r, "id")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid id")
+		return
+	}
+
+	affected, err := a.store.Project.Delete(r.Context(), id)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+	if !affected {
+		writeError(w, http.StatusNotFound, "project not found")
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// UploadProjectImages recibe multipart screenshots[] (varios archivos), los
+// guarda en static/uploads y los agrega al proyecto (201 con las URLs).
+func (a *API) UploadProjectImages(w http.ResponseWriter, r *http.Request) {
+	projectID, err := idParam(r, "id")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid id")
+		return
+	}
+
+	if _, err := a.store.Project.GetByID(r.Context(), projectID); err != nil {
+		if errNoRows(err) {
+			writeError(w, http.StatusNotFound, "project not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+
+	r.Body = http.MaxBytesReader(w, r.Body, 20<<20)
+	if err := r.ParseMultipartForm(20 << 20); err != nil {
+		writeError(w, http.StatusBadRequest, "request too large")
+		return
+	}
+	files := r.MultipartForm.File["screenshots"]
+	if len(files) == 0 {
+		writeError(w, http.StatusBadRequest, "no screenshots uploaded")
+		return
+	}
+
+	urls := make([]string, 0, len(files))
+	for _, fh := range files {
+		file, err := fh.Open()
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, "internal error")
+			return
+		}
+		url, err := saveUpload(file, fh, "screenshot", imageExts)
+		file.Close()
+		if err != nil {
+			writeError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		urls = append(urls, url)
+	}
+
+	if err := a.store.Project.AddImages(r.Context(), projectID, urls); err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+	writeJSON(w, http.StatusCreated, map[string][]string{"urls": urls})
+}
+
+// DeleteProjectImage elimina el screenshot {imageId} del proyecto; 204 en éxito.
+func (a *API) DeleteProjectImage(w http.ResponseWriter, r *http.Request) {
+	imageID, err := idParam(r, "imageId")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid image id")
+		return
+	}
+
+	affected, err := a.store.Project.DeleteImage(r.Context(), imageID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+	if !affected {
+		writeError(w, http.StatusNotFound, "image not found")
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
