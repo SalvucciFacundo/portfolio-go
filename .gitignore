@@ -5,3 +5,4 @@ tmp/
 # Environment files
 .env
 *.env.local
+.resend-dns*.png
