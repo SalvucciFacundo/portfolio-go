@@ -233,3 +233,25 @@ ol {
 		animation-iteration-count: 1 !important;
 	}
 }
+
+/* Responsive vertical scrolling behavior */
+@media (max-width: 900px) {
+	html, body {
+		overflow-y: auto !important;
+		height: auto !important;
+	}
+	.section {
+		display: flex !important;
+		min-height: auto !important;
+		height: auto !important;
+		padding: 5rem 0 !important;
+		opacity: 1 !important;
+		transform: none !important;
+	}
+	.section > * {
+		opacity: 1 !important;
+		transform: none !important;
+		animation: none !important;
+	}
+}
+

@@ -1213,6 +1213,8 @@ html.dark-theme .theme-toggle .icon-moon {
 	padding: 0;
 	max-width: 650px;
 	width: calc(100% - 2rem);
+	max-height: calc(100vh - 2rem);
+	overflow-y: auto;
 	box-shadow: 0 24px 54px rgba(0, 0, 0, 0.35);
 	z-index: 9999;
 	position: fixed;
@@ -1973,6 +1975,36 @@ html.dark-theme .project-modal__tag {
 	.hero {
 		min-height: auto;
 		padding-top: 4rem;
+	}
+
+	.hero__media-floated {
+		float: none !important;
+		margin: 0 auto 2rem !important;
+		display: flex;
+		justify-content: center;
+		width: fit-content;
+	}
+
+	.hero__intro {
+		margin-top: 1rem !important;
+		text-align: center !important;
+	}
+
+	.hero__status-tag,
+	.hero__greeting {
+		justify-content: center !important;
+	}
+
+	.hero__role-wrapper {
+		justify-content: center !important;
+	}
+
+	.hero__gutter {
+		display: none !important;
+	}
+
+	.project-modal__content {
+		padding: 1.25rem !important;
 	}
 
 	.vinyl {

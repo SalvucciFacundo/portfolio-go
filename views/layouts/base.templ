@@ -140,18 +140,26 @@ templ Base(lang string) {
 						}, LEAVE_MS);
 					}
 
-					// Initialize: hide all sections except the first, activate it
-					allSections.forEach(function (sec, i) {
-						if (i === 0) {
+					// Initialize: hide all sections except the first if on desktop
+					if (window.innerWidth > 900) {
+						allSections.forEach(function (sec, i) {
+							if (i === 0) {
+								sec.classList.add('is-active');
+							} else {
+								sec.style.display = 'none';
+							}
+						});
+						updateNav(0);
+					} else {
+						allSections.forEach(function (sec) {
 							sec.classList.add('is-active');
-						} else {
-							sec.style.display = 'none';
-						}
-					});
-					updateNav(0);
+							sec.style.display = '';
+						});
+					}
 
 					// Wheel handler
 					window.addEventListener('wheel', function (e) {
+						if (window.innerWidth <= 900) return;
 						e.preventDefault();
 						var dir = e.deltaY > 0 ? 1 : -1;
 						goTo(currentIdx + dir);
@@ -160,6 +168,7 @@ templ Base(lang string) {
 					// Sidebar nav click handler
 					navLinks.forEach(function (a) {
 						a.addEventListener('click', function (e) {
+							if (window.innerWidth <= 900) return;
 							e.preventDefault();
 							var targetId = a.getAttribute('href').replace('#', '');
 							for (var i = 0; i < allSections.length; i++) {
@@ -173,6 +182,7 @@ templ Base(lang string) {
 
 					// Keyboard arrow support
 					window.addEventListener('keydown', function (e) {
+						if (window.innerWidth <= 900) return;
 						if (e.key === 'ArrowDown' || e.key === 'PageDown') {
 							e.preventDefault();
 							goTo(currentIdx + 1);

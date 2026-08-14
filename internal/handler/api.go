@@ -74,14 +74,18 @@ func idParam(r *http.Request, name string) (int64, error) {
 
 var (
 	imageExts = map[string]bool{".jpg": true, ".jpeg": true, ".png": true, ".webp": true, ".gif": true}
-	cvExts    = map[string]bool{".pdf": true}
+	// vectorExts son archivos vectoriales (SVG) que se suben TAL CUAL a
+	// Cloudinary sin conversión a WebP (cwebp no procesa vectores y convertirlos
+	// perdería nitidez). El navegador los renderiza directamente.
+	vectorExts = map[string]bool{".svg": true}
+	cvExts     = map[string]bool{".pdf": true}
 )
 
 // uploadFile lee un archivo multipart a bytes y lo sube al Uploader: las
-// imágenes se convierten a WebP en local (imageproc) y se suben como image;
-// los PDFs se suben como raw. El public_id se arma como
-// <folder>/<name>-<unix>.<ext> — Cloudinary crea las carpetas automáticamente.
-// Devuelve la URL de entrega y el nombre original del archivo.
+// imágenes bitmap se convierten a WebP en local (imageproc); los SVG y PDFs se
+// suben tal cual. El public_id se arma como <folder>/<name>-<unix>.<ext> —
+// Cloudinary crea las carpetas automáticamente. Devuelve la URL de entrega y
+// el nombre original del archivo.
 func (a *API) uploadFile(r *http.Request, fh *multipart.FileHeader, folder, name string) (url, filename string, err error) {
 	if a.uploader == nil {
 		return "", "", errors.New("uploader not configured")
@@ -104,6 +108,11 @@ func (a *API) uploadFile(r *http.Request, fh *multipart.FileHeader, folder, name
 	case cvExts[ext]:
 		publicID := fmt.Sprintf("%s-%d.pdf", name, time.Now().Unix())
 		url, err = a.uploader.UploadRaw(r.Context(), data, folder, publicID)
+	case vectorExts[ext]:
+		// SVG: subir tal cual, SIN conversión. public_id con extensión para
+		// que Cloudinary lo sirva como image/svg+xml.
+		publicID := fmt.Sprintf("%s-%d.svg", name, time.Now().Unix())
+		url, err = a.uploader.UploadImage(r.Context(), data, folder, publicID)
 	case imageExts[ext]:
 		webp, convErr := imageproc.ConvertToWebP(data, filename)
 		if convErr != nil {
