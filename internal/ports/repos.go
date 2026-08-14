@@ -68,6 +68,7 @@ type AuthRepo interface {
 	CreateAdmin(ctx context.Context, username, passwordHash string) error
 	GetAdminCount(ctx context.Context) (int, error)
 	GetAdminByUsername(ctx context.Context, username string) (domain.AdminUser, error)
+	GetFirstAdmin(ctx context.Context) (domain.AdminUser, error)
 	CreateSession(ctx context.Context, session domain.Session) error
 	GetSessionByTokenHash(ctx context.Context, tokenHash string) (domain.Session, error)
 	DeleteSession(ctx context.Context, tokenHash string) error

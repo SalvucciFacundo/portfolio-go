@@ -68,10 +68,12 @@ func (s *Service) CreateAdmin(ctx context.Context, username, password string) er
 	return nil
 }
 
-// Login validates password against the default admin account and returns a new
-// session token (kept hashed in the repo) on success.
+// Login validates password against the single owner admin account (the first
+// created) and returns a new session token (kept hashed in the repo) on
+// success. The frontend login form only asks for the password, so the username
+// is not part of the flow.
 func (s *Service) Login(ctx context.Context, password, userAgent string) (string, error) {
-	admin, err := s.repo.GetAdminByUsername(ctx, s.defaultUsername)
+	admin, err := s.repo.GetFirstAdmin(ctx)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return "", ErrNoAdmin
 	}

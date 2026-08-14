@@ -57,6 +57,20 @@ func (r *AuthRepo) GetAdminByUsername(ctx context.Context, username string) (dom
 	return u, nil
 }
 
+// GetFirstAdmin returns the first (lowest id) admin account, which is the
+// single owner account for this portfolio. Returns pgx.ErrNoRows wrapped when
+// no admin exists yet.
+func (r *AuthRepo) GetFirstAdmin(ctx context.Context) (domain.AdminUser, error) {
+	var u domain.AdminUser
+	err := r.pool.QueryRow(ctx,
+		`SELECT id, username, password_hash FROM admin_users ORDER BY id ASC LIMIT 1`,
+	).Scan(&u.ID, &u.Username, &u.PasswordHash)
+	if err != nil {
+		return domain.AdminUser{}, fmt.Errorf("get first admin: %w", err)
+	}
+	return u, nil
+}
+
 // CreateSession inserts a session row. ExpiresAt is stored as TIMESTAMPTZ.
 func (r *AuthRepo) CreateSession(ctx context.Context, s domain.Session) error {
 	_, err := r.pool.Exec(ctx, `
