@@ -170,8 +170,9 @@ func (a *API) UploadProjectImages(w http.ResponseWriter, r *http.Request) {
 	}
 
 	urls := make([]string, 0, len(files))
+	folder := fmt.Sprintf("portfolio/projects/%d", projectID)
 	for _, fh := range files {
-		url, _, err := a.uploadFile(r, fh, "screenshot")
+		url, _, err := a.uploadFile(r, fh, folder, "screenshot")
 		if err != nil {
 			writeError(w, http.StatusBadRequest, err.Error())
 			return
@@ -232,7 +233,7 @@ func (a *API) UploadProjectCover(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url, _, err := a.uploadFile(r, header, fmt.Sprintf("project-cover-%d", id))
+	url, _, err := a.uploadFile(r, header, fmt.Sprintf("portfolio/projects/%d", id), "cover")
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return

@@ -112,7 +112,7 @@ func (a *API) UploadAvatar(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url, _, err := a.uploadFile(r, header, "avatar")
+	url, _, err := a.uploadFile(r, header, "portfolio/avatar", "avatar")
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return
@@ -135,7 +135,7 @@ func (a *API) UploadCV(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url, filename, err := a.uploadFile(r, header, "cv")
+	url, filename, err := a.uploadFile(r, header, "portfolio/cv", "cv")
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return

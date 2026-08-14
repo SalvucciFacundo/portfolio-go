@@ -133,7 +133,7 @@ func (a *API) UploadSkillIcon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url, _, err := a.uploadFile(r, header, fmt.Sprintf("skill-icon-%d", id))
+	url, _, err := a.uploadFile(r, header, "portfolio/skills", fmt.Sprintf("skill-icon-%d", id))
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return

@@ -79,11 +79,10 @@ var (
 
 // uploadFile lee un archivo multipart a bytes y lo sube al Uploader: las
 // imágenes se convierten a WebP en local (imageproc) y se suben como image;
-// los PDFs se suben como raw. El public_id generado es <entidad>-<unix>.<ext>
-// (plano, sin folder). Devuelve la URL de entrega y el nombre original del
-// archivo. Los archivos se suben a Cloudinary, ya NO se guardan en
-// static/uploads.
-func (a *API) uploadFile(r *http.Request, fh *multipart.FileHeader, entity string) (url, filename string, err error) {
+// los PDFs se suben como raw. El public_id se arma como
+// <folder>/<name>-<unix>.<ext> — Cloudinary crea las carpetas automáticamente.
+// Devuelve la URL de entrega y el nombre original del archivo.
+func (a *API) uploadFile(r *http.Request, fh *multipart.FileHeader, folder, name string) (url, filename string, err error) {
 	if a.uploader == nil {
 		return "", "", errors.New("uploader not configured")
 	}
@@ -103,7 +102,7 @@ func (a *API) uploadFile(r *http.Request, fh *multipart.FileHeader, entity strin
 	ext := strings.ToLower(filepath.Ext(filename))
 	switch {
 	case cvExts[ext]:
-		publicID := fmt.Sprintf("%s-%d.pdf", entity, time.Now().Unix())
+		publicID := fmt.Sprintf("%s/%s-%d.pdf", folder, name, time.Now().Unix())
 		url, err = a.uploader.UploadRaw(r.Context(), data, publicID)
 	case imageExts[ext]:
 		webp, convErr := imageproc.ConvertToWebP(data, filename)
@@ -111,13 +110,13 @@ func (a *API) uploadFile(r *http.Request, fh *multipart.FileHeader, entity strin
 			return "", "", convErr
 		}
 		// public_id SIN extensión: Cloudinary agrega el formato a la URL
-		publicID := fmt.Sprintf("%s-%d", entity, time.Now().Unix())
+		publicID := fmt.Sprintf("%s/%s-%d", folder, name, time.Now().Unix())
 		url, err = a.uploader.UploadImage(r.Context(), webp, publicID)
 	default:
 		return "", "", fmt.Errorf("file type %q not allowed", ext)
 	}
 	if err != nil {
-		return "", "", fmt.Errorf("upload %s: %w", entity, err)
+		return "", "", fmt.Errorf("upload %s/%s: %w", folder, name, err)
 	}
 	return url, filename, nil
 }
