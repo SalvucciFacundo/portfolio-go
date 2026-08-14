@@ -14,13 +14,13 @@
 //   - Creaciones: {"id": N}. 401 = sesión expirada (se recarga).
 //
 // Decisiones de v1 (documentadas en api_contract.md):
-//   - Skill icon: NO hay endpoint de upload de icono (el contrato lo menciona
-//     pero el server no lo implementa). El form lo mantiene pero no se sube.
-//   - Project cover: NO hay endpoint de upload de cover. Se preserva el cover
-//     existente al editar (data-cover) y el nuevo cover no se sube.
-//   - Screenshot individual: el server no expone el imageId numérico de
-//     project_images (solo URLs), por eso no hay botones de borrado por imagen.
-//     La subida de screenshots (POST /projects/{id}/images) sí se usa.
+//   - Skill icon: se sube a POST /skills/{id}/icon tras el create/update.
+//   - Project cover: se sube a POST /projects/{id}/cover tras el create/update.
+//   - Screenshots múltiples: se suben a POST /projects/{id}/images (multipart
+//     screenshots[]) tras el create; el server los convierte a WebP.
+//   - Screenshot individual: el GET /projects/{id} expone imageId numérico en
+//     screenshots[{id,url}], por lo que el delete por imagen es posible (pero
+//     no se renderiza botón en la lista admin por ahora).
 (function () {
   'use strict';
 
@@ -240,7 +240,18 @@
     var req = editingSkillId
       ? api('/skills/' + editingSkillId, { method: 'PUT', body: payload })
       : api('/skills', { method: 'POST', body: payload });
-    req.then(reload).catch(function (err) { handleError('skills-error', err); });
+    req
+      .then(function (data) {
+        // Si hay archivo de icono, subirlo al endpoint dedicado (después del
+        // create/update para tener el id).
+        var id = editingSkillId || (data && data.id);
+        if (!id) {
+          return;
+        }
+        return uploadFiles('skill-icon', '/skills/' + id + '/icon', 'icon');
+      })
+      .then(reload)
+      .catch(function (err) { handleError('skills-error', err); });
   }
 
   function deleteSkill(btn) {
@@ -327,11 +338,17 @@
       promise = api('/projects/' + editingProjectId, { method: 'PUT', body: payload })
         .then(function () {
           return uploadFiles('project-screenshots', '/projects/' + editingProjectId + '/images', 'screenshots');
+        })
+        .then(function () {
+          return uploadFiles('project-cover', '/projects/' + editingProjectId + '/cover', 'cover');
         });
     } else {
       promise = api('/projects', { method: 'POST', body: payload })
         .then(function (data) {
           return uploadFiles('project-screenshots', '/projects/' + data.id + '/images', 'screenshots');
+        })
+        .then(function () {
+          return uploadFiles('project-cover', '/projects/' + data.id + '/cover', 'cover');
         });
     }
     promise.then(reload).catch(function (err) { handleError('projects-error', err); });
