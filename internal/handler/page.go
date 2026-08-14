@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/db"
+	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/mailer"
+	"github.com/SalvucciFacundo/portfolio-go/internal/auth"
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
@@ -80,29 +83,50 @@ func normalizeEmpty(p *domain.Profile) {
 	}
 }
 
-func ContactHandler(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		http.Error(w, "bad request", http.StatusBadRequest)
-		return
-	}
+// ContactHandler implementa POST /contact (HTMX): rate limit por IP (3/min,
+// más bajo que login porque es público), valida el form y envía el email vía
+// el Mailer. Cualquier error de envío se loguea con detalle pero el usuario
+// solo ve un mensaje genérico i18n. Éxito: form con success=true.
+func ContactHandler(m *mailer.Mailer, limiter *auth.Limiter) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "bad request", http.StatusBadRequest)
+			return
+		}
 
-	lang := "es"
-	if v := r.URL.Query().Get("lang"); v == "en" {
-		lang = "en"
-	}
+		lang := "es"
+		if v := r.URL.Query().Get("lang"); v == "en" {
+			lang = "en"
+		}
 
-	email := r.FormValue("email")
-	subject := r.FormValue("subject")
-	message := r.FormValue("message")
+		email := r.FormValue("email")
+		subject := r.FormValue("subject")
+		message := r.FormValue("message")
 
-	// Validate inputs
-	if email == "" || subject == "" || message == "" {
-		errMsg := i18n.T(lang, "contact.error")
+		if !limiter.Allow(remoteIP(r)) {
+			errMsg := i18n.T(lang, "contact.error_rate")
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			_ = components.ContactForm(lang, email, subject, message, errMsg, false).Render(r.Context(), w)
+			return
+		}
+
+		// Validate inputs
+		if email == "" || subject == "" || message == "" {
+			errMsg := i18n.T(lang, "contact.error")
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			_ = components.ContactForm(lang, email, subject, message, errMsg, false).Render(r.Context(), w)
+			return
+		}
+
+		if err := m.SendContact(r.Context(), email, subject, message); err != nil {
+			log.Printf("contact: enviar email: %v", err)
+			errMsg := i18n.T(lang, "contact.error_send")
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			_ = components.ContactForm(lang, email, subject, message, errMsg, false).Render(r.Context(), w)
+			return
+		}
+
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		_ = components.ContactForm(lang, email, subject, message, errMsg, false).Render(r.Context(), w)
-		return
+		_ = components.ContactForm(lang, "", "", "", "", true).Render(r.Context(), w)
 	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	_ = components.ContactForm(lang, "", "", "", "", true).Render(r.Context(), w)
 }

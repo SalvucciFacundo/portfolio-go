@@ -4,16 +4,19 @@ import (
 	"net/http"
 
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/db"
+	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/mailer"
 	"github.com/SalvucciFacundo/portfolio-go/internal/auth"
 	"github.com/SalvucciFacundo/portfolio-go/internal/handler"
 )
 
 // Deps agrupa las dependencias que main inyecta al router.
 type Deps struct {
-	Store    *db.Store
-	Auth     *auth.Service
-	Limiter  *auth.Limiter
-	Uploader handler.Uploader
+	Store          *db.Store
+	Auth           *auth.Service
+	Limiter        *auth.Limiter
+	ContactLimiter *auth.Limiter
+	Uploader       handler.Uploader
+	Mailer         *mailer.Mailer
 }
 
 // Register registra las rutas HTMX y las JSON /api/v1. Los endpoints admin de
@@ -21,7 +24,7 @@ type Deps struct {
 func Register(mux *http.ServeMux, deps Deps) {
 	// ---- Rutas HTMX existentes ----
 	mux.HandleFunc("GET /", handler.PageHandler(deps.Store))
-	mux.HandleFunc("POST /contact", handler.ContactHandler)
+	mux.HandleFunc("POST /contact", handler.ContactHandler(deps.Mailer, deps.ContactLimiter))
 	mux.HandleFunc("POST /admin/login", handler.LoginHandler)
 	mux.HandleFunc("GET /admin/logout", handler.LogoutHandler)
 	mux.HandleFunc("POST /admin/hero", handler.HeroUpdateHandler)
@@ -38,7 +41,7 @@ func Register(mux *http.ServeMux, deps Deps) {
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// ---- API JSON /api/v1 ----
-	api := handler.NewAPI(deps.Store, deps.Auth, deps.Uploader)
+	api := handler.NewAPI(deps.Store, deps.Auth, deps.Uploader, deps.Mailer, deps.ContactLimiter)
 
 	// Rutas públicas
 	mux.HandleFunc("GET /api/v1/profile/cv", api.GetCV)

@@ -15,11 +15,19 @@ const (
 type Limiter struct {
 	mu   sync.Mutex
 	hits map[string][]time.Time
+	max  int
 }
 
-// NewLimiter creates an empty Limiter.
+// NewLimiter creates an empty Limiter with the default max hits per window.
 func NewLimiter() *Limiter {
-	return &Limiter{hits: make(map[string][]time.Time)}
+	return NewLimiterWithMax(rateLimitMaxHits)
+}
+
+// NewLimiterWithMax creates an empty Limiter allowing max hits per IP per
+// window. Endpoints públicos con menos margen (p.ej. el formulario de
+// contacto) pueden usar un límite más bajo que el de login.
+func NewLimiterWithMax(max int) *Limiter {
+	return &Limiter{hits: make(map[string][]time.Time), max: max}
 }
 
 // Allow reports whether ip may perform one more action within the current
@@ -36,7 +44,7 @@ func (l *Limiter) Allow(ip string) bool {
 		}
 	}
 
-	if len(recent) >= rateLimitMaxHits {
+	if len(recent) >= l.max {
 		l.hits[ip] = recent
 		return false
 	}

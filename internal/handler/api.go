@@ -17,6 +17,7 @@ import (
 
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/db"
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/imageproc"
+	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/mailer"
 	"github.com/SalvucciFacundo/portfolio-go/internal/auth"
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 )
@@ -30,16 +31,18 @@ type Uploader interface {
 }
 
 // API agrupa los handlers JSON del portafolio sobre el Store, el Service de
-// auth y el Uploader inyectados.
+// auth, el Uploader, el Mailer y el Limiter inyectados.
 type API struct {
 	store    *db.Store
 	auth     *auth.Service
 	uploader Uploader
+	mailer   *mailer.Mailer
+	limiter  *auth.Limiter
 }
 
 // NewAPI crea un API con las dependencias dadas.
-func NewAPI(store *db.Store, svc *auth.Service, uploader Uploader) *API {
-	return &API{store: store, auth: svc, uploader: uploader}
+func NewAPI(store *db.Store, svc *auth.Service, uploader Uploader, mailer *mailer.Mailer, limiter *auth.Limiter) *API {
+	return &API{store: store, auth: svc, uploader: uploader, mailer: mailer, limiter: limiter}
 }
 
 // writeError escribe una respuesta JSON de error: {"error":"msg"}.

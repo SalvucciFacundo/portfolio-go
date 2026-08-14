@@ -16,6 +16,7 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/cloudinary"
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/db"
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/dbmigrate"
+	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/mailer"
 	"github.com/SalvucciFacundo/portfolio-go/internal/auth"
 	"github.com/SalvucciFacundo/portfolio-go/internal/handler"
 	"github.com/SalvucciFacundo/portfolio-go/internal/router"
@@ -94,15 +95,23 @@ func runServe(ctx context.Context, pool *pgxpool.Pool) {
 		log.Fatalf("%v", err)
 	}
 
+	m, err := mailer.New()
+	if err != nil {
+		log.Fatalf("mailer: %v", err)
+	}
+
 	store := db.New(pool)
 	limiter := auth.NewLimiter()
+	contactLimiter := auth.NewLimiterWithMax(3) // público, más bajo que login
 
 	mux := http.NewServeMux()
 	router.Register(mux, router.Deps{
-		Store:    store,
-		Auth:     svc,
-		Limiter:  limiter,
-		Uploader: uploader,
+		Store:          store,
+		Auth:           svc,
+		Limiter:        limiter,
+		ContactLimiter: contactLimiter,
+		Uploader:       uploader,
+		Mailer:         m,
 	})
 
 	port := os.Getenv("SERVER_PORT")
