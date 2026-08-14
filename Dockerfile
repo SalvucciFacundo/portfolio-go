@@ -25,13 +25,17 @@ FROM alpine:3.20
 # (conversión WebP local). ca-certificates para HTTPS a Cloudinary/Resend.
 RUN apk add --no-cache libwebp-tools ca-certificates tzdata
 
-WORKDIR /root/
+# Usuario no-root + directorio de trabajo accesible.
+# NOTA: /root/ tiene permisos 700 en Alpine — el usuario no-root NO puede leer
+# estáticos desde ahí. Usamos /app con ownership del usuario app.
+RUN addgroup -S app && adduser -S app -G app
+
+WORKDIR /app
 
 COPY --from=builder /app/main .
 COPY --from=builder /app/static ./static
+RUN chown -R app:app /app
 
-# Usuario no-root (buena práctica)
-RUN addgroup -S app && adduser -S app -G app
 USER app
 
 # Puerto que espera Dokploy (Container Port configurado — el server escucha
