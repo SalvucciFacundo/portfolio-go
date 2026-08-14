@@ -72,6 +72,25 @@
 { "ok": true }
 ```
 
+### Tablas de auth (PostgreSQL)
+```sql
+admin_users (
+  id BIGSERIAL PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,        -- argon2id encoded
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+)
+
+sessions (
+  id BIGSERIAL PRIMARY KEY,
+  token_hash TEXT UNIQUE NOT NULL,    -- SHA-256(token)
+  admin_user_id BIGINT NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+  user_agent_hash TEXT NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+)
+```
+
 ---
 
 ## 2. Endpoints públicos (sin auth)
@@ -154,3 +173,26 @@ Formato: `{"error": "descripción"}`.
 - Los campos bilingües (`_es`/`_en`) se envían SIEMPRE ambos en las mutaciones admin (el front los edita en tabs ES/EN).
 - El render público elige según `lang` (cookie > Accept-Language > es).
 - Tema: dark por defecto (localStorage ausente → dark).
+
+## 8. Seguridad (auth)
+
+### Creación del admin
+- Comando CLI: `./server create-admin --username <user>` — pide el password interactivamente (nunca en argv/scripts/env/logs).
+- Genera hash **argon2id** con salt aleatorio y lo inserta en `admin_users`.
+
+### Login / sesión
+| Capa | Mecanismo |
+|---|---|
+| Hash | argon2id (PHC winner), salt por usuario, params seguros (m=64MB, t=3, p=4) |
+| Sesión | token 32 bytes `crypto/rand`, guardado **hasheado** en DB (SHA-256 del token), expiración 24h |
+| Cookie | `admin_session`, `HttpOnly`, `Secure`, `SameSite=Strict`, `Path=/`, MaxAge 86400 |
+| CSRF | token CSRF por sesión (32 bytes), requerido en header `X-CSRF-Token` en todo POST/PUT/DELETE admin |
+| Rate limit | `/login`: 5 intentos/min por IP con backoff (sin lockout permanente) |
+| Timing | `subtle.ConstantTimeCompare` en verificación |
+| Rotación | login → nueva sesión + cookie; logout → invalida sesión en DB y limpia cookie |
+| Fingerprint | hash(User-Agent) en la sesión; mismatch → invalida |
+| Errores | siempre genérico "Invalid credentials" (no revela existencia) |
+
+### Endpoints admin
+- Todo endpoint admin (PUT/DELETE de profile/skills/projects/experience/education/socials, uploads) requiere: sesión válida + `X-CSRF-Token` válido.
+- Sin sesión → `401 {"error":"unauthorized"}`. CSRF inválido → `403 {"error":"invalid csrf token"}`.
