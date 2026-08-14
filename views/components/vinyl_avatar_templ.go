@@ -127,7 +127,7 @@ func VinylAvatar(p domain.Profile, isAdmin bool) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if isAdmin {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<input type=\"file\" id=\"avatar-file-input\" name=\"avatar\" accept=\"image/*\" hx-post=\"/admin/avatar\" hx-encoding=\"multipart/form-data\" hx-trigger=\"change\" hx-swap=\"none\" style=\"display: none;\"> <button type=\"button\" class=\"tech-avatar__edit-btn\" onclick=\"document.getElementById('avatar-file-input').click()\" aria-label=\"Change avatar\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z\"></path> <circle cx=\"12\" cy=\"13\" r=\"4\"></circle></svg></button>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<input type=\"file\" id=\"avatar-file-input\" name=\"avatar\" accept=\"image/*\" style=\"display: none;\"> <button type=\"button\" class=\"tech-avatar__edit-btn\" onclick=\"PortfolioAdmin.changeAvatar(event)\" aria-label=\"Change avatar\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z\"></path> <circle cx=\"12\" cy=\"13\" r=\"4\"></circle></svg></button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

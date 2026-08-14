@@ -149,6 +149,23 @@
     return upload(path, fd);
   }
 
+  // changeAvatar abre el selector de archivo oculto del avatar y, al elegir
+  // una imagen, la sube a POST /api/v1/profile/avatar y recarga la página.
+  function changeAvatar(ev) {
+    ev.preventDefault();
+    var input = document.getElementById('avatar-file-input');
+    if (!input) return;
+    input.onchange = function () {
+      if (!input.files || input.files.length === 0) return;
+      var fd = new FormData();
+      fd.append('avatar', input.files[0], input.files[0].name);
+      upload('/profile/avatar', fd)
+        .then(function () { reload(); })
+        .catch(function (err) { handleError(null, err); });
+    };
+    input.click();
+  }
+
   function handleError(id, err) {
     showError(id, err.message || 'Something went wrong');
     if (err.status === 401) {
@@ -545,6 +562,7 @@
     saveEducation: saveEducation,
     deleteEducation: deleteEducation,
     saveHero: saveHero,
+    changeAvatar: changeAvatar,
     saveSocials: saveSocials,
   };
 
