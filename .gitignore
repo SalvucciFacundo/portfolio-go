@@ -6,3 +6,4 @@ tmp/
 .env
 *.env.local
 .resend-dns*.png
+.cld-*.png
