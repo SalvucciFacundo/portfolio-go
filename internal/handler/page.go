@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 
-	"github.com/SalvucciFacundo/portfolio-go/internal/auth"
 	"github.com/SalvucciFacundo/portfolio-go/internal/data"
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
@@ -17,7 +16,7 @@ func PageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	profile := data.GetProfile()
-	isAdmin := auth.IsAdmin(r)
+	isAdmin := IsAdmin(r)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	_ = pages.Home(profile, lang, isAdmin).Render(r.Context(), w)

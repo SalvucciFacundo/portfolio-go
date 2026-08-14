@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/SalvucciFacundo/portfolio-go/internal/auth"
 	"github.com/SalvucciFacundo/portfolio-go/internal/data"
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 )
@@ -19,7 +18,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	password := r.FormValue("password")
-	token, ok := auth.Login(password)
+	_, ok := loginPassword(w, r, password)
 	if !ok {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.WriteHeader(http.StatusUnauthorized)
@@ -27,21 +26,20 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auth.SetSessionCookie(w, token)
 	w.Header().Set("HX-Redirect", r.Referer())
 	w.WriteHeader(http.StatusOK)
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	if cookie, err := r.Cookie("admin_session"); err == nil {
-		auth.Logout(cookie.Value)
+	if cookie, err := r.Cookie(adminSessionCookie); err == nil {
+		Logout(cookie.Value)
 	}
-	auth.ClearSessionCookie(w)
+	ClearSessionCookie(w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func HeroUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -104,7 +102,7 @@ func HeroUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AvatarUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -140,7 +138,7 @@ func AvatarUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SkillsUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -202,7 +200,7 @@ func SkillsUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SkillsDeleteHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -229,7 +227,7 @@ func SkillsDeleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProjectsUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -353,7 +351,7 @@ func ProjectsUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProjectsDeleteHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -380,7 +378,7 @@ func ProjectsDeleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func EducationUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -436,7 +434,7 @@ func EducationUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func EducationDeleteHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -463,7 +461,7 @@ func EducationDeleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ExperienceUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -520,7 +518,7 @@ func ExperienceUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ExperienceDeleteHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -548,7 +546,7 @@ func ExperienceDeleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SocialsUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdmin(r) {
+	if !IsAdmin(r) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}

@@ -23,6 +23,28 @@ func NewAuthRepo(pool *pgxpool.Pool) *AuthRepo {
 	return &AuthRepo{pool: pool}
 }
 
+// CreateAdmin inserts a new admin account with an already-hashed password.
+func (r *AuthRepo) CreateAdmin(ctx context.Context, username, passwordHash string) error {
+	_, err := r.pool.Exec(ctx,
+		`INSERT INTO admin_users (username, password_hash) VALUES ($1, $2)`,
+		username, passwordHash,
+	)
+	if err != nil {
+		return fmt.Errorf("create admin %q: %w", username, err)
+	}
+	return nil
+}
+
+// GetAdminCount returns the number of admin accounts.
+func (r *AuthRepo) GetAdminCount(ctx context.Context) (int, error) {
+	var count int
+	err := r.pool.QueryRow(ctx, `SELECT COUNT(*) FROM admin_users`).Scan(&count)
+	if err != nil {
+		return 0, fmt.Errorf("count admins: %w", err)
+	}
+	return count, nil
+}
+
 // GetAdminByUsername returns the admin account or pgx.ErrNoRows wrapped when absent.
 func (r *AuthRepo) GetAdminByUsername(ctx context.Context, username string) (domain.AdminUser, error) {
 	var u domain.AdminUser
