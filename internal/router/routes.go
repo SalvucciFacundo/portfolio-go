@@ -10,9 +10,10 @@ import (
 
 // Deps agrupa las dependencias que main inyecta al router.
 type Deps struct {
-	Store   *db.Store
-	Auth    *auth.Service
-	Limiter *auth.Limiter
+	Store    *db.Store
+	Auth     *auth.Service
+	Limiter  *auth.Limiter
+	Uploader handler.Uploader
 }
 
 // Register registra las rutas HTMX y las JSON /api/v1. Los endpoints admin de
@@ -37,7 +38,7 @@ func Register(mux *http.ServeMux, deps Deps) {
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// ---- API JSON /api/v1 ----
-	api := handler.NewAPI(deps.Store, deps.Auth)
+	api := handler.NewAPI(deps.Store, deps.Auth, deps.Uploader)
 
 	// Rutas públicas
 	mux.HandleFunc("GET /api/v1/profile/cv", api.GetCV)

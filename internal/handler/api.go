@@ -3,35 +3,43 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/db"
+	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/imageproc"
 	"github.com/SalvucciFacundo/portfolio-go/internal/auth"
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 )
 
-const uploadsDir = "static/uploads"
+// Uploader es el puerto de salida del handler hacia el almacenamiento externo
+// (Cloudinary). Desacopla los handlers del adapter concreto: el llamador decide
+// el public_id y recibe la URL de entrega.
+type Uploader interface {
+	UploadImage(ctx context.Context, data []byte, publicID string) (string, error)
+	UploadRaw(ctx context.Context, data []byte, publicID string) (string, error)
+}
 
-// API agrupa los handlers JSON del portafolio sobre el Store y el Service de
-// auth inyectados.
+// API agrupa los handlers JSON del portafolio sobre el Store, el Service de
+// auth y el Uploader inyectados.
 type API struct {
-	store *db.Store
-	auth  *auth.Service
+	store    *db.Store
+	auth     *auth.Service
+	uploader Uploader
 }
 
 // NewAPI crea un API con las dependencias dadas.
-func NewAPI(store *db.Store, svc *auth.Service) *API {
-	return &API{store: store, auth: svc}
+func NewAPI(store *db.Store, svc *auth.Service, uploader Uploader) *API {
+	return &API{store: store, auth: svc, uploader: uploader}
 }
 
 // writeError escribe una respuesta JSON de error: {"error":"msg"}.
@@ -66,32 +74,48 @@ var (
 	cvExts    = map[string]bool{".pdf": true}
 )
 
-// saveUpload guarda un archivo multipart en static/uploads con nombre
-// generado por el server (<entidad>-<unix>.<ext>) y devuelve su URL pública.
-// Rechaza extensiones fuera del set allowed para evitar path traversal y tipos
-// inesperados.
-func saveUpload(file multipart.File, header *multipart.FileHeader, entity string, allowed map[string]bool) (string, error) {
-	ext := strings.ToLower(filepath.Ext(header.Filename))
-	if !allowed[ext] {
-		return "", fmt.Errorf("file type %q not allowed", ext)
+// uploadFile lee un archivo multipart a bytes y lo sube al Uploader: las
+// imágenes se convierten a WebP en local (imageproc) y se suben como image;
+// los PDFs se suben como raw. El public_id generado es <entidad>-<unix>.<ext>
+// (plano, sin folder). Devuelve la URL de entrega y el nombre original del
+// archivo. Los archivos se suben a Cloudinary, ya NO se guardan en
+// static/uploads.
+func (a *API) uploadFile(r *http.Request, fh *multipart.FileHeader, entity string) (url, filename string, err error) {
+	if a.uploader == nil {
+		return "", "", errors.New("uploader not configured")
 	}
 
-	name := fmt.Sprintf("%s-%d%s", entity, time.Now().UnixNano(), ext)
-	dst := filepath.Join(uploadsDir, name)
-	if err := os.MkdirAll(uploadsDir, 0o755); err != nil {
-		return "", fmt.Errorf("create uploads dir: %w", err)
-	}
-
-	out, err := os.Create(dst)
+	filename = filepath.Base(fh.Filename)
+	file, err := fh.Open()
 	if err != nil {
-		return "", fmt.Errorf("create file: %w", err)
+		return "", "", fmt.Errorf("open upload: %w", err)
 	}
-	defer out.Close()
+	defer file.Close()
 
-	if _, err := io.Copy(out, file); err != nil {
-		return "", fmt.Errorf("write file: %w", err)
+	data, err := io.ReadAll(file)
+	if err != nil {
+		return "", "", fmt.Errorf("read upload: %w", err)
 	}
-	return "/static/uploads/" + name, nil
+
+	ext := strings.ToLower(filepath.Ext(filename))
+	switch {
+	case cvExts[ext]:
+		publicID := fmt.Sprintf("%s-%d.pdf", entity, time.Now().Unix())
+		url, err = a.uploader.UploadRaw(r.Context(), data, publicID)
+	case imageExts[ext]:
+		webp, convErr := imageproc.ConvertToWebP(data, filename)
+		if convErr != nil {
+			return "", "", convErr
+		}
+		publicID := fmt.Sprintf("%s-%d.webp", entity, time.Now().Unix())
+		url, err = a.uploader.UploadImage(r.Context(), webp, publicID)
+	default:
+		return "", "", fmt.Errorf("file type %q not allowed", ext)
+	}
+	if err != nil {
+		return "", "", fmt.Errorf("upload %s: %w", entity, err)
+	}
+	return url, filename, nil
 }
 
 // emptyProfileSlices normaliza las listas anidadas del profile a slices vacíos

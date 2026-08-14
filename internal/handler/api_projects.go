@@ -133,7 +133,8 @@ func (a *API) DeleteProject(w http.ResponseWriter, r *http.Request) {
 }
 
 // UploadProjectImages recibe multipart screenshots[] (varios archivos), los
-// guarda en static/uploads y los agrega al proyecto (201 con las URLs).
+// convierte a WebP en local, los sube a Cloudinary y los agrega al proyecto
+// (201 con las URLs).
 func (a *API) UploadProjectImages(w http.ResponseWriter, r *http.Request) {
 	projectID, err := idParam(r, "id")
 	if err != nil {
@@ -163,13 +164,7 @@ func (a *API) UploadProjectImages(w http.ResponseWriter, r *http.Request) {
 
 	urls := make([]string, 0, len(files))
 	for _, fh := range files {
-		file, err := fh.Open()
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, "internal error")
-			return
-		}
-		url, err := saveUpload(file, fh, "screenshot", imageExts)
-		file.Close()
+		url, _, err := a.uploadFile(r, fh, "screenshot")
 		if err != nil {
 			writeError(w, http.StatusBadRequest, err.Error())
 			return

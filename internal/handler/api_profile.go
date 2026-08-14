@@ -4,7 +4,8 @@ package handler
 import (
 	"errors"
 	"net/http"
-	"path/filepath"
+	"net/url"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 
@@ -100,18 +101,17 @@ func (a *API) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
 
-// UploadAvatar recibe multipart avatar, lo guarda en static/uploads y persiste
-// la URL. El adapter Cloudinary se agrega en una fase posterior.
+// UploadAvatar recibe multipart avatar, lo convierte a WebP en local, lo sube
+// a Cloudinary y persiste la URL devuelta.
 func (a *API) UploadAvatar(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
-	file, header, err := r.FormFile("avatar")
+	_, header, err := r.FormFile("avatar")
 	if err != nil {
 		writeError(w, http.StatusBadRequest, "missing avatar file")
 		return
 	}
-	defer file.Close()
 
-	url, err := saveUpload(file, header, "avatar", imageExts)
+	url, _, err := a.uploadFile(r, header, "avatar")
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return
@@ -124,23 +124,21 @@ func (a *API) UploadAvatar(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"avatar_url": url})
 }
 
-// UploadCV recibe multipart cv (PDF), lo guarda en static/uploads y persiste la
-// URL + el nombre original del archivo.
+// UploadCV recibe multipart cv (PDF), lo sube a Cloudinary como raw y persiste
+// la URL devuelta + el nombre original del archivo.
 func (a *API) UploadCV(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
-	file, header, err := r.FormFile("cv")
+	_, header, err := r.FormFile("cv")
 	if err != nil {
 		writeError(w, http.StatusBadRequest, "missing cv file")
 		return
 	}
-	defer file.Close()
 
-	url, err := saveUpload(file, header, "cv", cvExts)
+	url, filename, err := a.uploadFile(r, header, "cv")
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	filename := filepath.Base(header.Filename)
 
 	if err := a.store.Profile.SetResume(r.Context(), url, filename); err != nil {
 		writeError(w, http.StatusInternalServerError, "internal error")
@@ -149,8 +147,11 @@ func (a *API) UploadCV(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"resume_url": url, "resume_filename": filename})
 }
 
-// GetCV redirige (302) a la URL del CV. Simple por ahora: si resume_url apunta
-// a Cloudinary ya trae fl_attachment; el adapter Cloudinary afina esto luego.
+// GetCV redirige (302) a la URL del CV. Si resume_url apunta a Cloudinary raw,
+// se inserta el flag fl_attachment:<resume_filename url-encoded> justo después
+// de "/raw/upload/" para que el navegador descargue el archivo con su nombre
+// original (Content-Disposition: attachment). URLs legacy locales
+// (static/uploads) no tienen ese segmento y se redirigen tal cual.
 func (a *API) GetCV(w http.ResponseWriter, r *http.Request) {
 	profile, err := a.store.Profile.Get(r.Context())
 	if err != nil {
@@ -165,7 +166,26 @@ func (a *API) GetCV(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, "no resume set")
 		return
 	}
-	http.Redirect(w, r, profile.ResumeURL, http.StatusFound)
+	target := profile.ResumeURL
+	if profile.ResumeFilename != "" {
+		target = cloudinaryDownloadURL(target, profile.ResumeFilename)
+	}
+	http.Redirect(w, r, target, http.StatusFound)
+}
+
+// cloudinaryDownloadURL inserta el flag fl_attachment:<filename> en una URL de
+// entrega raw de Cloudinary. Es la forma robusta: no re-construye la URL desde
+// el public_id (que ya queda embebido en resume_url tal como Cloudinary lo
+// devolvió), solo ancla el flag con el nombre original guardado en la DB.
+func cloudinaryDownloadURL(rawURL, filename string) string {
+	const marker = "/raw/upload/"
+	i := strings.Index(rawURL, marker)
+	if i < 0 {
+		return rawURL
+	}
+	flag := "fl_attachment:" + url.PathEscape(filename)
+	insertAt := i + len(marker)
+	return rawURL[:insertAt] + flag + "/" + rawURL[insertAt:]
 }
 
 // UpdateSocials reemplaza todas las social links con el array enviado.

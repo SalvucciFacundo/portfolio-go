@@ -13,6 +13,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/term"
 
+	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/cloudinary"
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/db"
 	"github.com/SalvucciFacundo/portfolio-go/internal/adapters/dbmigrate"
 	"github.com/SalvucciFacundo/portfolio-go/internal/auth"
@@ -88,14 +89,20 @@ func runServe(ctx context.Context, pool *pgxpool.Pool) {
 	svc := auth.NewService(db.NewAuthRepo(pool))
 	handler.SetupAuth(svc)
 
+	uploader, err := cloudinary.New()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
 	store := db.New(pool)
 	limiter := auth.NewLimiter()
 
 	mux := http.NewServeMux()
 	router.Register(mux, router.Deps{
-		Store:   store,
-		Auth:    svc,
-		Limiter: limiter,
+		Store:    store,
+		Auth:     svc,
+		Limiter:  limiter,
+		Uploader: uploader,
 	})
 
 	port := os.Getenv("SERVER_PORT")
