@@ -7,3 +7,6 @@ tmp/
 *.env.local
 .resend-dns*.png
 .cld-*.png
+
+# Dokploy API cheatsheet (datos sensibles de la instancia)
+dokploy-api-cheatsheet.md
