@@ -96,6 +96,33 @@ templ Base(lang string) {
 						}
 					};
 
+					// ── Fullscreen Lightbox Zoom ──
+					window.openLightbox = function (src) {
+						var overlay = document.createElement('div');
+						overlay.className = 'lightbox-overlay';
+						overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 999999; display: flex; align-items: center; justify-content: center; cursor: zoom-out; opacity: 0; transition: opacity 250ms ease;';
+
+						var img = document.createElement('img');
+						img.src = src;
+						img.style.cssText = 'max-width: 95%; max-height: 95%; object-fit: contain; border-radius: 8px; box-shadow: 0 24px 50px rgba(0,0,0,0.6); transform: scale(0.95); transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);';
+
+						overlay.addEventListener('click', function () {
+							overlay.style.opacity = '0';
+							img.style.transform = 'scale(0.95)';
+							setTimeout(function () {
+								overlay.remove();
+							}, 250);
+						});
+
+						overlay.appendChild(img);
+						document.body.appendChild(overlay);
+
+						requestAnimationFrame(function () {
+							overlay.style.opacity = '1';
+							img.style.transform = 'scale(1)';
+						});
+					};
+
 					// ── Fullscreen section navigator (Terminal screen swap) ──
 					var allSections = Array.prototype.slice.call(document.querySelectorAll('.section'));
 					var navLinks = Array.prototype.slice.call(document.querySelectorAll('.sidebar-right__link'));

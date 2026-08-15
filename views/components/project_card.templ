@@ -79,9 +79,9 @@ templ ProjectModal(p domain.Project, lang string) {
 					}
 					<div class="project-modal__gallery">
 						if len(p.Screenshots) > 0 {
-							<img src={ p.Screenshots[0].URL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" />
+							<img src={ p.Screenshots[0].URL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" onclick="openLightbox(this.src)" style="cursor: zoom-in;" />
 						} else {
-							<img src={ p.CoverURL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" />
+							<img src={ p.CoverURL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" onclick="openLightbox(this.src)" style="cursor: zoom-in;" />
 						}
 					</div>
 					if len(p.Screenshots) > 1 {
