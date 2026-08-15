@@ -283,23 +283,74 @@ templ Base(lang string) {
 							closeLightbox();
 						});
 
-						// Soporte táctil Swipe para móviles
+						// Soporte táctil unificado (Swipe, Paneo por Touch y Pinch-to-Zoom)
+						var isTouchDragging = false;
 						var touchStartX = 0;
-						var touchEndX = 0;
+						var touchStartY = 0;
+						var initialTouchDist = 0;
+						var initialTouchScale = 1;
+
 						dialog.addEventListener('touchstart', function (e) {
-							touchStartX = e.changedTouches[0].screenX;
-						}, { passive: true });
-						dialog.addEventListener('touchend', function (e) {
-							touchEndX = e.changedTouches[0].screenX;
-							var diff = touchEndX - touchStartX;
-							// Solo cambiar de imagen si la distancia es de deslizamiento y la imagen no está ampliada
-							if (Math.abs(diff) > 60 && currentScale === 1 && images.length > 1) {
-								if (diff > 0) {
-									navigate(-1); // Swipe derecha -> anterior
+							if (e.touches.length === 1) {
+								if (currentScale > 1) {
+									isTouchDragging = true;
+									touchStartX = e.touches[0].clientX - posX;
+									touchStartY = e.touches[0].clientY - posY;
 								} else {
-									navigate(1);  // Swipe izquierda -> siguiente
+									touchStartX = e.touches[0].clientX;
+								}
+							} else if (e.touches.length === 2) {
+								isTouchDragging = false;
+								initialTouchDist = Math.hypot(
+									e.touches[0].clientX - e.touches[1].clientX,
+									e.touches[0].clientY - e.touches[1].clientY
+								);
+								initialTouchScale = currentScale;
+							}
+						}, { passive: false });
+
+						dialog.addEventListener('touchmove', function (e) {
+							if (e.touches.length === 1 && isTouchDragging && currentScale > 1) {
+								e.preventDefault(); // Prevenir rebote/scroll nativo del navegador móvil
+								posX = e.touches[0].clientX - touchStartX;
+								posY = e.touches[0].clientY - touchStartY;
+								updateTransform(false);
+							} else if (e.touches.length === 2 && initialTouchDist > 0) {
+								e.preventDefault(); // Evitar que el navegador móvil haga zoom sobre toda la web
+								var dist = Math.hypot(
+									e.touches[0].clientX - e.touches[1].clientX,
+									e.touches[0].clientY - e.touches[1].clientY
+								);
+								var factor = dist / initialTouchDist;
+								currentScale = Math.min(Math.max(initialTouchScale * factor, minScale), maxScale);
+								
+								if (currentScale > 1) {
+									img.style.cursor = 'grab';
+								} else {
+									img.style.cursor = 'zoom-in';
+									posX = 0;
+									posY = 0;
+								}
+								updateTransform(false);
+							}
+						}, { passive: false });
+
+						dialog.addEventListener('touchend', function (e) {
+							if (isTouchDragging) {
+								isTouchDragging = false;
+							}
+							if (e.touches.length === 0 && currentScale === 1 && images.length > 1) {
+								var touchEndX = e.changedTouches[0].clientX;
+								var diff = touchEndX - touchStartX;
+								if (Math.abs(diff) > 60) {
+									if (diff > 0) {
+										navigate(-1); // Swipe derecha -> anterior
+									} else {
+										navigate(1);  // Swipe izquierda -> siguiente
+									}
 								}
 							}
+							initialTouchDist = 0;
 						}, { passive: true });
 
 						dialog.appendChild(img);
