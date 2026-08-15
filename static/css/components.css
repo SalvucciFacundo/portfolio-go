@@ -2429,3 +2429,90 @@ html.dark-theme .project-modal__tag {
 		margin-bottom: 1.5rem;
 	}
 }
+
+/* ==========================================================================
+   Terminal Log Window (Experience Section)
+   ========================================================================== */
+.terminal-log {
+	border: 1.5px solid var(--card-border);
+	border-radius: 8px;
+	background: var(--card-bg);
+	display: flex;
+	flex-direction: column;
+	max-height: 480px;
+	max-width: 680px;
+	margin: 0 auto;
+	box-shadow: 0 12px 34px rgba(0, 0, 0, 0.25);
+	width: 100%;
+}
+
+.terminal-log__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: var(--bg-alt);
+	border-bottom: 1.5px solid var(--card-border);
+	padding: 10px 16px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	user-select: none;
+}
+
+.terminal-log__title {
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	color: var(--text-muted);
+	letter-spacing: 0.05em;
+}
+
+.terminal-log__controls {
+	display: flex;
+	gap: 6px;
+}
+
+.terminal-log__controls .dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--card-border);
+	opacity: 0.6;
+}
+
+.terminal-log__body {
+	padding: 2.25rem 2rem 1.5rem 1rem;
+	overflow-y: auto;
+	scrollbar-width: thin;
+	scrollbar-color: var(--card-border) transparent;
+}
+
+.terminal-log__body::-webkit-scrollbar {
+	width: 6px;
+}
+
+.terminal-log__body::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.terminal-log__body::-webkit-scrollbar-thumb {
+	background-color: var(--card-border);
+	border-radius: 3px;
+}
+
+@media (max-width: 900px) {
+	.terminal-log {
+		max-height: none !important; /* Desactivar alto fijo y scroll interno en móvil */
+		border: none !important;
+		background: transparent !important;
+		box-shadow: none !important;
+	}
+
+	.terminal-log__header {
+		display: none !important; /* Ocultar el encabezado de consola en móvil */
+	}
+
+	.terminal-log__body {
+		padding: 0 !important;
+		overflow-y: visible !important;
+	}
+}
+

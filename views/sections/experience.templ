@@ -12,10 +12,23 @@ templ Experience(p domain.Profile, lang string, isAdmin bool) {
 			@components.AdminEditBtn("experience-admin-modal")
 		}
 		<h2 class="section__title">{ i18n.T(lang, "section.experience") }</h2>
-		<ol class="timeline">
-			for _, e := range p.Experience {
-				@components.ExperienceItem(e, lang)
-			}
-		</ol>
+		
+		<div class="terminal-log">
+			<div class="terminal-log__header">
+				<span class="terminal-log__title">SYS.LOG // WORK_EXPERIENCE</span>
+				<div class="terminal-log__controls">
+					<span class="dot"></span>
+					<span class="dot"></span>
+					<span class="dot"></span>
+				</div>
+			</div>
+			<div class="terminal-log__body">
+				<ol class="timeline">
+					for _, e := range p.Experience {
+						@components.ExperienceItem(e, lang)
+					}
+				</ol>
+			</div>
+		</div>
 	</section>
 }
