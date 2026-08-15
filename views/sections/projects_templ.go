@@ -48,7 +48,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		chunked := chunkProjects(p.Projects, 4)
+		chunked := chunkProjects(p.Projects, 5)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section id=\"projects\" class=\"section\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -76,7 +76,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(p.Projects) > 4 {
+		if len(p.Projects) > 5 {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<button type=\"button\" class=\"projects-slider__arrow projects-slider__arrow--left\" onclick=\"slideProjects(-1)\" aria-label=\"Previous projects\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"20\" height=\"20\"><polyline points=\"15 18 9 12 15 6\"></polyline></svg></button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -119,7 +119,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(p.Projects) > 4 {
+		if len(p.Projects) > 5 {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<button type=\"button\" class=\"projects-slider__arrow projects-slider__arrow--right\" onclick=\"slideProjects(1)\" aria-label=\"Next projects\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"20\" height=\"20\"><polyline points=\"9 18 15 12 9 6\"></polyline></svg></button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

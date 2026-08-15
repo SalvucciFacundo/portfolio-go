@@ -20,7 +20,7 @@ func chunkProjects(projects []domain.Project, size int) [][]domain.Project {
 }
 
 templ Projects(p domain.Profile, lang string, isAdmin bool) {
-	{{ chunked := chunkProjects(p.Projects, 4) }}
+	{{ chunked := chunkProjects(p.Projects, 5) }}
 	<section id="projects" class="section">
 		if isAdmin {
 			@components.AdminEditBtn("projects-admin-modal")
@@ -28,7 +28,7 @@ templ Projects(p domain.Profile, lang string, isAdmin bool) {
 		<h2 class="section__title">{ i18n.T(lang, "section.projects") }</h2>
 		
 		<div class="projects-slider-wrapper">
-			if len(p.Projects) > 4 {
+			if len(p.Projects) > 5 {
 				<button type="button" class="projects-slider__arrow projects-slider__arrow--left" onclick="slideProjects(-1)" aria-label="Previous projects">
 					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
 						<polyline points="15 18 9 12 15 6"></polyline>
@@ -48,7 +48,7 @@ templ Projects(p domain.Profile, lang string, isAdmin bool) {
 				</div>
 			</div>
 
-			if len(p.Projects) > 4 {
+			if len(p.Projects) > 5 {
 				<button type="button" class="projects-slider__arrow projects-slider__arrow--right" onclick="slideProjects(1)" aria-label="Next projects">
 					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
 						<polyline points="9 18 15 12 9 6"></polyline>
