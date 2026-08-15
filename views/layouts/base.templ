@@ -160,6 +160,37 @@ templ Base(lang string) {
 					// Wheel handler
 					window.addEventListener('wheel', function (e) {
 						if (window.innerWidth <= 900) return;
+
+						// If any dialog modal is open, do not swap sections
+						var activeDialog = document.querySelector('dialog[open]');
+						if (activeDialog) {
+							var path = e.composedPath();
+							var insideDialog = false;
+							for (var i = 0; i < path.length; i++) {
+								if (path[i] === activeDialog) {
+									insideDialog = true;
+									break;
+								}
+							}
+							if (insideDialog) {
+								return; // Allow scrolling inside the open modal
+							} else {
+								e.preventDefault(); // Ignore scroll outside the modal
+								return;
+							}
+						}
+
+						// Check if scrolling inside the terminal log body
+						var path = e.composedPath();
+						for (var i = 0; i < path.length; i++) {
+							var el = path[i];
+							if (el === window || el === document) break;
+							if (!el || !el.classList) continue;
+							if (el.classList.contains('terminal-log__body')) {
+								return; // Allow scrolling inside the terminal log
+							}
+						}
+
 						e.preventDefault();
 						var dir = e.deltaY > 0 ? 1 : -1;
 						goTo(currentIdx + dir);

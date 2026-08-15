@@ -2439,11 +2439,17 @@ html.dark-theme .project-modal__tag {
 	background: var(--card-bg);
 	display: flex;
 	flex-direction: column;
-	max-height: 480px;
-	max-width: 680px;
+	max-height: 560px;
+	max-width: 860px;
 	margin: 0 auto;
-	box-shadow: 0 12px 34px rgba(0, 0, 0, 0.25);
+	box-shadow: 0 12px 34px rgba(0, 0, 0, 0.25), 0 0 15px rgba(34, 197, 94, 0.02);
 	width: 100%;
+	transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.terminal-log:hover {
+	border-color: rgba(34, 197, 94, 0.3);
+	box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3), 0 0 25px rgba(34, 197, 94, 0.1);
 }
 
 .terminal-log__header {
