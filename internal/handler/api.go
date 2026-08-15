@@ -73,7 +73,7 @@ func idParam(r *http.Request, name string) (int64, error) {
 }
 
 var (
-	imageExts = map[string]bool{".jpg": true, ".jpeg": true, ".png": true, ".webp": true, ".gif": true}
+	imageExts = map[string]bool{".jpg": true, ".jpeg": true, ".png": true, ".webp": true, ".gif": true, ".avif": true, ".bmp": true, ".tiff": true, ".tif": true}
 	// vectorExts son archivos vectoriales (SVG) que se suben TAL CUAL a
 	// Cloudinary sin conversión a WebP (cwebp no procesa vectores y convertirlos
 	// perdería nitidez). El navegador los renderiza directamente.

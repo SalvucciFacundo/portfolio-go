@@ -4,6 +4,7 @@ package handler
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -181,6 +182,7 @@ func (a *API) UploadProjectImages(w http.ResponseWriter, r *http.Request) {
 	for _, fh := range files {
 		url, _, err := a.uploadFile(r, fh, folder, "screenshot")
 		if err != nil {
+			log.Printf("upload screenshot project %d: %v", projectID, err)
 			writeError(w, http.StatusBadRequest, err.Error())
 			return
 		}
@@ -247,6 +249,7 @@ func (a *API) UploadProjectCover(w http.ResponseWriter, r *http.Request) {
 
 	url, _, err := a.uploadFile(r, header, fmt.Sprintf("portfolio/projects/%d", id), "cover")
 	if err != nil {
+		log.Printf("upload cover project %d: %v", id, err)
 		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}
