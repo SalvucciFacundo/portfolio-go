@@ -342,7 +342,7 @@ func ProjectModal(p domain.Project, lang string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" width=\"800\" height=\"500\" onclick=\"openLightbox(this.src)\" style=\"cursor: zoom-in;\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" width=\"800\" height=\"500\" onclick=\"openLightbox(this.src)\" style=\"cursor: pointer;\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -373,7 +373,7 @@ func ProjectModal(p domain.Project, lang string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\" width=\"800\" height=\"500\" onclick=\"openLightbox(this.src)\" style=\"cursor: zoom-in;\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\" width=\"800\" height=\"500\" onclick=\"openLightbox(this.src)\" style=\"cursor: pointer;\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
