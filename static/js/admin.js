@@ -318,6 +318,14 @@
   function saveProject(event) {
     event.preventDefault();
     showError('projects-error', '');
+
+    var submitBtn = document.getElementById('project-submit-btn');
+    var originalText = submitBtn ? submitBtn.textContent : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving & uploading...';
+    }
+
     var payload = {
       title_es: value('project-title-es'),
       title_en: value('project-title-en'),
@@ -351,7 +359,13 @@
           return uploadFiles('project-cover', '/projects/' + data.id + '/cover', 'cover');
         });
     }
-    promise.then(reload).catch(function (err) { handleError('projects-error', err); });
+    promise.then(reload).catch(function (err) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+      handleError('projects-error', err);
+    });
   }
 
   function deleteProject(btn) {

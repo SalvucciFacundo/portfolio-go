@@ -38,7 +38,7 @@ func scanProject(row pgx.Row) (domain.Project, error) {
 	return p, err
 }
 
-// List returns every project ordered by position, without screenshots.
+// List returns every project ordered by position, including its screenshots.
 func (r *ProjectRepo) List(ctx context.Context) ([]domain.Project, error) {
 	rows, err := r.pool.Query(ctx,
 		`SELECT `+projectColumns+` FROM projects ORDER BY position ASC, id ASC`)
@@ -58,6 +58,38 @@ func (r *ProjectRepo) List(ctx context.Context) ([]domain.Project, error) {
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("list projects: %w", err)
 	}
+
+	// Query all project images in batch to avoid N+1 queries
+	imgRows, err := r.pool.Query(ctx, `
+		SELECT id, project_id, url FROM project_images
+		ORDER BY project_id, position ASC, id ASC`)
+	if err != nil {
+		return nil, fmt.Errorf("list project images: %w", err)
+	}
+	defer imgRows.Close()
+
+	imagesMap := make(map[int64][]domain.ProjectImage)
+	for imgRows.Next() {
+		var img domain.ProjectImage
+		var projID int64
+		if err := imgRows.Scan(&img.ID, &projID, &img.URL); err != nil {
+			return nil, fmt.Errorf("scan project image: %w", err)
+		}
+		imagesMap[projID] = append(imagesMap[projID], img)
+	}
+	if err := imgRows.Err(); err != nil {
+		return nil, fmt.Errorf("list project images: %w", err)
+	}
+
+	// Link screenshots to projects
+	for i := range projects {
+		if screenshots, ok := imagesMap[projects[i].ID]; ok {
+			projects[i].Screenshots = screenshots
+		} else {
+			projects[i].Screenshots = []domain.ProjectImage{}
+		}
+	}
+
 	return projects, nil
 }
 
