@@ -122,7 +122,10 @@
           try { data = JSON.parse(text); } catch (e) { /* body no JSON */ }
         }
         if (!res.ok) {
-          var err = new Error((data && data.error) || 'Request failed (' + res.status + ')');
+          // Si el body no era JSON, data.error no existe: intentamos mostrar el
+          // texto crudo (puede ser un HTML de error del proxy, un 413, etc.)
+          var msg = (data && data.error) ? data.error : (text ? text.slice(0, 200) : 'Request failed');
+          var err = new Error(msg);
           err.status = res.status;
           err.data = data;
           throw err;

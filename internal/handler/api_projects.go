@@ -2,6 +2,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -232,10 +233,15 @@ func (a *API) UploadProjectCover(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+	r.Body = http.MaxBytesReader(w, r.Body, 20<<20)
 	_, header, err := r.FormFile("cover")
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "missing cover file")
+		var maxBytesErr *http.MaxBytesError
+		if errors.As(err, &maxBytesErr) {
+			writeError(w, http.StatusRequestEntityTooLarge, "cover image too large (max 20MB)")
+			return
+		}
+		writeError(w, http.StatusBadRequest, "missing or invalid cover file")
 		return
 	}
 

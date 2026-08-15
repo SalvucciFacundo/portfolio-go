@@ -46,7 +46,6 @@ func otherLangHref(lang string) string {
 	return "/?lang=en"
 }
 
-
 // statusBadgeClass devuelve la clase CSS del badge de estado del proyecto.
 func statusBadgeClass(status string) string {
 	switch status {
