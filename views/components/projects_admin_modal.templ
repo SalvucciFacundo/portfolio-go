@@ -42,6 +42,7 @@ templ ProjectsAdminModal(p domain.Profile) {
 										data-tech-es={ pr.TechDescriptionEs }
 										data-tech-en={ pr.TechDescriptionEn }
 										data-category={ pr.Category }
+										data-status={ pr.Status }
 										data-tags={ strings.Join(pr.Tags, ", ") }
 										data-link={ pr.Link }
 										data-repo={ pr.RepoLink }
@@ -117,7 +118,16 @@ templ ProjectsAdminModal(p domain.Profile) {
 								</select>
 							</div>
 							<div class="admin-modal__field">
-								<label for="project-tags">Technologies (Comma separated)</label>
+								<div class="admin-modal__field">
+								<label for="project-status">Status</label>
+								<select id="project-status" name="status" class="admin-modal__select">
+									<option value="production">Production</option>
+									<option value="development" selected>Development</option>
+									<option value="demo">Demo</option>
+								</select>
+							</div>
+
+							<label for="project-tags">Technologies (Comma separated)</label>
 								<input type="text" id="project-tags" name="tags" placeholder="e.g. Go, Angular, Docker"/>
 							</div>
 						</div>

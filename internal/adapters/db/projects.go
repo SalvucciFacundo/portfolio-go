@@ -26,13 +26,13 @@ func NewProjectRepo(pool *pgxpool.Pool) *ProjectRepo {
 
 // projectColumns excludes screenshots (project_images).
 const projectColumns = `id, position, title_es, title_en, description_es, description_en,
-	tech_description_es, tech_description_en, category, tags, link, repo_link, cover_url`
+	tech_description_es, tech_description_en, category, status, tags, link, repo_link, cover_url`
 
 func scanProject(row pgx.Row) (domain.Project, error) {
 	var p domain.Project
 	err := row.Scan(
 		&p.ID, &p.Position, &p.TitleEs, &p.TitleEn, &p.DescriptionEs, &p.DescriptionEn,
-		&p.TechDescriptionEs, &p.TechDescriptionEn, &p.Category, &p.Tags,
+		&p.TechDescriptionEs, &p.TechDescriptionEn, &p.Category, &p.Status, &p.Tags,
 		&p.Link, &p.RepoLink, &p.CoverURL,
 	)
 	return p, err
@@ -138,12 +138,12 @@ func (r *ProjectRepo) Create(ctx context.Context, p domain.Project) (int64, erro
 	err = tx.QueryRow(ctx, `
 		INSERT INTO projects (
 			position, title_es, title_en, description_es, description_en,
-			tech_description_es, tech_description_en, category, tags,
+			tech_description_es, tech_description_en, category, status, tags,
 			link, repo_link, cover_url
-		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
 		RETURNING id`,
 		p.Position, p.TitleEs, p.TitleEn, p.DescriptionEs, p.DescriptionEn,
-		p.TechDescriptionEs, p.TechDescriptionEn, p.Category, p.Tags,
+		p.TechDescriptionEs, p.TechDescriptionEn, p.Category, p.Status, p.Tags,
 		p.Link, p.RepoLink, p.CoverURL,
 	).Scan(&id)
 	if err != nil {
@@ -183,11 +183,11 @@ func (r *ProjectRepo) Update(ctx context.Context, p domain.Project) (bool, error
 			position = $1, title_es = $2, title_en = $3,
 			description_es = $4, description_en = $5,
 			tech_description_es = $6, tech_description_en = $7,
-			category = $8, tags = $9, link = $10, repo_link = $11, cover_url = $12,
+			category = $8, status = $9, tags = $10, link = $11, repo_link = $12, cover_url = $13,
 			updated_at = now()
-		WHERE id = $13`,
+		WHERE id = $14`,
 		p.Position, p.TitleEs, p.TitleEn, p.DescriptionEs, p.DescriptionEn,
-		p.TechDescriptionEs, p.TechDescriptionEn, p.Category, p.Tags,
+		p.TechDescriptionEs, p.TechDescriptionEn, p.Category, p.Status, p.Tags,
 		p.Link, p.RepoLink, p.CoverURL, p.ID,
 	)
 	if err != nil {

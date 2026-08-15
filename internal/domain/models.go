@@ -48,6 +48,7 @@ type Project struct {
 	TechDescriptionEs string         `json:"tech_description_es"`
 	TechDescriptionEn string         `json:"tech_description_en"`
 	Category          string         `json:"category"`
+	Status            string         `json:"status"` // production | development | demo
 	Tags              []string       `json:"tags"`
 	Link              string         `json:"link"`
 	RepoLink          string         `json:"repo_link"`

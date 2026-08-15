@@ -1107,6 +1107,37 @@ html.dark-theme .theme-toggle .icon-moon {
 	z-index: 2;
 }
 
+.project-card__badge {
+	position: absolute;
+	top: 0.75rem;
+	left: 0.75rem;
+	z-index: 3;
+	font-family: var(--font-mono);
+	font-size: 0.62rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	padding: 0.3rem 0.6rem;
+	border-radius: 4px;
+	color: #0A0A0A;
+	background: var(--text-muted);
+	pointer-events: none;
+}
+
+.project-card__badge--production {
+	background: #3DDC84;
+	color: #0A0A0A;
+}
+
+.project-card__badge--development {
+	background: #FFB000;
+	color: #0A0A0A;
+}
+
+.project-card__badge--demo {
+	background: #4FC3F7;
+	color: #0A0A0A;
+}
+
 .project-card:hover .project-card__img {
 	filter: grayscale(0%);
 	opacity: 0.45;

@@ -287,6 +287,7 @@
     setValue('project-tech-desc-es', btn.getAttribute('data-tech-es'));
     setValue('project-tech-desc-en', btn.getAttribute('data-tech-en'));
     setValue('project-category', btn.getAttribute('data-category'));
+    setValue('project-status', btn.getAttribute('data-status') || 'development');
     setValue('project-tags', btn.getAttribute('data-tags'));
     setValue('project-link', btn.getAttribute('data-link'));
     setValue('project-repo-link', btn.getAttribute('data-repo'));
@@ -305,6 +306,7 @@
     setValue('project-tech-desc-es', '');
     setValue('project-tech-desc-en', '');
     setValue('project-category', 'Web');
+    setValue('project-status', 'development');
     setValue('project-tags', '');
     setValue('project-link', '');
     setValue('project-repo-link', '');
@@ -334,6 +336,7 @@
       tech_description_es: value('project-tech-desc-es'),
       tech_description_en: value('project-tech-desc-en'),
       category: value('project-category'),
+      status: value('project-status'),
       tags: csvValue('project-tags'),
       link: value('project-link'),
       repo_link: value('project-repo-link'),

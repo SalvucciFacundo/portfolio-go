@@ -43,6 +43,7 @@ templ ProjectCard(p domain.Project, index int, lang string) {
 		<div class="project-card__cover">
 			<img class="project-card__img grayscale-reveal" src={ p.CoverURL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" loading="eager" decoding="async"/>
 			<div class="project-card__overlay"></div>
+			<span class={ "project-card__badge", statusBadgeClass(p.Status) }>{ statusLabel(p.Status, lang) }</span>
 		</div>
 		<div class="project-card__content">
 			<span class="project-card__category">{ p.Category }</span>

@@ -65,6 +65,7 @@ func (a *API) CreateProject(w http.ResponseWriter, r *http.Request) {
 	}
 	project.Link = normalizeURL(project.Link)
 	project.RepoLink = normalizeURL(project.RepoLink)
+	project.Status = normalizeStatus(project.Status)
 
 	exists, err := a.store.Project.ExistsByTitleEn(r.Context(), project.TitleEn)
 	if err != nil {
@@ -110,6 +111,7 @@ func (a *API) UpdateProject(w http.ResponseWriter, r *http.Request) {
 	}
 	project.Link = normalizeURL(project.Link)
 	project.RepoLink = normalizeURL(project.RepoLink)
+	project.Status = normalizeStatus(project.Status)
 
 	affected, err := a.store.Project.Update(r.Context(), project)
 	if err != nil {
@@ -266,4 +268,15 @@ func normalizeURL(raw string) string {
 		return raw
 	}
 	return "https://" + raw
+}
+
+// normalizeStatus valida el estado del proyecto. Valores permitidos:
+// production | development | demo. Vacío o desconocido → development.
+func normalizeStatus(s string) string {
+	switch strings.TrimSpace(s) {
+	case "production", "development", "demo":
+		return strings.TrimSpace(s)
+	default:
+		return "development"
+	}
 }
