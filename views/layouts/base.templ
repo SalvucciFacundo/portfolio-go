@@ -103,28 +103,81 @@ templ Base(lang string) {
 						var images = wrapper ? wrapper.getAttribute('data-images').split(',') : [src];
 						var currentIndex = wrapper ? parseInt(wrapper.getAttribute('data-index') || '0', 10) : 0;
 
-						var overlay = document.createElement('div');
-						overlay.className = 'lightbox-overlay';
-						overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 999999; display: flex; align-items: center; justify-content: center; cursor: zoom-out; opacity: 0; transition: opacity 250ms ease; overflow: auto;';
+						// Crear dialog para evitar que el transform del modal padre restrinja el tamaño del visor
+						var dialog = document.createElement('dialog');
+						dialog.className = 'lightbox-dialog';
+						dialog.style.cssText = 'border: none; background: transparent; padding: 0; margin: 0; width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; position: fixed; inset: 0; z-index: 999999; display: flex; align-items: center; justify-content: center; overflow: hidden;';
+
+						// Estilo dinámico para el backdrop del dialog (desenfoque y fondo oscuro)
+						var style = document.createElement('style');
+						style.innerHTML = '.lightbox-dialog::backdrop { background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }';
+						dialog.appendChild(style);
 
 						var img = document.createElement('img');
 						img.src = src;
-						img.style.cssText = 'max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 8px; box-shadow: 0 24px 50px rgba(0,0,0,0.6); transform: scale(0.95); transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1), margin 250ms ease; cursor: zoom-in;';
+						img.style.cssText = 'max-width: 95vw; max-height: 95vh; object-fit: contain; border-radius: 8px; box-shadow: 0 24px 50px rgba(0,0,0,0.6); transform-origin: center; user-select: none; -webkit-user-drag: none; transition: transform 0.15s ease-out; cursor: zoom-in;';
 
-						var isZoomed = false;
-						img.addEventListener('click', function (e) {
-							e.stopPropagation(); // Evitar cerrar al hacer click sobre la imagen
-							isZoomed = !isZoomed;
-							if (isZoomed) {
-								img.style.transform = 'scale(1.6)';
-								img.style.cursor = 'zoom-out';
-								img.style.margin = '20% 0'; // Espacio de paneo para el scroll
+						var currentScale = 1;
+						var minScale = 1;
+						var maxScale = 5;
+						var posX = 0;
+						var posY = 0;
+
+						function updateTransform(useTransition) {
+							img.style.transition = useTransition ? 'transform 0.15s ease-out' : 'none';
+							img.style.transform = 'translate(' + posX + 'px, ' + posY + 'px) scale(' + currentScale + ')';
+						}
+
+						// Zoom con la Rueda del Mouse (Wheel)
+						dialog.addEventListener('wheel', function (e) {
+							e.preventDefault();
+							var zoomIntensity = 0.15;
+							var delta = e.deltaY < 0 ? 1 : -1;
+							
+							currentScale = Math.min(Math.max(currentScale + delta * zoomIntensity, minScale), maxScale);
+							
+							if (currentScale > 1) {
+								img.style.cursor = 'grab';
 							} else {
-								img.style.transform = 'scale(1)';
 								img.style.cursor = 'zoom-in';
-								img.style.margin = '0';
+								posX = 0;
+								posY = 0;
 							}
+							
+							updateTransform(true);
+						}, { passive: false });
+
+						// Arrastre y Paneo con el mouse
+						var isDragging = false;
+						var startX = 0;
+						var startY = 0;
+
+						img.addEventListener('mousedown', function (e) {
+							if (currentScale <= 1) return;
+							e.preventDefault();
+							e.stopPropagation();
+							isDragging = true;
+							img.style.cursor = 'grabbing';
+							startX = e.clientX - posX;
+							startY = e.clientY - posY;
 						});
+
+						var onMouseMove = function (e) {
+							if (!isDragging) return;
+							posX = e.clientX - startX;
+							posY = e.clientY - startY;
+							updateTransform(false);
+						};
+
+						var onMouseUp = function () {
+							if (isDragging) {
+								isDragging = false;
+								img.style.cursor = 'grab';
+							}
+						};
+
+						window.addEventListener('mousemove', onMouseMove);
+						window.addEventListener('mouseup', onMouseUp);
 
 						var closeBtn = document.createElement('button');
 						closeBtn.innerHTML = '&times;';
@@ -143,11 +196,12 @@ templ Base(lang string) {
 							currentIndex = idx;
 							img.src = images[currentIndex];
 							
-							// Resetear zoom al cambiar de imagen
-							isZoomed = false;
-							img.style.transform = 'scale(1)';
+							// Resetear escala y offsets al cambiar de imagen
+							currentScale = 1;
+							posX = 0;
+							posY = 0;
 							img.style.cursor = 'zoom-in';
-							img.style.margin = '0';
+							updateTransform(true);
 
 							// Sincronizar el carrusel de fondo del modal
 							if (wrapper) {
@@ -188,8 +242,8 @@ templ Base(lang string) {
 							rightArrow.addEventListener('mouseenter', function () { rightArrow.style.background = '#22c55e'; rightArrow.style.borderColor = '#22c55e'; });
 							rightArrow.addEventListener('mouseleave', function () { rightArrow.style.background = 'rgba(0,0,0,0.5)'; rightArrow.style.borderColor = 'rgba(255,255,255,0.2)'; });
 
-							overlay.appendChild(leftArrow);
-							overlay.appendChild(rightArrow);
+							dialog.appendChild(leftArrow);
+							dialog.appendChild(rightArrow);
 
 							// Soporte para flechas físicas del teclado en Lightbox
 							keyHandler = function (e) {
@@ -205,31 +259,41 @@ templ Base(lang string) {
 						}
 
 						function closeLightbox() {
-							overlay.style.opacity = '0';
+							dialog.style.opacity = '0';
 							img.style.transform = 'scale(0.95)';
 							if (images.length > 1 && keyHandler) {
 								window.removeEventListener('keydown', keyHandler);
 							}
+							window.removeEventListener('mousemove', onMouseMove);
+							window.removeEventListener('mouseup', onMouseUp);
 							setTimeout(function () {
-								overlay.remove();
-							}, 250);
+								dialog.close();
+								dialog.remove();
+							}, 150);
 						}
 
-						overlay.addEventListener('click', function () {
+						dialog.addEventListener('click', function (e) {
+							if (e.target === dialog) {
+								closeLightbox();
+							}
+						});
+
+						closeBtn.addEventListener('click', function (e) {
+							e.stopPropagation();
 							closeLightbox();
 						});
 
 						// Soporte táctil Swipe para móviles
 						var touchStartX = 0;
 						var touchEndX = 0;
-						overlay.addEventListener('touchstart', function (e) {
+						dialog.addEventListener('touchstart', function (e) {
 							touchStartX = e.changedTouches[0].screenX;
 						}, { passive: true });
-						overlay.addEventListener('touchend', function (e) {
+						dialog.addEventListener('touchend', function (e) {
 							touchEndX = e.changedTouches[0].screenX;
 							var diff = touchEndX - touchStartX;
-							// Solo cambiar de imagen si la distancia es significativa y la imagen no está aumentada (zoomed)
-							if (Math.abs(diff) > 60 && !isZoomed && images.length > 1) {
+							// Solo cambiar de imagen si la distancia es de deslizamiento y la imagen no está ampliada
+							if (Math.abs(diff) > 60 && currentScale === 1 && images.length > 1) {
 								if (diff > 0) {
 									navigate(-1); // Swipe derecha -> anterior
 								} else {
@@ -238,15 +302,18 @@ templ Base(lang string) {
 							}
 						}, { passive: true });
 
-						overlay.appendChild(img);
-						overlay.appendChild(closeBtn);
+						dialog.appendChild(img);
+						dialog.appendChild(closeBtn);
+						document.body.appendChild(dialog);
 
-						var parentContainer = document.querySelector('dialog[open]') || document.body;
-						parentContainer.appendChild(overlay);
+						// Abrir modal en la capa superior (Top Layer)
+						dialog.showModal();
 
+						// Animación suave de aparición
+						dialog.style.opacity = '0';
+						dialog.style.transition = 'opacity 150ms ease';
 						requestAnimationFrame(function () {
-							overlay.style.opacity = '1';
-							img.style.transform = 'scale(1)';
+							dialog.style.opacity = '1';
 						});
 					};
 
