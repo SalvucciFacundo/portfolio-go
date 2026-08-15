@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"fmt"
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
@@ -52,23 +53,119 @@ func Experience(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.T(lang, "section.experience"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 14, Col: 65}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 15, Col: 65}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</h2><div class=\"terminal-log\"><div class=\"terminal-log__header\"><span class=\"terminal-log__title\">SYS.LOG // WORK_EXPERIENCE</span><div class=\"terminal-log__controls\"><span class=\"dot\"></span> <span class=\"dot\"></span> <span class=\"dot\"></span></div></div><div class=\"terminal-log__body\"><ol class=\"timeline\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</h2><div class=\"experience-accordion\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, e := range p.Experience {
-			templ_7745c5c3_Err = components.ExperienceItem(e, lang).Render(ctx, templ_7745c5c3_Buffer)
+		for i, e := range p.Experience {
+			var templ_7745c5c3_Var3 = []any{"accordion-item", templ.KV("is-active", i == 0)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var3).String())
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 1, Col: 0}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\"><button type=\"button\" class=\"accordion-item__header\" onclick=\"toggleExperience(this)\" aria-expanded=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%t", i == 0))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 20, Col: 132}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\"><div class=\"accordion-item__meta\"><span class=\"accordion-item__period\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L(e.PeriodEs, e.PeriodEn, lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 22, Col: 82}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span> <span class=\"accordion-item__indicator\"></span></div><div class=\"accordion-item__info\"><h3 class=\"accordion-item__position\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var7 string
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L(e.PositionEs, e.PositionEn, lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 27, Col: 50}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</h3><span class=\"accordion-item__company\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var8 string
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs("@ " + e.Company)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 29, Col: 63}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span></div></button><div class=\"accordion-item__content\"><div class=\"accordion-item__inner\"><div class=\"accordion-item__code-prefix\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var9 string
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs("// " + i18n.L("responsabilidades y tecnologías aplicadas", "responsibilities and tech stack", lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 35, Col: 111}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div><p class=\"accordion-item__desc\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var10 string
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L(e.DescriptionEs, e.DescriptionEn, lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 38, Col: 56}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</p></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</ol></div></div></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><script>\n\t\t\tfunction toggleExperience(btn) {\n\t\t\t\tconst currentItem = btn.closest('.accordion-item');\n\t\t\t\tconst allItems = document.querySelectorAll('.accordion-item');\n\t\t\t\tconst isActive = currentItem.classList.contains('is-active');\n\n\t\t\t\tallItems.forEach(item => {\n\t\t\t\t\titem.classList.remove('is-active');\n\t\t\t\t\titem.querySelector('.accordion-item__header').setAttribute('aria-expanded', 'false');\n\t\t\t\t});\n\n\t\t\t\tif (!isActive) {\n\t\t\t\t\tcurrentItem.classList.add('is-active');\n\t\t\t\t\tbtn.setAttribute('aria-expanded', 'true');\n\t\t\t\t}\n\t\t\t}\n\t\t</script></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

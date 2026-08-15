@@ -1,6 +1,7 @@
 package sections
 
 import (
+	"fmt"
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
@@ -13,22 +14,51 @@ templ Experience(p domain.Profile, lang string, isAdmin bool) {
 		}
 		<h2 class="section__title">{ i18n.T(lang, "section.experience") }</h2>
 		
-		<div class="terminal-log">
-			<div class="terminal-log__header">
-				<span class="terminal-log__title">SYS.LOG // WORK_EXPERIENCE</span>
-				<div class="terminal-log__controls">
-					<span class="dot"></span>
-					<span class="dot"></span>
-					<span class="dot"></span>
+		<div class="experience-accordion">
+			for i, e := range p.Experience {
+				<div class={ "accordion-item", templ.KV("is-active", i == 0) }>
+					<button type="button" class="accordion-item__header" onclick="toggleExperience(this)" aria-expanded={ fmt.Sprintf("%t", i == 0) }>
+						<div class="accordion-item__meta">
+							<span class="accordion-item__period">{ i18n.L(e.PeriodEs, e.PeriodEn, lang) }</span>
+							<span class="accordion-item__indicator"></span>
+						</div>
+						<div class="accordion-item__info">
+							<h3 class="accordion-item__position">
+								{ i18n.L(e.PositionEs, e.PositionEn, lang) }
+							</h3>
+							<span class="accordion-item__company">{ "@ " + e.Company }</span>
+						</div>
+					</button>
+					<div class="accordion-item__content">
+						<div class="accordion-item__inner">
+							<div class="accordion-item__code-prefix">
+								{ "// " + i18n.L("responsabilidades y tecnologías aplicadas", "responsibilities and tech stack", lang) }
+							</div>
+							<p class="accordion-item__desc">
+								{ i18n.L(e.DescriptionEs, e.DescriptionEn, lang) }
+							</p>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="terminal-log__body">
-				<ol class="timeline">
-					for _, e := range p.Experience {
-						@components.ExperienceItem(e, lang)
-					}
-				</ol>
-			</div>
+			}
 		</div>
+
+		<script>
+			function toggleExperience(btn) {
+				const currentItem = btn.closest('.accordion-item');
+				const allItems = document.querySelectorAll('.accordion-item');
+				const isActive = currentItem.classList.contains('is-active');
+
+				allItems.forEach(item => {
+					item.classList.remove('is-active');
+					item.querySelector('.accordion-item__header').setAttribute('aria-expanded', 'false');
+				});
+
+				if (!isActive) {
+					currentItem.classList.add('is-active');
+					btn.setAttribute('aria-expanded', 'true');
+				}
+			}
+		</script>
 	</section>
 }
