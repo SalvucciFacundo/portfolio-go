@@ -1,22 +1,62 @@
 package sections
 
 import (
+	"fmt"
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
 )
 
+func chunkProjects(projects []domain.Project, size int) [][]domain.Project {
+	var chunks [][]domain.Project
+	for i := 0; i < len(projects); i += size {
+		end := i + size
+		if end > len(projects) {
+			end = len(projects)
+		}
+		chunks = append(chunks, projects[i:end])
+	}
+	return chunks
+}
+
 templ Projects(p domain.Profile, lang string, isAdmin bool) {
+	{{ chunked := chunkProjects(p.Projects, 4) }}
 	<section id="projects" class="section">
 		if isAdmin {
 			@components.AdminEditBtn("projects-admin-modal")
 		}
 		<h2 class="section__title">{ i18n.T(lang, "section.projects") }</h2>
-		<div class="projects-grid">
-			for i, pr := range p.Projects {
-				@components.ProjectCard(pr, i, lang)
+		
+		<div class="projects-slider-wrapper">
+			if len(p.Projects) > 4 {
+				<button type="button" class="projects-slider__arrow projects-slider__arrow--left" onclick="slideProjects(-1)" aria-label="Previous projects">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+						<polyline points="15 18 9 12 15 6"></polyline>
+					</svg>
+				</button>
+			}
+
+			<div class="projects-slider-container">
+				<div class="projects-slider" id="projects-slider" data-index="0" data-slides={ fmt.Sprintf("%d", len(chunked)) }>
+					for _, chunk := range chunked {
+						<div class="projects-grid">
+							for i, pr := range chunk {
+								@components.ProjectCard(pr, i, lang)
+							}
+						</div>
+					}
+				</div>
+			</div>
+
+			if len(p.Projects) > 4 {
+				<button type="button" class="projects-slider__arrow projects-slider__arrow--right" onclick="slideProjects(1)" aria-label="Next projects">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+						<polyline points="9 18 15 12 9 6"></polyline>
+					</svg>
+				</button>
 			}
 		</div>
+
 		for _, pr := range p.Projects {
 			@components.ProjectModal(pr, lang)
 		}

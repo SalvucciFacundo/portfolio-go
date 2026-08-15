@@ -368,6 +368,18 @@ templ Base(lang string) {
 						});
 					};
 
+					// ── Projects Slider navigation ──
+					window.slideProjects = function (dir) {
+						var slider = document.getElementById('projects-slider');
+						if (!slider) return;
+						var index = parseInt(slider.getAttribute('data-index') || '0', 10);
+						var totalSlides = parseInt(slider.getAttribute('data-slides') || '1', 10);
+						
+						index = (index + dir + totalSlides) % totalSlides;
+						slider.setAttribute('data-index', index);
+						slider.style.transform = 'translateX(-' + (index * 100) + '%)';
+					};
+
 					// ── Fullscreen section navigator (Terminal screen swap) ──
 					var allSections = Array.prototype.slice.call(document.querySelectorAll('.section'));
 					var navLinks = Array.prototype.slice.call(document.querySelectorAll('.sidebar-right__link'));
