@@ -133,16 +133,14 @@ templ ProjectsAdminModal(p domain.Profile) {
 							</div>
 						</div>
 
-						<div class="admin-modal__grid">
-							<div class="admin-modal__field">
-								<label for="project-cover">Cover Image</label>
-								<input type="file" id="project-cover" name="cover" accept="image/*"/>
-								<span class="admin-modal__file-hint">Cover upload is not available yet — the current cover is kept when editing</span>
-							</div>
-							<div class="admin-modal__field">
-								<label for="project-screenshots">Screenshots (1 or more)</label>
-								<input type="file" id="project-screenshots" name="screenshots" multiple accept="image/*"/>
-							</div>
+						<div class="admin-modal__field">
+							<label for="project-cover">Cover Image</label>
+							<input type="file" id="project-cover" name="cover" accept="image/*"/>
+							<span class="admin-modal__file-hint">Cover upload is not available yet — the current cover is kept when editing</span>
+						</div>
+						<div class="admin-modal__field">
+							<label for="project-screenshots">Screenshots (1 or more)</label>
+							<input type="file" id="project-screenshots" name="screenshots" multiple accept="image/*"/>
 						</div>
 
 						<div class="admin-modal__actions">
