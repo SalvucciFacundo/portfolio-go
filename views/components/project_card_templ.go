@@ -115,9 +115,9 @@ func ProjectCard(p domain.Project, index int, lang string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(responsiveURL(p.CoverURL, 800))
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(p.CoverURL)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 44, Col: 87}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 44, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -130,13 +130,13 @@ func ProjectCard(p domain.Project, index int, lang string) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L(p.TitleEs, p.TitleEn, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 44, Col: 130}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 44, Col: 110}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" width=\"800\" height=\"500\" loading=\"lazy\"><div class=\"project-card__overlay\"></div></div><div class=\"project-card__content\"><span class=\"project-card__category\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" width=\"800\" height=\"500\" loading=\"eager\" decoding=\"async\"><div class=\"project-card__overlay\"></div></div><div class=\"project-card__content\"><span class=\"project-card__category\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -321,9 +321,9 @@ func ProjectModal(p domain.Project, lang string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var17 string
-			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(responsiveURL(p.Screenshots[0].URL, 1000))
+			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(p.Screenshots[0].URL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 82, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 82, Col: 38}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
@@ -336,13 +336,13 @@ func ProjectModal(p domain.Project, lang string) templ.Component {
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L(p.TitleEs, p.TitleEn, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 82, Col: 102}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 82, Col: 81}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" width=\"800\" height=\"500\" onclick=\"openLightbox(this)\" style=\"cursor: pointer;\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" width=\"800\" height=\"500\" loading=\"lazy\" decoding=\"async\" onclick=\"openLightbox(this)\" style=\"cursor: pointer;\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -352,9 +352,9 @@ func ProjectModal(p domain.Project, lang string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var19 string
-			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(responsiveURL(p.CoverURL, 1000))
+			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(p.CoverURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 84, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 84, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {
@@ -367,13 +367,13 @@ func ProjectModal(p domain.Project, lang string) templ.Component {
 			var templ_7745c5c3_Var20 string
 			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L(p.TitleEs, p.TitleEn, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 84, Col: 92}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/project_card.templ`, Line: 84, Col: 71}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\" width=\"800\" height=\"500\" onclick=\"openLightbox(this)\" style=\"cursor: pointer;\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\" width=\"800\" height=\"500\" loading=\"lazy\" decoding=\"async\" onclick=\"openLightbox(this)\" style=\"cursor: pointer;\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
