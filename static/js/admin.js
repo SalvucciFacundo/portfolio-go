@@ -359,10 +359,14 @@
     } else {
       promise = api('/projects', { method: 'POST', body: payload })
         .then(function (data) {
-          return uploadFiles('project-screenshots', '/projects/' + data.id + '/images', 'screenshots');
-        })
-        .then(function () {
-          return uploadFiles('project-cover', '/projects/' + data.id + '/cover', 'cover');
+          // Guardar el id en una variable del closure: los .then siguientes no
+          // reciben 'data' como parámetro (cada .then recibe el return del
+          // anterior), así que usarla directo lanzaba "data is not defined".
+          var newProjectId = data && data.id;
+          return uploadFiles('project-screenshots', '/projects/' + newProjectId + '/images', 'screenshots')
+            .then(function () {
+              return uploadFiles('project-cover', '/projects/' + newProjectId + '/cover', 'cover');
+            });
         });
     }
     promise.then(reload).catch(function (err) {
