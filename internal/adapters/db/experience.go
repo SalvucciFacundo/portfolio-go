@@ -37,11 +37,14 @@ func scanExperience(row pgx.Row) (domain.Experience, error) {
 
 // List returns every experience entry ordered newest-first by the start year
 // of its period (e.g. "2026 — Presente" sorts before "2023 — 2025"),
-// independent of the manual position field. Position/id act as tie-breakers.
+// independent of the manual position field. Within the same start year, active
+// roles (periods ending in "Presente"/"Present") come before finished ones.
+// Position/id act as final tie-breakers.
 func (r *ExperienceRepo) List(ctx context.Context) ([]domain.Experience, error) {
 	rows, err := r.pool.Query(ctx,
 		`SELECT `+experienceColumns+` FROM experience
 		 ORDER BY NULLIF(regexp_replace(period_es, '[^0-9].*$', ''), '')::int DESC NULLS LAST,
+		          CASE WHEN period_es ILIKE '%presente%' THEN 0 ELSE 1 END ASC,
 		          position ASC, id ASC`)
 	if err != nil {
 		return nil, fmt.Errorf("list experience: %w", err)
