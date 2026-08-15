@@ -63,6 +63,8 @@ func (a *API) CreateProject(w http.ResponseWriter, r *http.Request) {
 	if project.Tags == nil {
 		project.Tags = []string{}
 	}
+	project.Link = normalizeURL(project.Link)
+	project.RepoLink = normalizeURL(project.RepoLink)
 
 	exists, err := a.store.Project.ExistsByTitleEn(r.Context(), project.TitleEn)
 	if err != nil {
@@ -106,6 +108,8 @@ func (a *API) UpdateProject(w http.ResponseWriter, r *http.Request) {
 	if project.Tags == nil {
 		project.Tags = []string{}
 	}
+	project.Link = normalizeURL(project.Link)
+	project.RepoLink = normalizeURL(project.RepoLink)
 
 	affected, err := a.store.Project.Update(r.Context(), project)
 	if err != nil {
@@ -247,4 +251,19 @@ func (a *API) UploadProjectCover(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, map[string]string{"cover_url": url})
+}
+
+// normalizeURL asegura que un link guardado sea una URL absoluta. Si el valor
+// no trae protocolo (ej. "www.miscanarios.com.ar"), le antepone https:// —
+// de otro modo el navegador lo interpretaría como URL relativa al dominio
+// actual (https://facundosalvucci.dev/www.miscanarios.com.ar). Vacío pasa igual.
+func normalizeURL(raw string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return ""
+	}
+	if strings.HasPrefix(raw, "http://") || strings.HasPrefix(raw, "https://") {
+		return raw
+	}
+	return "https://" + raw
 }
