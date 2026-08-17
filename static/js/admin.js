@@ -392,6 +392,21 @@
       .catch(function (err) { handleError('projects-error', err); });
   }
 
+  function reorderProject(selectEl) {
+    var id = num(selectEl.getAttribute('data-id'));
+    if (!id) {
+      return;
+    }
+    var newPosition = parseInt(selectEl.value, 10);
+    showError('projects-error', '');
+    api('/projects/' + id + '/position', {
+      method: 'PUT',
+      body: { position: newPosition }
+    })
+      .then(reload)
+      .catch(function (err) { handleError('projects-error', err); });
+  }
+
   // ---------------------------------------------------------------------------
   // Experience
   // ---------------------------------------------------------------------------
@@ -598,6 +613,7 @@
     deleteSkill: deleteSkill,
     saveProject: saveProject,
     deleteProject: deleteProject,
+    reorderProject: reorderProject,
     saveExperience: saveExperience,
     deleteExperience: deleteExperience,
     saveEducation: saveEducation,

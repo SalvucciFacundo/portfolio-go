@@ -43,6 +43,7 @@ type ProjectRepo interface {
 	DeleteImage(ctx context.Context, imageID int64) (bool, error)
 	SetCover(ctx context.Context, id int64, coverURL string) (bool, error)
 	ExistsByTitleEn(ctx context.Context, titleEn string) (bool, error)
+	Reorder(ctx context.Context, id int64, newPosition int) error
 }
 
 // ExperienceRepo persists work experience entries.

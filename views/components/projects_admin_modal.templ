@@ -28,6 +28,22 @@ templ ProjectsAdminModal(p domain.Profile) {
 									<span class="admin-skill-item__name">{ pr.TitleEn }</span>
 									<span class="admin-skill-item__category">{ pr.Category }</span>
 								</div>
+								<div class="admin-skill-item__position" style="margin-right: 0.25rem;">
+									<select 
+										class="admin-modal__select" 
+										style="width: 52px; padding: 4px 6px; font-size: 1.2rem; border-radius: 4px; background: var(--bg-alt); border: 1px solid var(--card-border); color: var(--text-primary); cursor: pointer;"
+										data-id={ fmt.Sprintf("%d", pr.ID) }
+										onchange="PortfolioAdmin.reorderProject(this)"
+									>
+										for i := 0; i < len(p.Projects); i++ {
+											if i == pr.Position {
+												<option value={ fmt.Sprintf("%d", i) } selected>{ fmt.Sprintf("%d", i+1) }</option>
+											} else {
+												<option value={ fmt.Sprintf("%d", i) }>{ fmt.Sprintf("%d", i+1) }</option>
+											}
+										}
+									</select>
+								</div>
 								<div class="admin-skill-item__actions">
 									<button 
 										type="button" 

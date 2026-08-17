@@ -289,3 +289,27 @@ func normalizeStatus(s string) string {
 		return "development"
 	}
 }
+
+// ReorderProject reordena un proyecto a una posición dada y desplaza a los otros.
+func (a *API) ReorderProject(w http.ResponseWriter, r *http.Request) {
+	id, err := idParam(r, "id")
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid id")
+		return
+	}
+
+	var payload struct {
+		Position int `json:"position"`
+	}
+	if err := readJSON(r, &payload); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+
+	if err := a.store.Project.Reorder(r.Context(), id, payload.Position); err != nil {
+		writeError(w, http.StatusInternalServerError, "internal error")
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}

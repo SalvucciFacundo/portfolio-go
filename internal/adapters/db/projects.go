@@ -267,3 +267,60 @@ func (r *ProjectRepo) ExistsByTitleEn(ctx context.Context, titleEn string) (bool
 	}
 	return exists, nil
 }
+
+// Reorder moves a project to a new position, shifting intermediate projects as needed.
+func (r *ProjectRepo) Reorder(ctx context.Context, id int64, newPosition int) error {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin reorder project tx: %w", err)
+	}
+	defer tx.Rollback(ctx)
+
+	// 1. Get current position of the target project
+	var oldPosition int
+	err = tx.QueryRow(ctx, "SELECT position FROM projects WHERE id = $1", id).Scan(&oldPosition)
+	if err != nil {
+		return fmt.Errorf("get current position of project %d: %w", id, err)
+	}
+
+	if oldPosition == newPosition {
+		return nil // No change needed
+	}
+
+	// 2. Shift position values for intermediate projects in the database
+	if newPosition < oldPosition {
+		_, err = tx.Exec(ctx, `
+			UPDATE projects
+			SET position = position + 1, updated_at = now()
+			WHERE position >= $1 AND position < $2`,
+			newPosition, oldPosition,
+		)
+	} else {
+		_, err = tx.Exec(ctx, `
+			UPDATE projects
+			SET position = position - 1, updated_at = now()
+			WHERE position > $1 AND position <= $2`,
+			oldPosition, newPosition,
+		)
+	}
+	if err != nil {
+		return fmt.Errorf("shift intermediate projects position: %w", err)
+	}
+
+	// 3. Set the new position on the target project
+	_, err = tx.Exec(ctx, `
+		UPDATE projects
+		SET position = $1, updated_at = now()
+		WHERE id = $2`,
+		newPosition, id,
+	)
+	if err != nil {
+		return fmt.Errorf("set new position for project %d: %w", id, err)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("commit reorder project: %w", err)
+	}
+
+	return nil
+}

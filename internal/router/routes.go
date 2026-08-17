@@ -70,6 +70,7 @@ func Register(mux *http.ServeMux, deps Deps) {
 	mux.Handle("POST /api/v1/skills/{id}/icon", admin(api.UploadSkillIcon))
 	mux.Handle("POST /api/v1/projects", admin(api.CreateProject))
 	mux.Handle("PUT /api/v1/projects/{id}", admin(api.UpdateProject))
+	mux.Handle("PUT /api/v1/projects/{id}/position", admin(api.ReorderProject))
 	mux.Handle("DELETE /api/v1/projects/{id}", admin(api.DeleteProject))
 	mux.Handle("POST /api/v1/projects/{id}/cover", admin(api.UploadProjectCover))
 	mux.Handle("POST /api/v1/projects/{id}/images", admin(api.UploadProjectImages))

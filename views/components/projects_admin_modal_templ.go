@@ -79,7 +79,7 @@ func ProjectsAdminModal(p domain.Profile) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><div class=\"admin-skill-item__actions\"><button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--edit\" data-id=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><div class=\"admin-skill-item__position\" style=\"margin-right: 0.25rem;\"><select class=\"admin-modal__select\" style=\"width: 52px; padding: 4px 6px; font-size: 1.2rem; border-radius: 4px; background: var(--bg-alt); border: 1px solid var(--card-border); color: var(--text-primary); cursor: pointer;\" data-id=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -92,207 +92,289 @@ func ProjectsAdminModal(p domain.Profile) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" data-position=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" onchange=\"PortfolioAdmin.reorderProject(this)\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", pr.Position))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 36, Col: 56}
+			for i := 0; i < len(p.Projects); i++ {
+				if i == pr.Position {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<option value=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var6 string
+					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 40, Col: 48}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" selected>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var7 string
+					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i+1))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 40, Col: 84}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</option>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<option value=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var8 string
+					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 42, Col: 48}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var9 string
+					templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i+1))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 42, Col: 75}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</option>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" data-cover=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var7 string
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(pr.CoverURL)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 37, Col: 34}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" data-title-es=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var8 string
-			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TitleEs)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 38, Col: 36}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" data-title-en=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var9 string
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TitleEn)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 39, Col: 36}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" data-desc-es=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</select></div><div class=\"admin-skill-item__actions\"><button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--edit\" data-id=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 string
-			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(pr.DescriptionEs)
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", pr.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 40, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 51, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" data-desc-en=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" data-position=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var11 string
-			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(pr.DescriptionEn)
+			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", pr.Position))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 41, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 52, Col: 56}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" data-tech-es=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" data-cover=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TechDescriptionEs)
+			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(pr.CoverURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 42, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 53, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" data-tech-en=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" data-title-es=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 string
-			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TechDescriptionEn)
+			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TitleEs)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 43, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 54, Col: 36}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" data-category=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" data-title-en=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var14 string
-			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(pr.Category)
+			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TitleEn)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 44, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 55, Col: 36}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" data-status=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\" data-desc-es=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var15 string
-			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(pr.Status)
+			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(pr.DescriptionEs)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 45, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 56, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" data-tags=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\" data-desc-en=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var16 string
-			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(strings.Join(pr.Tags, ", "))
+			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(pr.DescriptionEn)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 46, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 57, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" data-link=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" data-tech-es=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var17 string
-			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(pr.Link)
+			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TechDescriptionEs)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 47, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 58, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\" data-repo=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\" data-tech-en=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var18 string
-			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(pr.RepoLink)
+			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TechDescriptionEn)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 48, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 59, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\" onclick=\"fillProjectForm(this)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><path d=\"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\"></path> <path d=\"M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z\"></path></svg></button> <button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--delete\" data-id=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\" data-category=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var19 string
-			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", pr.ID))
+			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(pr.Category)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 59, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 60, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" data-title=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" data-status=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var20 string
-			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TitleEn)
+			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(pr.Status)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 60, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 61, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\" onclick=\"deleteProject(this)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><polyline points=\"3 6 5 6 21 6\"></polyline> <path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"></path> <line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"></line> <line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"></line></svg></button></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\" data-tags=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var21 string
+			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(strings.Join(pr.Tags, ", "))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 62, Col: 49}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\" data-link=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var22 string
+			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(pr.Link)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 63, Col: 29}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\" data-repo=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var23 string
+			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(pr.RepoLink)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 64, Col: 33}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" onclick=\"fillProjectForm(this)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><path d=\"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\"></path> <path d=\"M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z\"></path></svg></button> <button type=\"button\" class=\"admin-skill-item__btn admin-skill-item__btn--delete\" data-id=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var24 string
+			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", pr.ID))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 75, Col: 44}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\" data-title=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var25 string
+			templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(pr.TitleEn)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/projects_admin_modal.templ`, Line: 76, Col: 33}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\" onclick=\"deleteProject(this)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" width=\"16\" height=\"16\"><polyline points=\"3 6 5 6 21 6\"></polyline> <path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"></path> <line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"></line> <line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"></line></svg></button></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div></div><!-- Right Column: Add/Edit Form --><div class=\"admin-skills-form\" style=\"max-height: 480px; overflow-y: auto; padding-right: 0.5rem;\"><h4 id=\"project-form-title\" class=\"admin-skills-form__title\">Add New Project</h4><form onsubmit=\"PortfolioAdmin.saveProject(event)\"><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"project-title-es\">Title (ES)</label> <input type=\"text\" id=\"project-title-es\" name=\"title_es\" required placeholder=\"e.g. GAIA\"></div><div class=\"admin-modal__field\"><label for=\"project-title-en\">Title (EN)</label> <input type=\"text\" id=\"project-title-en\" name=\"title_en\" required placeholder=\"e.g. GAIA\"></div></div><div class=\"admin-modal__field\"><label for=\"project-desc-es\">Description (ES)</label> <textarea id=\"project-desc-es\" name=\"description_es\" rows=\"3\" required placeholder=\"General overview...\"></textarea></div><div class=\"admin-modal__field\"><label for=\"project-desc-en\">Description (EN)</label> <textarea id=\"project-desc-en\" name=\"description_en\" rows=\"3\" required placeholder=\"General overview...\"></textarea></div><div class=\"admin-modal__field\"><label for=\"project-tech-desc-es\">Technical Explanation (ES)</label> <textarea id=\"project-tech-desc-es\" name=\"tech_description_es\" rows=\"3\" placeholder=\"Architecture details...\"></textarea></div><div class=\"admin-modal__field\"><label for=\"project-tech-desc-en\">Technical Explanation (EN)</label> <textarea id=\"project-tech-desc-en\" name=\"tech_description_en\" rows=\"3\" placeholder=\"Architecture details...\"></textarea></div><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"project-category\">Category</label> <select id=\"project-category\" name=\"category\" class=\"admin-modal__select\"><option value=\"Web\">Web</option> <option value=\"AI\">AI</option> <option value=\"Tools\">Tools</option></select></div><div class=\"admin-modal__field\"><div class=\"admin-modal__field\"><label for=\"project-status\">Status</label> <select id=\"project-status\" name=\"status\" class=\"admin-modal__select\"><option value=\"production\">Production</option> <option value=\"development\" selected>Development</option> <option value=\"demo\">Demo</option></select></div><label for=\"project-tags\">Technologies (Comma separated)</label> <input type=\"text\" id=\"project-tags\" name=\"tags\" placeholder=\"e.g. Go, Angular, Docker\"></div></div><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"project-link\">Web Link</label> <input type=\"text\" id=\"project-link\" name=\"link\" placeholder=\"e.g. https://myproject.com\"></div><div class=\"admin-modal__field\"><label for=\"project-repo-link\">GitHub Link</label> <input type=\"text\" id=\"project-repo-link\" name=\"repo_link\" placeholder=\"e.g. https://github.com/...\"></div></div><div class=\"admin-modal__field\"><label for=\"project-cover\">Cover Image</label> <input type=\"file\" id=\"project-cover\" name=\"cover\" accept=\"image/*\"> <span class=\"admin-modal__file-hint\">Cover upload is not available yet — the current cover is kept when editing</span></div><div class=\"admin-modal__field\"><label for=\"project-screenshots\">Screenshots (1 or more)</label> <input type=\"file\" id=\"project-screenshots\" name=\"screenshots\" multiple accept=\"image/*\"></div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"resetProjectForm()\">Reset</button> <button type=\"submit\" id=\"project-submit-btn\" class=\"admin-modal__submit\">Add Project</button></div></form></div></div></div></dialog>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</div></div><!-- Right Column: Add/Edit Form --><div class=\"admin-skills-form\" style=\"max-height: 480px; overflow-y: auto; padding-right: 0.5rem;\"><h4 id=\"project-form-title\" class=\"admin-skills-form__title\">Add New Project</h4><form onsubmit=\"PortfolioAdmin.saveProject(event)\"><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"project-title-es\">Title (ES)</label> <input type=\"text\" id=\"project-title-es\" name=\"title_es\" required placeholder=\"e.g. GAIA\"></div><div class=\"admin-modal__field\"><label for=\"project-title-en\">Title (EN)</label> <input type=\"text\" id=\"project-title-en\" name=\"title_en\" required placeholder=\"e.g. GAIA\"></div></div><div class=\"admin-modal__field\"><label for=\"project-desc-es\">Description (ES)</label> <textarea id=\"project-desc-es\" name=\"description_es\" rows=\"3\" required placeholder=\"General overview...\"></textarea></div><div class=\"admin-modal__field\"><label for=\"project-desc-en\">Description (EN)</label> <textarea id=\"project-desc-en\" name=\"description_en\" rows=\"3\" required placeholder=\"General overview...\"></textarea></div><div class=\"admin-modal__field\"><label for=\"project-tech-desc-es\">Technical Explanation (ES)</label> <textarea id=\"project-tech-desc-es\" name=\"tech_description_es\" rows=\"3\" placeholder=\"Architecture details...\"></textarea></div><div class=\"admin-modal__field\"><label for=\"project-tech-desc-en\">Technical Explanation (EN)</label> <textarea id=\"project-tech-desc-en\" name=\"tech_description_en\" rows=\"3\" placeholder=\"Architecture details...\"></textarea></div><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"project-category\">Category</label> <select id=\"project-category\" name=\"category\" class=\"admin-modal__select\"><option value=\"Web\">Web</option> <option value=\"AI\">AI</option> <option value=\"Tools\">Tools</option></select></div><div class=\"admin-modal__field\"><div class=\"admin-modal__field\"><label for=\"project-status\">Status</label> <select id=\"project-status\" name=\"status\" class=\"admin-modal__select\"><option value=\"production\">Production</option> <option value=\"development\" selected>Development</option> <option value=\"demo\">Demo</option></select></div><label for=\"project-tags\">Technologies (Comma separated)</label> <input type=\"text\" id=\"project-tags\" name=\"tags\" placeholder=\"e.g. Go, Angular, Docker\"></div></div><div class=\"admin-modal__grid\"><div class=\"admin-modal__field\"><label for=\"project-link\">Web Link</label> <input type=\"text\" id=\"project-link\" name=\"link\" placeholder=\"e.g. https://myproject.com\"></div><div class=\"admin-modal__field\"><label for=\"project-repo-link\">GitHub Link</label> <input type=\"text\" id=\"project-repo-link\" name=\"repo_link\" placeholder=\"e.g. https://github.com/...\"></div></div><div class=\"admin-modal__field\"><label for=\"project-cover\">Cover Image</label> <input type=\"file\" id=\"project-cover\" name=\"cover\" accept=\"image/*\"> <span class=\"admin-modal__file-hint\">Cover upload is not available yet — the current cover is kept when editing</span></div><div class=\"admin-modal__field\"><label for=\"project-screenshots\">Screenshots (1 or more)</label> <input type=\"file\" id=\"project-screenshots\" name=\"screenshots\" multiple accept=\"image/*\"></div><div class=\"admin-modal__actions\"><button type=\"button\" class=\"admin-modal__cancel\" onclick=\"resetProjectForm()\">Reset</button> <button type=\"submit\" id=\"project-submit-btn\" class=\"admin-modal__submit\">Add Project</button></div></form></div></div></div></dialog>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
