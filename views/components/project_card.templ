@@ -60,10 +60,6 @@ templ ProjectCard(p domain.Project, index int, lang string) {
 
 templ ProjectModal(p domain.Project, lang string) {
 	{{ id := sanitizeID(p.TitleEn) }}
-	{{ link := p.Link }}
-	if link == "" {
-		{{ link = "#" }}
-	}
 	<dialog id={ id } class="project-modal" onclick="if (event.target === this) this.close()">
 		<div class="project-modal__content" onclick="event.stopPropagation()">
 			<button class="project-modal__close-btn" onclick={ closeModal(id) } aria-label="Close modal">&times;</button>
@@ -107,7 +103,9 @@ templ ProjectModal(p domain.Project, lang string) {
 				</div>
 			</div>
 			<div class="project-modal__footer">
-				<a class="btn btn--primary" href={ link } target="_blank" rel="noopener noreferrer">{ i18n.T(lang, "action.view_live") }</a>
+				if p.Link != "" && p.Link != "#" {
+					<a class="btn btn--primary" href={ p.Link } target="_blank" rel="noopener noreferrer">{ i18n.T(lang, "action.view_live") }</a>
+				}
 				if p.RepoLink != "" {
 					<a class="btn btn--secondary" href={ p.RepoLink } target="_blank" rel="noopener noreferrer">
 						<span>GitHub</span>
