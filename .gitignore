@@ -10,3 +10,6 @@ tmp/
 
 # Dokploy API cheatsheet (datos sensibles de la instancia)
 dokploy-api-cheatsheet.md
+
+# CodeGraph index
+.codegraph/
