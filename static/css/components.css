@@ -1237,10 +1237,17 @@ html.dark-theme .theme-toggle .icon-moon {
 
 .project-card__category {
 	font-family: var(--font-mono);
-	font-size: 0.68rem;
-	color: var(--text-muted);
+	font-size: 0.72rem;
+	color: #22c55e;
 	text-transform: uppercase;
-	letter-spacing: 0.15em;
+	letter-spacing: 0.12em;
+	font-weight: 600;
+}
+
+.project-card__category::before {
+	content: "> ";
+	color: #22c55e;
+	opacity: 0.85;
 }
 
 .project-card__title {
@@ -1426,10 +1433,17 @@ html.dark-theme .theme-toggle .icon-moon {
 
 .project-modal__category {
 	font-family: var(--font-mono);
-	font-size: 0.7rem;
+	font-size: 0.75rem;
 	text-transform: uppercase;
-	color: var(--text-muted);
-	letter-spacing: 0.15em;
+	color: #22c55e;
+	letter-spacing: 0.12em;
+	font-weight: 600;
+}
+
+.project-modal__category::before {
+	content: "> ";
+	color: #22c55e;
+	opacity: 0.85;
 }
 
 .project-modal__title {
