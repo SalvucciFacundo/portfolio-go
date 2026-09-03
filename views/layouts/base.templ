@@ -380,131 +380,62 @@ templ Base(lang string) {
 						slider.style.transform = 'translateX(-' + (index * 100) + '%)';
 					};
 
-					// ── Fullscreen section navigator (Terminal screen swap) ──
+					// ── Smooth Scroll & Section Observer (IntersectionObserver) ──
 					var allSections = Array.prototype.slice.call(document.querySelectorAll('.section'));
 					var navLinks = Array.prototype.slice.call(document.querySelectorAll('.sidebar-right__link'));
-					var currentIdx = 0;
-					var isTransitioning = false;
-					var LEAVE_MS = 350;
-					var COOLDOWN_MS = 900;
 
-					function updateNav(idx) {
+					function updateNav(targetId) {
 						navLinks.forEach(function (a) {
-							var target = a.getAttribute('href').replace('#', '');
-							a.classList.toggle('is-active', allSections[idx] && allSections[idx].id === target);
+							var id = a.getAttribute('href').replace('#', '');
+							a.classList.toggle('is-active', id === targetId);
 						});
 					}
 
-					function goTo(nextIdx) {
-						if (isTransitioning || nextIdx < 0 || nextIdx >= allSections.length || nextIdx === currentIdx) return;
-						isTransitioning = true;
+					// Activate hero immediately
+					if (allSections.length > 0) {
+						allSections[0].classList.add('is-active');
+						updateNav(allSections[0].id);
+					}
 
-						// Phase 1: Fade out current section
-						allSections[currentIdx].classList.remove('is-active');
-						allSections[currentIdx].classList.add('is-leaving');
-
-						setTimeout(function () {
-							// Phase 2: Swap — hide old, show new instantly
-							allSections[currentIdx].classList.remove('is-leaving');
-							allSections[currentIdx].style.display = 'none';
-
-							allSections[nextIdx].style.display = '';
-							allSections[nextIdx].scrollIntoView({ behavior: 'instant' });
-
-							// Phase 3: Fade in new section
-							requestAnimationFrame(function () {
-								allSections[nextIdx].classList.add('is-active');
-								currentIdx = nextIdx;
-								updateNav(currentIdx);
-
-								setTimeout(function () {
-									isTransitioning = false;
-								}, COOLDOWN_MS);
+					// Observe sections for active state & CRT boot animation
+					if ('IntersectionObserver' in window) {
+						var sectionObserver = new IntersectionObserver(function (entries) {
+							entries.forEach(function (entry) {
+								if (entry.isIntersecting) {
+									entry.target.classList.add('is-active');
+									updateNav(entry.target.id);
+								}
 							});
-						}, LEAVE_MS);
-					}
-
-					// Initialize: hide all sections except the first if on desktop
-					if (window.innerWidth > 900) {
-						allSections.forEach(function (sec, i) {
-							if (i === 0) {
-								sec.classList.add('is-active');
-							} else {
-								sec.style.display = 'none';
-							}
+						}, {
+							rootMargin: '-20% 0px -40% 0px',
+							threshold: 0.1
 						});
-						updateNav(0);
+
+						allSections.forEach(function (sec) {
+							sectionObserver.observe(sec);
+						});
 					} else {
+						// Fallback if IntersectionObserver is not supported
 						allSections.forEach(function (sec) {
 							sec.classList.add('is-active');
-							sec.style.display = '';
 						});
 					}
 
-					// Wheel handler
-					window.addEventListener('wheel', function (e) {
-						if (window.innerWidth <= 900) return;
-
-						// If any dialog modal is open, do not swap sections
-						var activeDialog = document.querySelector('dialog[open]');
-						if (activeDialog) {
-							var path = e.composedPath();
-							var insideDialog = false;
-							for (var i = 0; i < path.length; i++) {
-								if (path[i] === activeDialog) {
-									insideDialog = true;
-									break;
-								}
-							}
-							if (insideDialog) {
-								return; // Allow scrolling inside the open modal
-							} else {
-								e.preventDefault(); // Ignore scroll outside the modal
-								return;
-							}
-						}
-
-						// Check if scrolling inside the terminal log body
-						var path = e.composedPath();
-						for (var i = 0; i < path.length; i++) {
-							var el = path[i];
-							if (el === window || el === document) break;
-							if (!el || !el.classList) continue;
-							if (el.classList.contains('terminal-log__body')) {
-								return; // Allow scrolling inside the terminal log
-							}
-						}
-
-						e.preventDefault();
-						var dir = e.deltaY > 0 ? 1 : -1;
-						goTo(currentIdx + dir);
-					}, { passive: false });
-
-					// Sidebar nav click handler
+					// Smooth click on sidebar links
 					navLinks.forEach(function (a) {
 						a.addEventListener('click', function (e) {
-							if (window.innerWidth <= 900) return;
-							e.preventDefault();
-							var targetId = a.getAttribute('href').replace('#', '');
-							for (var i = 0; i < allSections.length; i++) {
-								if (allSections[i].id === targetId) {
-									goTo(i);
-									break;
+							var href = a.getAttribute('href');
+							if (href && href.startsWith('#')) {
+								var target = document.querySelector(href);
+								if (target) {
+									e.preventDefault();
+									target.scrollIntoView({ behavior: 'smooth' });
+									if (window.history && window.history.pushState) {
+										history.pushState(null, null, href);
+									}
 								}
 							}
 						});
-					});
-
-					// Keyboard arrow support
-					window.addEventListener('keydown', function (e) {
-						if (window.innerWidth <= 900) return;
-						if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-							e.preventDefault();
-							goTo(currentIdx + 1);
-						} else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-							e.preventDefault();
-							goTo(currentIdx - 1);
-						}
 					});
 				})();
 			</script>

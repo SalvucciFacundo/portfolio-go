@@ -17,8 +17,7 @@
 }
 
 html {
-	overflow: hidden;
-	height: 100vh;
+	scroll-behavior: smooth;
 }
 
 body {
@@ -68,12 +67,13 @@ ol {
 }
 
 .section {
-	padding: 6rem 0;
+	padding: clamp(3rem, 5vh, 5.5rem) 0;
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	border-bottom: 1px solid var(--card-border);
+	scroll-margin-top: 1.5rem;
 }
 
 /* ── Section-based fullscreen navigation (Terminal screen swap) ── */
@@ -234,24 +234,15 @@ ol {
 	}
 }
 
-/* Responsive vertical scrolling behavior */
+/* Responsive vertical scrolling adjustments */
 @media (max-width: 900px) {
-	html, body {
-		overflow-y: auto !important;
-		height: auto !important;
+	.main-content {
+		padding: 0 1.25rem 4rem 1.25rem;
 	}
 	.section {
-		display: flex !important;
-		min-height: auto !important;
-		height: auto !important;
-		padding: 5rem 0 !important;
-		opacity: 1 !important;
-		transform: none !important;
-	}
-	.section > * {
-		opacity: 1 !important;
-		transform: none !important;
-		animation: none !important;
+		min-height: auto;
+		padding: 3.5rem 0;
+		justify-content: flex-start;
 	}
 }
 
