@@ -21,6 +21,14 @@ func getBentoClass(index int) string {
 	}
 }
 
+func filterCategory(cat string) string {
+	c := strings.ToLower(strings.TrimSpace(cat))
+	if c == "ai" || c == "ia" {
+		return "tools"
+	}
+	return c
+}
+
 script openModal(id string) {
 	const dialog = document.getElementById(id);
 	if (dialog) {
@@ -37,7 +45,7 @@ script closeModal(id string) {
 
 templ ProjectCard(p domain.Project, index int, lang string) {
 	{{ id := sanitizeID(p.TitleEn) }}
-	<article class={ "project-card", getBentoClass(index) } onclick={ openModal(id) }>
+	<article class={ "project-card", getBentoClass(index) } data-category={ filterCategory(p.Category) } onclick={ openModal(id) }>
 		<div class="project-card__cover">
 			<img class="project-card__img grayscale-reveal" src={ p.CoverURL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" loading="eager" decoding="async"/>
 			<div class="project-card__overlay"></div>

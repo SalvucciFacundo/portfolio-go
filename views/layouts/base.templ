@@ -368,6 +368,32 @@ templ Base(lang string) {
 						});
 					};
 
+					// ── Projects Tabs Filtering ──
+					window.filterProjects = function (category, btn) {
+						var tabs = document.querySelectorAll('.projects-tab');
+						tabs.forEach(function (tab) {
+							tab.classList.toggle('is-active', tab === btn);
+						});
+
+						var cards = document.querySelectorAll('.project-card');
+						cards.forEach(function (card) {
+							var cardCat = (card.getAttribute('data-category') || '').toLowerCase();
+							var match = (category === 'all') || (cardCat === category);
+							card.classList.toggle('is-filtered-out', !match);
+						});
+
+						var slider = document.getElementById('projects-slider');
+						if (slider) {
+							slider.setAttribute('data-index', '0');
+							slider.style.transform = 'translateX(0%)';
+						}
+
+						var arrows = document.querySelectorAll('.projects-slider__arrow');
+						arrows.forEach(function (arrow) {
+							arrow.style.display = (category === 'all') ? '' : 'none';
+						});
+					};
+
 					// ── Projects Slider navigation ──
 					window.slideProjects = function (dir) {
 						var slider = document.getElementById('projects-slider');

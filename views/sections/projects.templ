@@ -27,6 +27,18 @@ templ Projects(p domain.Profile, lang string, isAdmin bool) {
 		}
 		<h2 class="section__title">{ i18n.T(lang, "section.projects") }</h2>
 		
+		<div class="projects-tabs">
+			<button type="button" class="projects-tab is-active" data-filter="all" onclick="filterProjects('all', this)">
+				<span>{ i18n.L("// Todos", "// All", lang) }</span>
+			</button>
+			<button type="button" class="projects-tab" data-filter="web" onclick="filterProjects('web', this)">
+				<span>{ "// Web" }</span>
+			</button>
+			<button type="button" class="projects-tab" data-filter="tools" onclick="filterProjects('tools', this)">
+				<span>{ "// Tools" }</span>
+			</button>
+		</div>
+
 		<div class="projects-slider-wrapper">
 			if len(p.Projects) > 5 {
 				<button type="button" class="projects-slider__arrow projects-slider__arrow--left" onclick="slideProjects(-1)" aria-label="Previous projects">
