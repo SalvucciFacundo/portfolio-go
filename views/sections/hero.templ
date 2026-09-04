@@ -6,6 +6,16 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
 )
 
+func getResumeURL(lang string, defaultURL string) string {
+	if lang == "en" {
+		return "https://res.cloudinary.com/ds3g4jdd2/raw/upload/v1788482707/cv-1788482706.pdf"
+	}
+	if defaultURL != "" {
+		return defaultURL
+	}
+	return "https://res.cloudinary.com/ds3g4jdd2/raw/upload/v1788482297/cv-1788482296.pdf"
+}
+
 templ Hero(p domain.Profile, lang string, isAdmin bool) {
 	<section id="hero" class="section hero">
 		if isAdmin {
@@ -57,7 +67,7 @@ templ Hero(p domain.Profile, lang string, isAdmin bool) {
 				</div>
 				<div class="hero__actions">
 					if p.ResumeURL != "" {
-						<a class="btn-3d" href={ p.ResumeURL }>
+						<a class="btn-3d" href={ templ.SafeURL(getResumeURL(lang, p.ResumeURL)) } target="_blank" rel="noopener noreferrer">
 							<span class="btn-3d__back"></span>
 							<span class="btn-3d__front">{ i18n.T(lang, "action.download_cv") }</span>
 						</a>
