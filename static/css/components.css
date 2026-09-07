@@ -2887,7 +2887,8 @@ html.dark-theme .project-modal__tag {
 	font-family: var(--font-body);
 	font-size: 0.95rem;
 	color: var(--text-secondary);
-	line-height: 1.6;
+	line-height: 1.7;
+	white-space: pre-line;
 }
 
 @media (max-width: 640px) {
