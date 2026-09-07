@@ -42,12 +42,12 @@ func MockData() domain.Profile {
 func initMockProfile() domain.Profile {
 	return domain.Profile{
 		Name:       "Facundo Salvucci",
-		RoleEs:     "Desarrollador Full Stack",
-		RoleEn:     "Full Stack Developer",
-		HeadlineEs: "Construyo aplicaciones web con Go, templ y HTMX.",
-		HeadlineEn: "I build web applications with Go, templ and HTMX.",
-		SummaryEs:  "Desarrollador Full Stack de Mendoza, Argentina. Me enfoco en backends sólidos con Go y en interfaces rápidas renderizadas en el servidor con templ + HTMX. Sistemas simples, rendimiento real y código que se entiende.",
-		SummaryEn:  "Full Stack Developer from Mendoza, Argentina. I focus on solid backends with Go and fast server-rendered interfaces with templ + HTMX. Simple systems, real performance and code that reads well.",
+		RoleEs:     "Full Stack Developer & DevTools Builder",
+		RoleEn:     "Full Stack Developer & DevTools Builder",
+		HeadlineEs: "Desarrollo aplicaciones web robustas con Go y TypeScript, creando además herramientas que optimizan el flujo de trabajo de otros desarrolladores.",
+		HeadlineEn: "Building robust web applications with Go and TypeScript, while crafting tools that streamline developer workflows.",
+		SummaryEs:  "Desarrollador Full Stack de Mendoza, Argentina. En el backend trabajo con Go aplicando arquitectura limpia, concurrencia y análisis estático con AST. En el frontend construyo interfaces ágiles con Angular y React. Mi diferencial está en crear tooling práctico —servidores MCP, linters y CLIs— pensado para resolver problemas reales del ecosistema.",
+		SummaryEn:  "Full Stack Developer based in Mendoza, Argentina. On the backend I work with Go focusing on clean architecture, concurrency, and AST static analysis. On the frontend I build responsive interfaces with Angular and React. My edge is creating practical tooling —MCP servers, linters, and CLIs— designed to solve real-world problems in the ecosystem.",
 		Email:      "fds1288@gmail.com",
 		AvatarURL:  "https://placehold.co/400x400/666666/F4F4F2?text=FS",
 		ResumeURL:  "",

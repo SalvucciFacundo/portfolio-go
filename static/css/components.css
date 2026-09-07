@@ -1147,6 +1147,27 @@ html.dark-theme .theme-toggle .icon-moon {
 	width: 100%;
 }
 
+/* Modo filtrado (Web o Tools): aplana los lotes para una grilla uniforme sin huecos */
+.projects-slider.is-filtered {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+	width: 100%;
+	transform: none !important;
+	transition: none;
+}
+
+.projects-slider.is-filtered .projects-grid {
+	display: contents;
+}
+
+.projects-slider.is-filtered .project-card,
+.projects-slider.is-filtered .project-card--tall {
+	grid-column: span 1;
+	grid-row: span 1;
+	height: 210px;
+}
+
 .projects-slider__arrow {
 	position: absolute;
 	top: 50%;
@@ -1357,7 +1378,8 @@ html.dark-theme .theme-toggle .icon-moon {
 		overflow: visible;
 	}
 
-	.projects-slider {
+	.projects-slider,
+	.projects-slider.is-filtered {
 		display: grid;
 		grid-template-columns: 1fr;
 		gap: 20px;
@@ -1369,7 +1391,9 @@ html.dark-theme .theme-toggle .icon-moon {
 	}
 
 	.project-card--tall,
-	.project-card--short {
+	.project-card--short,
+	.projects-slider.is-filtered .project-card,
+	.projects-slider.is-filtered .project-card--tall {
 		grid-column: span 1;
 		grid-row: auto;
 		height: 260px;
