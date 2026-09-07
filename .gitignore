@@ -13,3 +13,8 @@ dokploy-api-cheatsheet.md
 
 # CodeGraph index
 .codegraph/
+
+# Binaries
+api
+bin/
+*.exe
