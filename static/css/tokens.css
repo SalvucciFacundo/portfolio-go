@@ -54,3 +54,31 @@ html.dark-theme {
 	--skill-hover-bg: #F4F4F2;
 	--skill-hover-text: #1A1A1A;
 }
+
+/* Large monitors (1440p / 4K / Ultrawide) */
+@media (min-width: 1400px) {
+	:root {
+		--content-max: 1240px;
+		--avatar-outer: 440px;
+		--avatar-mid: 330px;
+		--avatar-inner: 220px;
+	}
+}
+
+@media (min-width: 1800px) {
+	:root {
+		--content-max: 1440px;
+		--avatar-outer: 480px;
+		--avatar-mid: 360px;
+		--avatar-inner: 240px;
+	}
+}
+
+/* Mobile responsive tokens */
+@media (max-width: 640px) {
+	:root {
+		--avatar-outer: 220px;
+		--avatar-mid: 165px;
+		--avatar-inner: 110px;
+	}
+}
