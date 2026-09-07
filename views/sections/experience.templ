@@ -2,10 +2,19 @@ package sections
 
 import (
 	"fmt"
+	"html"
+	"regexp"
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
 )
+
+var boldRegex = regexp.MustCompile(`\*\*(.*?)\*\*`)
+
+func formatExperienceDesc(raw string) string {
+	escaped := html.EscapeString(raw)
+	return boldRegex.ReplaceAllString(escaped, `<strong class="experience-strong">$1</strong>`)
+}
 
 templ Experience(p domain.Profile, lang string, isAdmin bool) {
 	<section id="experience" class="section">
@@ -35,7 +44,7 @@ templ Experience(p domain.Profile, lang string, isAdmin bool) {
 								{ "// " + i18n.L("responsabilidades y tecnologías aplicadas", "responsibilities and tech stack", lang) }
 							</div>
 							<p class="accordion-item__desc">
-								{ i18n.L(e.DescriptionEs, e.DescriptionEn, lang) }
+								@templ.Raw(formatExperienceDesc(i18n.L(e.DescriptionEs, e.DescriptionEn, lang)))
 							</p>
 						</div>
 					</div>

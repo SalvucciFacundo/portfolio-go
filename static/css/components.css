@@ -2867,7 +2867,7 @@ html.dark-theme .project-modal__tag {
 }
 
 .accordion-item.is-active .accordion-item__content {
-	max-height: 400px;
+	max-height: 1200px;
 }
 
 .accordion-item__inner {
@@ -2889,6 +2889,11 @@ html.dark-theme .project-modal__tag {
 	color: var(--text-secondary);
 	line-height: 1.7;
 	white-space: pre-line;
+}
+
+.experience-strong {
+	color: var(--text-primary);
+	font-weight: 600;
 }
 
 @media (max-width: 640px) {

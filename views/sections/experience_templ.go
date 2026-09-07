@@ -13,7 +13,16 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
+	"html"
+	"regexp"
 )
+
+var boldRegex = regexp.MustCompile(`\*\*(.*?)\*\*`)
+
+func formatExperienceDesc(raw string) string {
+	escaped := html.EscapeString(raw)
+	return boldRegex.ReplaceAllString(escaped, `<strong class="experience-strong">$1</strong>`)
+}
 
 func Experience(p domain.Profile, lang string, isAdmin bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -53,7 +62,7 @@ func Experience(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.T(lang, "section.experience"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 15, Col: 65}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 24, Col: 65}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -89,7 +98,7 @@ func Experience(p domain.Profile, lang string, isAdmin bool) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%t", i == 0))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 20, Col: 132}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 29, Col: 132}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -102,7 +111,7 @@ func Experience(p domain.Profile, lang string, isAdmin bool) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L(e.PeriodEs, e.PeriodEn, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 22, Col: 82}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 31, Col: 82}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -115,7 +124,7 @@ func Experience(p domain.Profile, lang string, isAdmin bool) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L(e.PositionEs, e.PositionEn, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 27, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 36, Col: 50}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -128,7 +137,7 @@ func Experience(p domain.Profile, lang string, isAdmin bool) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs("@ " + e.Company)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 29, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 38, Col: 63}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -141,7 +150,7 @@ func Experience(p domain.Profile, lang string, isAdmin bool) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs("// " + i18n.L("responsabilidades y tecnologías aplicadas", "responsibilities and tech stack", lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 35, Col: 111}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 44, Col: 111}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -151,12 +160,7 @@ func Experience(p domain.Profile, lang string, isAdmin bool) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var10 string
-			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L(e.DescriptionEs, e.DescriptionEn, lang))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/experience.templ`, Line: 38, Col: 56}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+			templ_7745c5c3_Err = templ.Raw(formatExperienceDesc(i18n.L(e.DescriptionEs, e.DescriptionEn, lang))).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
