@@ -1062,16 +1062,29 @@ html.dark-theme .theme-toggle .icon-moon {
 }
 
 .projects-tab:hover {
+	color: #15803d;
+	border-color: #15803d;
+	background: rgba(34, 197, 94, 0.08);
+}
+
+.projects-tab.is-active {
+	color: #15803d;
+	border-color: #15803d;
+	background: rgba(34, 197, 94, 0.15);
+	font-weight: 600;
+	box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+}
+
+html.dark-theme .projects-tab:hover {
 	color: #22c55e;
 	border-color: #22c55e;
 	background: rgba(34, 197, 94, 0.05);
 }
 
-.projects-tab.is-active {
+html.dark-theme .projects-tab.is-active {
 	color: #22c55e;
 	border-color: #22c55e;
 	background: rgba(34, 197, 94, 0.12);
-	font-weight: 600;
 	box-shadow: 0 0 12px rgba(34, 197, 94, 0.25);
 }
 
@@ -1233,14 +1246,20 @@ html.dark-theme .theme-toggle .icon-moon {
 	height: 44px;
 	border-radius: 50%;
 	background: var(--bg-alt);
-	border: 1px solid #22c55e;
-	color: #22c55e;
+	border: 1.5px solid #15803d;
+	color: #15803d;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	z-index: 10;
 	transition: all 200ms ease;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+html.dark-theme .projects-slider__arrow {
+	border-color: #22c55e;
+	color: #22c55e;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
@@ -1292,15 +1311,23 @@ html.dark-theme .theme-toggle .icon-moon {
 	height: 100%;
 	object-fit: cover;
 	filter: grayscale(100%);
-	opacity: 0.12;
+	opacity: 0.16;
 	transition: opacity 300ms ease, filter 300ms ease, transform 300ms ease;
+}
+
+html.dark-theme .project-card__img {
+	opacity: 0.12;
 }
 
 .project-card__overlay {
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.85) 90%);
+	background: linear-gradient(180deg, transparent 20%, rgba(226, 226, 223, 0.82) 65%, #E2E2DF 95%);
 	z-index: 2;
+}
+
+html.dark-theme .project-card__overlay {
+	background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.85) 90%);
 }
 
 .project-card__badge {
@@ -1357,16 +1384,21 @@ html.dark-theme .theme-toggle .icon-moon {
 .project-card__category {
 	font-family: var(--font-mono);
 	font-size: 0.72rem;
-	color: #22c55e;
+	color: #15803d;
 	text-transform: uppercase;
 	letter-spacing: 0.12em;
-	font-weight: 600;
+	font-weight: 700;
 }
 
 .project-card__category::before {
 	content: "> ";
-	color: #22c55e;
+	color: #15803d;
 	opacity: 0.85;
+}
+
+html.dark-theme .project-card__category,
+html.dark-theme .project-card__category::before {
+	color: #22c55e;
 }
 
 .project-card__title {
@@ -1389,11 +1421,17 @@ html.dark-theme .theme-toggle .icon-moon {
 .project-card__tag {
 	font-family: var(--font-mono);
 	font-size: 0.65rem;
-	color: var(--text-secondary);
-	background: rgba(0, 0, 0, 0.18);
+	color: var(--text-primary);
+	background: rgba(255, 255, 255, 0.65);
 	border: 1px solid var(--card-border);
 	border-radius: 4px;
 	padding: 1px 6px;
+	font-weight: 500;
+}
+
+html.dark-theme .project-card__tag {
+	color: var(--text-secondary);
+	background: rgba(0, 0, 0, 0.25);
 }
 
 .project-card__plus-btn {
@@ -1561,15 +1599,20 @@ html.dark-theme .theme-toggle .icon-moon {
 	font-family: var(--font-mono);
 	font-size: 0.75rem;
 	text-transform: uppercase;
-	color: #22c55e;
+	color: #15803d;
 	letter-spacing: 0.12em;
-	font-weight: 600;
+	font-weight: 700;
 }
 
 .project-modal__category::before {
 	content: "> ";
-	color: #22c55e;
+	color: #15803d;
 	opacity: 0.85;
+}
+
+html.dark-theme .project-modal__category,
+html.dark-theme .project-modal__category::before {
+	color: #22c55e;
 }
 
 .project-modal__title {
