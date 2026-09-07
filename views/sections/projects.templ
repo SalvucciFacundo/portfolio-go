@@ -2,25 +2,52 @@ package sections
 
 import (
 	"fmt"
+	"strings"
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
 )
 
-func chunkProjects(projects []domain.Project, size int) [][]domain.Project {
-	var chunks [][]domain.Project
-	for i := 0; i < len(projects); i += size {
-		end := i + size
-		if end > len(projects) {
-			end = len(projects)
+func isFeaturedTag(tags []string) bool {
+	for _, t := range tags {
+		if strings.EqualFold(strings.TrimSpace(t), "featured") || strings.EqualFold(strings.TrimSpace(t), "insignia") {
+			return true
 		}
-		chunks = append(chunks, projects[i:end])
+	}
+	return false
+}
+
+func projectGridUnits(p domain.Project) int {
+	if isFeaturedTag(p.Tags) {
+		return 2
+	}
+	return 1
+}
+
+func chunkProjectsByUnits(projects []domain.Project, maxUnits int) [][]domain.Project {
+	var chunks [][]domain.Project
+	var current []domain.Project
+	currentUnits := 0
+
+	for _, pr := range projects {
+		u := projectGridUnits(pr)
+		if len(current) > 0 && currentUnits+u > maxUnits {
+			chunks = append(chunks, current)
+			current = []domain.Project{pr}
+			currentUnits = u
+		} else {
+			current = append(current, pr)
+			currentUnits += u
+		}
+	}
+	if len(current) > 0 {
+		chunks = append(chunks, current)
 	}
 	return chunks
 }
 
 templ Projects(p domain.Profile, lang string, isAdmin bool) {
-	{{ chunked := chunkProjects(p.Projects, 5) }}
+	{{ chunked := chunkProjectsByUnits(p.Projects, 6) }}
 	<section id="projects" class="section">
 		if isAdmin {
 			@components.AdminEditBtn("projects-admin-modal")
@@ -40,7 +67,7 @@ templ Projects(p domain.Profile, lang string, isAdmin bool) {
 		</div>
 
 		<div class="projects-slider-wrapper">
-			if len(p.Projects) > 5 {
+			if len(chunked) > 1 {
 				<button type="button" class="projects-slider__arrow projects-slider__arrow--left" onclick="slideProjects(-1)" aria-label="Previous projects">
 					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
 						<polyline points="15 18 9 12 15 6"></polyline>
@@ -52,15 +79,15 @@ templ Projects(p domain.Profile, lang string, isAdmin bool) {
 				<div class="projects-slider" id="projects-slider" data-index="0" data-slides={ fmt.Sprintf("%d", len(chunked)) }>
 					for _, chunk := range chunked {
 						<div class="projects-grid">
-							for i, pr := range chunk {
-								@components.ProjectCard(pr, i, lang)
+							for _, pr := range chunk {
+								@components.ProjectCard(pr, lang)
 							}
 						</div>
 					}
 				</div>
 			</div>
 
-			if len(p.Projects) > 5 {
+			if len(chunked) > 1 {
 				<button type="button" class="projects-slider__arrow projects-slider__arrow--right" onclick="slideProjects(1)" aria-label="Next projects">
 					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
 						<polyline points="9 18 15 12 9 6"></polyline>

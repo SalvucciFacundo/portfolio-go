@@ -10,15 +10,34 @@ func sanitizeID(title string) string {
 	return "modal-" + strings.ReplaceAll(strings.ToLower(title), " ", "-")
 }
 
-func getBentoClass(index int) string {
-	switch index {
-	case 0:
-		return "project-card--tall"
-	case 1, 2, 3, 4:
-		return "project-card--short"
-	default:
-		return ""
+func isFeatured(tags []string) bool {
+	for _, t := range tags {
+		if strings.EqualFold(strings.TrimSpace(t), "featured") || strings.EqualFold(strings.TrimSpace(t), "insignia") {
+			return true
+		}
 	}
+	return false
+}
+
+func getBentoClass(p domain.Project) string {
+	if isFeatured(p.Tags) {
+		cat := strings.ToLower(strings.TrimSpace(p.Category))
+		if cat == "web" {
+			return "project-card--wide"
+		}
+		return "project-card--tall"
+	}
+	return "project-card--normal"
+}
+
+func displayTags(tags []string) []string {
+	var res []string
+	for _, t := range tags {
+		if !strings.EqualFold(strings.TrimSpace(t), "featured") && !strings.EqualFold(strings.TrimSpace(t), "insignia") {
+			res = append(res, t)
+		}
+	}
+	return res
 }
 
 func filterCategory(cat string) string {
@@ -43,19 +62,24 @@ script closeModal(id string) {
 	}
 }
 
-templ ProjectCard(p domain.Project, index int, lang string) {
+templ ProjectCard(p domain.Project, lang string) {
 	{{ id := sanitizeID(p.TitleEn) }}
-	<article class={ "project-card", getBentoClass(index) } data-category={ filterCategory(p.Category) } onclick={ openModal(id) }>
+	<article class={ "project-card", getBentoClass(p) } data-category={ filterCategory(p.Category) } onclick={ openModal(id) }>
 		<div class="project-card__cover">
 			<img class="project-card__img grayscale-reveal" src={ p.CoverURL } alt={ i18n.L(p.TitleEs, p.TitleEn, lang) } width="800" height="500" loading="eager" decoding="async"/>
 			<div class="project-card__overlay"></div>
-			<span class={ "project-card__badge", statusBadgeClass(p.Status) }>{ statusLabel(p.Status, lang) }</span>
+			<span class={ "project-card__badge", statusBadgeClass(p.Status) }>
+				if isFeatured(p.Tags) {
+					<span class="project-card__badge-star">★ </span>
+				}
+				{ statusLabel(p.Status, lang) }
+			</span>
 		</div>
 		<div class="project-card__content">
 			<span class="project-card__category">{ p.Category }</span>
 			<h3 class="project-card__title">{ i18n.L(p.TitleEs, p.TitleEn, lang) }</h3>
 			<ul class="project-card__tags">
-				for _, t := range p.Tags {
+				for _, t := range displayTags(p.Tags) {
 					<li class="project-card__tag">{ t }</li>
 				}
 			</ul>

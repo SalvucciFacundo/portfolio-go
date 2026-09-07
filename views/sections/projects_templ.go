@@ -13,16 +13,43 @@ import (
 	"github.com/SalvucciFacundo/portfolio-go/internal/domain"
 	"github.com/SalvucciFacundo/portfolio-go/internal/i18n"
 	"github.com/SalvucciFacundo/portfolio-go/views/components"
+	"strings"
 )
 
-func chunkProjects(projects []domain.Project, size int) [][]domain.Project {
-	var chunks [][]domain.Project
-	for i := 0; i < len(projects); i += size {
-		end := i + size
-		if end > len(projects) {
-			end = len(projects)
+func isFeaturedTag(tags []string) bool {
+	for _, t := range tags {
+		if strings.EqualFold(strings.TrimSpace(t), "featured") || strings.EqualFold(strings.TrimSpace(t), "insignia") {
+			return true
 		}
-		chunks = append(chunks, projects[i:end])
+	}
+	return false
+}
+
+func projectGridUnits(p domain.Project) int {
+	if isFeaturedTag(p.Tags) {
+		return 2
+	}
+	return 1
+}
+
+func chunkProjectsByUnits(projects []domain.Project, maxUnits int) [][]domain.Project {
+	var chunks [][]domain.Project
+	var current []domain.Project
+	currentUnits := 0
+
+	for _, pr := range projects {
+		u := projectGridUnits(pr)
+		if len(current) > 0 && currentUnits+u > maxUnits {
+			chunks = append(chunks, current)
+			current = []domain.Project{pr}
+			currentUnits = u
+		} else {
+			current = append(current, pr)
+			currentUnits += u
+		}
+	}
+	if len(current) > 0 {
+		chunks = append(chunks, current)
 	}
 	return chunks
 }
@@ -48,7 +75,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		chunked := chunkProjects(p.Projects, 5)
+		chunked := chunkProjectsByUnits(p.Projects, 6)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section id=\"projects\" class=\"section\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -66,7 +93,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.T(lang, "section.projects"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 28, Col: 63}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 55, Col: 63}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -79,7 +106,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.L("// Todos", "// All", lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 32, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 59, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -92,7 +119,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("// Web")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 35, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 62, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -105,7 +132,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs("// Tools")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 38, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 65, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -115,7 +142,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(p.Projects) > 5 {
+		if len(chunked) > 1 {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<button type=\"button\" class=\"projects-slider__arrow projects-slider__arrow--left\" onclick=\"slideProjects(-1)\" aria-label=\"Previous projects\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"20\" height=\"20\"><polyline points=\"15 18 9 12 15 6\"></polyline></svg></button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -128,7 +155,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(chunked)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 52, Col: 114}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/sections/projects.templ`, Line: 79, Col: 114}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -143,8 +170,8 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for i, pr := range chunk {
-				templ_7745c5c3_Err = components.ProjectCard(pr, i, lang).Render(ctx, templ_7745c5c3_Buffer)
+			for _, pr := range chunk {
+				templ_7745c5c3_Err = components.ProjectCard(pr, lang).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -158,7 +185,7 @@ func Projects(p domain.Profile, lang string, isAdmin bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(p.Projects) > 5 {
+		if len(chunked) > 1 {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<button type=\"button\" class=\"projects-slider__arrow projects-slider__arrow--right\" onclick=\"slideProjects(1)\" aria-label=\"Next projects\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"20\" height=\"20\"><polyline points=\"9 18 15 12 9 6\"></polyline></svg></button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
